@@ -1,0 +1,70 @@
+plugins {
+    id 'java-library'
+	id 'com.github.harbby.gradle.serviceloader' version '1.1.8'
+	id 'maven-publish'
+	id 'jacoco'
+}
+
+version = project.mod_version
+group = project.maven_group
+
+repositories {
+    mavenCentral()
+    gradlePluginPortal()
+}
+
+dependencies {
+	implementation "org.joml:joml:1.10.8"
+
+    implementation 'org.slf4j:slf4j-api:1.7.+'
+    implementation 'org.slf4j:slf4j-log4j12:1.7.29'
+
+    implementation 'org.apache.commons:commons-text:1.12.0'
+
+	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.3'
+	testImplementation 'org.junit.jupiter:junit-jupiter-params:5.10.3'
+
+	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.3'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs = ['-Xlint:deprecation']
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+	finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+	dependsOn test // tests are required to run before generating the report
+
+	reports {
+		xml {
+			enabled true // coveralls plugin depends on xml format report
+		}
+
+		html {
+			enabled true
+		}
+	}
+
+	afterEvaluate {
+		classDirectories = files(classDirectories.files.collect {
+			fileTree(
+				dir: it,
+				exclude: [
+					'com/midnightbits/scanner/rt/**'
+					// 'com/midnightbits/scanner/core/impl/**',
+					// 'com/midnightbits/scanner/platform/**',
+				])
+		})
+	}
+}
