@@ -9,4 +9,4 @@ pluginManagement {
 	}
 }
 
-include("scanner")
+include("scanner", "fabric:1.21", "fabric:1.21.1")

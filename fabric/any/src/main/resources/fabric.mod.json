@@ -1,0 +1,29 @@
+{
+	"schemaVersion": 1,
+	"id": "${id}",
+	"version": "${version}",
+	"name": "${title}",
+	"description": "${description}",
+	"authors": [
+		"mzdun"
+	],
+	"contact": {
+		"homepage": "${github}",
+		"sources": "${github}"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/${id}/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"client": [
+			"com.midnightbits.scanner.fabric.ResourceScannerFabric"
+		]
+	},
+	"mixins": [],
+	"depends": {
+		"fabricloader": ">=0.16.0",
+		"minecraft": "~${minecraft_version}",
+		"java": ">=21",
+		"fabric-api": "*"
+	}
+}
