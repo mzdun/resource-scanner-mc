@@ -21,8 +21,11 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
 
-    - name: Find python version
-      run: python --version
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.12' 
+
+    - run: python --version
 
     # Configure Gradle for optimal use in GitHub Actions, including caching of downloaded dependencies.
     # See: https://github.com/gradle/actions/blob/main/setup-gradle/README.md
