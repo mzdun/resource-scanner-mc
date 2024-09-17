@@ -25,8 +25,7 @@ public class ResourceScannerMod implements ScannerMod {
         LOGGER.warn("ResourceScannerMod ({}, {})",
                 Services.PLATFORM.getPlatformName(),
                 Services.PLATFORM.getEnvironmentName());
-        LOGGER.warn("Game dir: {}", gameDir);
-        LOGGER.warn("Conf dir: {}", configDir);
+        LOGGER.debug("Conf dir: {}", configDir);
 
         Services.PLATFORM.getKeyBinder().bind(
                 "key.resource-scanner.scan",
@@ -40,17 +39,9 @@ public class ResourceScannerMod implements ScannerMod {
             return;
 
         for (BlockEcho echo : sonar.echoes()) {
-            LOGGER.info(
-                    new StringBuilder()
-                            .append(String.valueOf(echo.getPingTime())).append(" (")
-                            .append(echo.getPosition().toString()).append(") ")
-                            .append(String.valueOf(echo.getId())).toString());
+            LOGGER.info("{} ({}) {}", echo.getPingTime(), echo.getPosition(), echo.getId());
         }
         LOGGER.info("");
-
-        // for (Identifier id : Registries.BLOCK.getIds()) {
-        // LOGGER.info(String.valueOf(id));
-        // }
     }
 
     @Override

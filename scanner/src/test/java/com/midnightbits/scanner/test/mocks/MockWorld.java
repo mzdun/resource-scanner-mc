@@ -2,6 +2,7 @@ package com.midnightbits.scanner.test.mocks;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.TreeMap;
 
 import com.midnightbits.scanner.rt.core.BlockInfo;
@@ -11,7 +12,7 @@ public class MockWorld {
     public TreeMap<Integer, TreeMap<Integer, TreeMap<Integer, BlockInfo>>> layers = new TreeMap<>();
     private static final BlockInfo AIR = MockBlockInfo.ofAir();
 
-    private static record Block(V3i pos, BlockInfo info) {
+    private record Block(V3i pos, BlockInfo info) {
         public static Block of(String encoded) {
             try {
                 char colon = ':';
@@ -49,7 +50,7 @@ public class MockWorld {
                 prev = pos + 1;
 
                 BlockInfo info = MockBlockInfo.of(encoded.substring(prev));
-                if (caveFlag == 1 || info == null)
+                if (caveFlag == 1)
                     return null;
                 return new Block(new V3i(x, y, z), info);
             } catch (NumberFormatException e) {
@@ -71,15 +72,16 @@ public class MockWorld {
     public static MockWorld ofResource(String name) {
         try {
             InputStream is = MockWorld.class.getClassLoader().getResourceAsStream(name);
+            assert is != null;
             byte[] bytes = is.readAllBytes();
-            String contents = new String(bytes, "UTF-8");
+            String contents = new String(bytes, StandardCharsets.UTF_8);
             return of(contents);
         } catch (IOException e) {
             return new MockWorld();
         }
     }
 
-    public void add(Block info) {
+    private void add(Block info) {
         int i = info.pos.getX();
         int j = info.pos.getY();
         int k = info.pos.getZ();

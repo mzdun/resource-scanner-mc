@@ -17,7 +17,7 @@ public class MockClientCore implements ClientCore {
     final float cameraPitch;
     final float cameraYaw;
     final MockWorld world;
-    final List<String> messages = new ArrayList<String>();
+    final List<String> messages = new ArrayList<>();
 
     public MockClientCore(V3i playerPos, float cameraPitch, float cameraYaw, MockWorld world) {
         this.playerPos = playerPos;

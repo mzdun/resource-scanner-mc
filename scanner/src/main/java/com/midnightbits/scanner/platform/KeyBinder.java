@@ -4,7 +4,7 @@ import com.midnightbits.scanner.rt.core.ClientCore;
 
 public interface KeyBinder {
     @FunctionalInterface
-    public static interface KeyPressHandler {
+    interface KeyPressHandler {
         void handle(ClientCore client);
     }
 

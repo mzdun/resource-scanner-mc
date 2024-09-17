@@ -8,7 +8,7 @@ public class Helper {
         return object;
     }
 
-    private static final float[] SINE_TABLE = (float[]) make(new float[65536], (sineTable) -> {
+    private static final float[] SINE_TABLE = make(new float[65536], (sineTable) -> {
         for (int i = 0; i < sineTable.length; ++i) {
             sineTable[i] = (float) Math.sin((double) i * Math.PI * 2.0 / 65536.0);
         }

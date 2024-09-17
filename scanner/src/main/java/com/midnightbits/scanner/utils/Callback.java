@@ -4,5 +4,5 @@ import java.util.Optional;
 
 @FunctionalInterface
 public interface Callback<T> {
-    public Optional<T> call();
+     Optional<T> call();
 }

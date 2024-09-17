@@ -11,7 +11,7 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.option.KeyBinding;
 
 public class FabricKeyBinder implements KeyBinder {
-    private static record BoundKey(KeyBinding binding, KeyBinder.KeyPressHandler handler) {
+    private record BoundKey(KeyBinding binding, KeyBinder.KeyPressHandler handler) {
         public boolean handle(ClientCore client) {
             if (binding.wasPressed()) {
                 handler.handle(client);

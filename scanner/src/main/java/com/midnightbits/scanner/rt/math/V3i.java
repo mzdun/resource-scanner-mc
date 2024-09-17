@@ -135,9 +135,9 @@ public class V3i implements Comparable<V3i> {
         return (int) (f + g + h);
     }
 
+    @Override
     public String toString() {
-        int var10000 = this.getX();
-        return "" + var10000 + ", " + this.getY() + ", " + this.getZ();
+        return this.getX() + ", " + this.getY() + ", " + this.getZ();
     }
 
     static {

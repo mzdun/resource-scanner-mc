@@ -103,10 +103,9 @@ public class Id {
    public boolean equals(Object o) {
       if (this == o) {
          return true;
-      } else if (!(o instanceof Id)) {
+      } else if (!(o instanceof Id identifier)) {
          return false;
       } else {
-         Id identifier = (Id) o;
          return this.namespace.equals(identifier.namespace) && this.path.equals(identifier.path);
       }
    }

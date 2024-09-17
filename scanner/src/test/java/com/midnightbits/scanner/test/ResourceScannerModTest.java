@@ -21,8 +21,8 @@ import com.midnightbits.scanner.test.mocks.platform.MockPlatform;
 import com.midnightbits.scanner.test.support.Iterables;
 
 public class ResourceScannerModTest {
-    private MockedClock clock = new MockedClock();
-    private static MockWorld TEST_WORLD = MockWorld.ofResource("test_world.txt");
+    private final MockedClock clock = new MockedClock();
+    private static final MockWorld TEST_WORLD = MockWorld.ofResource("test_world.txt");
 
     @Test
     public void prepareScanner() {

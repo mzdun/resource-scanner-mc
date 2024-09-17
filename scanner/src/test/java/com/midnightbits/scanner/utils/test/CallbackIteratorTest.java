@@ -6,24 +6,10 @@ import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import com.midnightbits.scanner.test.support.Counter;
 import com.midnightbits.scanner.utils.CallbackIterator;
 
 public class CallbackIteratorTest {
-    private static class Counter {
-        int counter = 0;
-
-        public Counter() {
-        }
-
-        public void inc() {
-            ++counter;
-        }
-
-        public int get() {
-            return counter;
-        }
-    };
-
     @Test
     void canSeeTheEndEdgeOfReportedItems() {
         Counter c = new Counter();
@@ -44,6 +30,6 @@ public class CallbackIteratorTest {
 
         Assertions.assertEquals(10, c.get());
         Assertions.assertFalse(it.hasNext());
-        Assertions.assertThrows(NoSuchElementException.class, () -> it.next());
+        Assertions.assertThrows(NoSuchElementException.class, it::next);
     }
 }

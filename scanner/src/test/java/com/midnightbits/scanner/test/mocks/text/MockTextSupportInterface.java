@@ -13,8 +13,8 @@ public class MockTextSupportInterface implements TextSupportInterface {
         return new MockText(new LiteralSegment(string));
     }
 
-    private static interface Segment {
-        public String getString();
+    private interface Segment {
+        String getString();
     }
 
     private record LiteralSegment(String contents) implements Segment {

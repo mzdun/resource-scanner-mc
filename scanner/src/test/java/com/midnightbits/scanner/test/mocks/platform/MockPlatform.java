@@ -10,7 +10,7 @@ import com.midnightbits.scanner.platform.PlatformInterface;
 import com.midnightbits.scanner.rt.core.ClientCore;
 
 public class MockPlatform implements PlatformInterface, KeyBinder {
-    public static record KeyPressHandler(String translation, KeyBinder.KeyPressHandler handler) {
+    public record KeyPressHandler(String translation, KeyBinder.KeyPressHandler handler) {
         public void handle(ClientCore client) {
             handler.handle(client);
         }

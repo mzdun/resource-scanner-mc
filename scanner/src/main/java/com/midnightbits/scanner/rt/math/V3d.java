@@ -151,10 +151,9 @@ public class V3d implements Position {
     public boolean equals(Object o) {
         if (this == o) {
             return true;
-        } else if (!(o instanceof V3d)) {
+        } else if (!(o instanceof V3d vec3d)) {
             return false;
         } else {
-            V3d vec3d = (V3d) o;
             if (Double.compare(vec3d.x, this.x) != 0) {
                 return false;
             } else if (Double.compare(vec3d.y, this.y) != 0) {

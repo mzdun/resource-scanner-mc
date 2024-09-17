@@ -1,17 +1,16 @@
 package com.midnightbits.scanner.utils;
 
 import java.util.Iterator;
-import java.util.Optional;
 import java.util.NoSuchElementException;
 
 public class CallbackIterator<T> implements Iterator<T> {
 
     private final Callback<T> cb;
-    private Optional<T> nextValue;
+    private T nextValue;
 
     CallbackIterator(Callback<T> cb) {
         this.cb = cb;
-        nextValue = cb.call();
+        nextValue = cb.call().orElse(null);
     }
 
     public static <U> CallbackIterator<U> of(Callback<U> cb) {
@@ -20,16 +19,16 @@ public class CallbackIterator<T> implements Iterator<T> {
 
     @Override
     public boolean hasNext() {
-        return nextValue.isPresent();
+        return nextValue != null;
     }
 
     @Override
     public T next() {
-        Optional<T> current = nextValue;
-        if (!nextValue.isPresent()) {
+        T current = nextValue;
+        if (current == null) {
             throw new NoSuchElementException("No value present");
         }
-        nextValue = cb.call();
-        return current.get();
+        nextValue = cb.call().orElse(null);
+        return current;
     }
 }
