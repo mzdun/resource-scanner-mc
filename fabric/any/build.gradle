@@ -83,13 +83,16 @@ processResources {
 	inputs.property "version", project.version
 
 	filesMatching("fabric.mod.json") {
+		def minecraft_dependency = project.hasProperty('minecraft_dependency')
+			? project.minecraft_dependency
+			: "~${project.minecraft_version}"
 		expand \
 			"id": project.archives_base_name,
 			"title": project.mod_name,
 			"description": project.description,
 			"github": project.url,
 			"version": project.version,
-			"minecraft_version": project.minecraft_version
+			"minecraft_dependency": minecraft_dependency
 	}
 }
 

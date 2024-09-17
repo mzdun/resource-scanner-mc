@@ -4,3 +4,5 @@ run/
 bin/
 .vscode/
 .idea/
+.fabric-cache/
+*.pyc
