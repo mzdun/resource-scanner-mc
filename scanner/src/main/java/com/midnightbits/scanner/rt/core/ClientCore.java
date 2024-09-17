@@ -4,13 +4,13 @@ import com.midnightbits.scanner.rt.math.V3i;
 import com.midnightbits.scanner.rt.text.Text;
 
 public interface ClientCore {
-    public BlockInfo getBlockInfo(V3i pos);
+    BlockInfo getBlockInfo(V3i pos);
 
-    public V3i getPlayerPos();
+    V3i getPlayerPos();
 
-    public float getCameraPitch();
+    float getCameraPitch();
 
-    public float getCameraYaw();
+    float getCameraYaw();
 
-    public void sendPlayerMessage(Text message, boolean overlay);
+    void sendPlayerMessage(Text message, boolean overlay);
 }

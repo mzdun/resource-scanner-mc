@@ -15,9 +15,9 @@ import com.midnightbits.scanner.rt.math.V3i;
 import com.midnightbits.scanner.utils.Circle;
 import com.midnightbits.scanner.utils.Circle.PitchAndYaw;
 
-public class CircleTestMatrix {
-    private static int DISTANCE = 32;
-    private static Logger LOGGER = LoggerFactory.getLogger("MatrixTest");
+public class CircleMatrixTest {
+    private static final int DISTANCE = 32;
+    private static final Logger LOGGER = LoggerFactory.getLogger("MatrixTest");
 
     private static record Rotate(float pitch, float yaw, PitchAndYaw expected) {
         public static Rotate of(float pitchF, float yawF, double pitchD, double yawD) {
@@ -32,7 +32,7 @@ public class CircleTestMatrix {
     @ParameterizedTest
     @MethodSource("provideTests")
     void retrievePitchAndYaw(Rotate args) {
-        V3i cam = ofCamera(args.pitch(), args.yaw(), DISTANCE);
+        V3i cam = ofCamera(args.pitch(), args.yaw());
         PitchAndYaw actual = Circle.getPitchAndYaw(cam);
         double pitchDiff = Math.abs(actual.pitch() - args.expected.pitch());
         double yawDiff = Math.abs(actual.yaw() - args.expected.yaw());
@@ -47,7 +47,7 @@ public class CircleTestMatrix {
     @ParameterizedTest
     @MethodSource("provideTests")
     void rotatePitchAndYaw(Rotate args) {
-        V3i expected = ofCamera(args.pitch(), args.yaw(), DISTANCE);
+        V3i expected = ofCamera(args.pitch(), args.yaw());
         Matrix4d rot = Circle.rotatePitchYaw(expected);
         V3i actual = V3i.ofRounded(V3d.of(new V3i(0, 0, DISTANCE)).multiply(rot));
 
@@ -87,7 +87,7 @@ public class CircleTestMatrix {
                 Arguments.of(Rotate.of(60, -45)));
     }
 
-    private static V3i ofCamera(float pitch, float yaw, int distance) {
-        return V3i.ofRounded(V3d.fromPolar(pitch, yaw).multiply(distance));
+    private static V3i ofCamera(float pitch, float yaw) {
+        return V3i.ofRounded(V3d.fromPolar(pitch, yaw).multiply(CircleMatrixTest.DISTANCE));
     }
 }

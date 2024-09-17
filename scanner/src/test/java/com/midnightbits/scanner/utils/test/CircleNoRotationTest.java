@@ -9,7 +9,7 @@ import com.midnightbits.scanner.rt.math.V3i;
 import com.midnightbits.scanner.test.support.Iterables;
 import com.midnightbits.scanner.utils.Circle;
 
-public class CircleTestNoRotation {
+public class CircleNoRotationTest {
     @Test
     void print0x0() {
         Circle circle = new Circle(0);

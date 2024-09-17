@@ -29,17 +29,22 @@ public class Sonar {
             Id.ofVanilla("netherite_block"),
     };
 
-    private final BlockEchoes echoes = new BlockEchoes();
-    private final int blockDistance;
-    private final int blockRadius;
-    private final Set<Id> blocks;
+    private final BlockEchoes echoes;
+    private int blockDistance;
+    private int blockRadius;
+    private Set<Id> blocks;
 
     public static final Logger LOGGER = LoggerFactory.getLogger("Sonar");
 
-    public Sonar(int blockDistance, int blockRadius, Set<Id> blocks) {
+    public Sonar(int blockDistance, int blockRadius, Set<Id> blocks, int maxEchoes) {
         this.blockDistance = blockDistance;
         this.blockRadius = blockRadius;
         this.blocks = blocks;
+        this.echoes = new BlockEchoes(maxEchoes);
+    }
+
+    public Sonar(int blockDistance, int blockRadius, Set<Id> blocks) {
+        this(blockDistance, blockRadius, blocks, BlockEchoes.MAX_SIZE);
     }
 
     public Sonar() {
@@ -51,7 +56,14 @@ public class Sonar {
     }
 
     public static Sonar narrow(int blockDistance, Set<Id> blocks) {
-        return new Sonar(blockDistance, 0, blocks);
+        return new Sonar(blockDistance, 0, blocks, BlockEchoes.MAX_SIZE);
+    }
+
+    public void refresh(int blockDistance, int blockRadius, Set<Id> blocks, int maxEchoes) {
+        this.blockDistance = blockDistance;
+        this.blockRadius = blockRadius;
+        this.blocks = blocks;
+        this.echoes.refresh(maxEchoes);
     }
 
     public boolean ping(ClientCore client) {

@@ -7,9 +7,9 @@ import com.midnightbits.scanner.rt.math.V3i;
 import com.midnightbits.scanner.test.support.Iterables;
 import com.midnightbits.scanner.utils.Circle;
 
-public class CircleTestRotation {
-    private static int RADIUS = 4;
-    private static int DISTANCE = 32;
+public class CircleRotationTest {
+    private static final int RADIUS = 4;
+    private static final int DISTANCE = 32;
 
     @Test
     void lookStraightOn() {

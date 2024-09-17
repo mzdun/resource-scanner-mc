@@ -4,10 +4,12 @@ import com.midnightbits.scanner.rt.core.Id;
 import com.midnightbits.scanner.rt.math.V3i;
 import com.midnightbits.scanner.utils.Clock;
 
+import java.util.Objects;
+
 public class BlockEcho implements Comparable<BlockEcho> {
-    private V3i position;
-    private Id id;
-    private long pingTime;
+    private final V3i position;
+    private final Id id;
+    private final long pingTime;
 
     public BlockEcho(V3i position, Id id, long pingTime) {
         this.position = position;
@@ -35,10 +37,9 @@ public class BlockEcho implements Comparable<BlockEcho> {
         if (obj == null) {
             throw new NullPointerException();
         }
-        if (!(obj instanceof BlockEcho)) {
+        if (!(obj instanceof BlockEcho other)) {
             throw new ClassCastException();
         }
-        BlockEcho other = (BlockEcho) obj;
         return pingTime == other.pingTime && id.equals(other.id) && position.equals(other.position);
     }
 
@@ -49,7 +50,7 @@ public class BlockEcho implements Comparable<BlockEcho> {
                 .append(position.getX()).append(", ")
                 .append(position.getY()).append(", ")
                 .append(position.getZ()).append("), Id.of");
-        if (id.getNamespace() == Id.DEFAULT_NAMESPACE) {
+        if (Objects.equals(id.getNamespace(), Id.DEFAULT_NAMESPACE)) {
             builder.append("Vanilla(\"");
         } else {
             builder.append("(\"").append(id.getNamespace()).append("\", \"");
@@ -60,11 +61,10 @@ public class BlockEcho implements Comparable<BlockEcho> {
     }
 
     @Override
-    public int compareTo(BlockEcho obj) {
-        if (obj == null) {
+    public int compareTo(BlockEcho other) {
+        if (other == null) {
             throw new NullPointerException();
         }
-        BlockEcho other = (BlockEcho) obj;
         int result = (int) (pingTime - other.pingTime);
         if (result != 0) {
             return result;

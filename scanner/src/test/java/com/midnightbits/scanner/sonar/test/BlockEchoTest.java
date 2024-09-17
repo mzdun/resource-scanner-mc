@@ -10,7 +10,7 @@ import com.midnightbits.scanner.sonar.BlockEchoes;
 import com.midnightbits.scanner.test.mocks.MockedClock;
 
 public class BlockEchoTest {
-        private MockedClock clock = new MockedClock();
+        private final MockedClock clock = new MockedClock();
 
         @Test
         public void echoSeemsToRegisterAtGivenTime() {
@@ -66,8 +66,7 @@ public class BlockEchoTest {
                 Assertions.assertTrue(echo3.compareTo(echo4) < 0);
                 Assertions.assertTrue(echo4.compareTo(echo3) > 0);
 
-                Assertions.assertTrue(echo4.compareTo(echo5) == 0);
-                Assertions.assertTrue(echo5.compareTo(echo5) == 0);
+                Assertions.assertEquals(0, echo4.compareTo(echo5));
         }
 
         @Test

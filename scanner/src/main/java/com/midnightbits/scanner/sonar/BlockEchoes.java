@@ -11,10 +11,10 @@ import com.midnightbits.scanner.rt.core.Id;
 import com.midnightbits.scanner.rt.math.V3i;
 
 public class BlockEchoes implements Iterable<BlockEcho> {
-    private TreeSet<BlockEcho> echoes = new TreeSet<BlockEcho>();
-    private static final int MAX_SIZE = 100;
+    private final TreeSet<BlockEcho> echoes = new TreeSet<>();
+    public static final int MAX_SIZE = 100;
 
-    private final int maxSize;
+    private int maxSize;
 
     public BlockEchoes(int maxSize) {
         this.maxSize = maxSize;
@@ -22,6 +22,13 @@ public class BlockEchoes implements Iterable<BlockEcho> {
 
     public BlockEchoes() {
         this(MAX_SIZE);
+    }
+
+    public void refresh(int maxSize) {
+        this.maxSize = maxSize;
+        if (echoes.size() >= maxSize) {
+            evictBlocks(stream().limit(echoes.size() - maxSize + 1));
+        }
     }
 
     /**
@@ -44,17 +51,16 @@ public class BlockEchoes implements Iterable<BlockEcho> {
     }
 
     private Stream<BlockEcho> stream() {
-        return StreamSupport.stream(echoes.spliterator(), false);
+        return echoes.stream();
     }
 
     private boolean evictBlocks(Stream<BlockEcho> stream) {
-        List<BlockEcho> evictions = stream
-                .collect(Collectors.toList());
+        List<BlockEcho> evictions = stream.toList();
         for (BlockEcho evicted : evictions) {
             echoes.remove(evicted);
         }
 
-        return evictions.size() > 0;
+        return !evictions.isEmpty();
     }
 
     @Override
