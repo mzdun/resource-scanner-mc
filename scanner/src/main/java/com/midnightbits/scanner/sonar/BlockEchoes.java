@@ -3,9 +3,7 @@ package com.midnightbits.scanner.sonar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.TreeSet;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 import com.midnightbits.scanner.rt.core.Id;
 import com.midnightbits.scanner.rt.math.V3i;
@@ -27,7 +25,7 @@ public class BlockEchoes implements Iterable<BlockEcho> {
     public void refresh(int maxSize) {
         this.maxSize = maxSize;
         if (echoes.size() >= maxSize) {
-            evictBlocks(stream().limit(echoes.size() - maxSize + 1));
+            evictBlocks(stream().limit(echoes.size() - maxSize));
         }
     }
 
