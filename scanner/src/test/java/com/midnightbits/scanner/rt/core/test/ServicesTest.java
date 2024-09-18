@@ -1,4 +1,4 @@
-package com.midnightbits.scanner.rt.test;
+package com.midnightbits.scanner.rt.core.test;
 
 import java.util.ServiceConfigurationError;
 

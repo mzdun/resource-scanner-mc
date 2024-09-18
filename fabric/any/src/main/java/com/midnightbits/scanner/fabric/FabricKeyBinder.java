@@ -21,7 +21,7 @@ public class FabricKeyBinder implements KeyBinder {
         }
     };
 
-    private final ArrayList<BoundKey> keys = new ArrayList<BoundKey>();
+    private final ArrayList<BoundKey> keys = new ArrayList<>();
 
     private boolean handle(ClientCore client) {
         return keys.parallelStream()

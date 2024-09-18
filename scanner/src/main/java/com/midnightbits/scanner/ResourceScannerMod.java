@@ -1,6 +1,7 @@
 package com.midnightbits.scanner;
 
 import java.nio.file.Path;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,22 +11,40 @@ import com.midnightbits.scanner.rt.core.ClientCore;
 import com.midnightbits.scanner.rt.core.KeyBinding;
 import com.midnightbits.scanner.rt.core.ScannerMod;
 import com.midnightbits.scanner.sonar.BlockEcho;
+import com.midnightbits.scanner.sonar.BlockEchoes;
 import com.midnightbits.scanner.sonar.Sonar;
+import com.midnightbits.scanner.utils.ConfigFile;
 
 public class ResourceScannerMod implements ScannerMod {
     public static final String TAG = "resource-scanner";
     private static final Logger LOGGER = LoggerFactory.getLogger(TAG);
 
+    private final ConfigFile config = new ConfigFile();
     private Sonar sonar = new Sonar();
 
     @Override
     public void onInitializeClient() {
-        Path gameDir = Services.PLATFORM.getGameDir();
-        Path configDir = Services.PLATFORM.getConfigDir();
-        LOGGER.warn("ResourceScannerMod ({}, {})",
+        config.addEventListener((event) -> {
+            var settings = event.settings();
+            this.sonar.refresh(
+                    settings.blockDistance(), settings.blockRadius(), settings.interestingIds(), settings.echoesSize());
+        });
+
+        LOGGER.warn("resource-scanner ({}, {})",
                 Services.PLATFORM.getPlatformName(),
                 Services.PLATFORM.getEnvironmentName());
-        LOGGER.debug("Conf dir: {}", configDir);
+        Path configDir = Services.PLATFORM.getConfigDir();
+        LOGGER.debug("conf dir: {}", configDir);
+
+        config.setDirectory(configDir);
+        if (!config.load()) {
+            config.setAll(
+                    BlockEchoes.MAX_SIZE,
+                    Sonar.BLOCK_DISTANCE,
+                    Sonar.BLOCK_RADIUS,
+                    Set.of(Sonar.INTERESTING_IDS),
+                    false);
+        }
 
         Services.PLATFORM.getKeyBinder().bind(
                 "key.resource-scanner.scan",

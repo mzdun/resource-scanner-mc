@@ -45,6 +45,11 @@ public class BlockEchosTest {
                                 new BlockEcho(new V3i(1, 2, 1), Id.ofVanilla("iron_ore"), 0x123458),
                                 new BlockEcho(new V3i(1, 2, 2), Id.ofVanilla("iron_ore"), 0x123459),
                 }, echoes);
+
+                echoes.refresh(1);
+                Iterables.assertEquals(new BlockEcho[] {
+                                new BlockEcho(new V3i(1, 2, 2), Id.ofVanilla("iron_ore"), 0x123459),
+                }, echoes);
         }
 
         @Test
