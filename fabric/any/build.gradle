@@ -139,18 +139,38 @@ build {
 
 import com.modrinth.minotaur.dependencies.ModDependency
 
+def getRootVersionType() {
+	def sem = rootProject.mod_version.split("-")
+	if (sem.size() > 1) {
+		def stability = sem[1]
+		if (stability == "alpha" || stability.startsWith("alpha."))
+			return "alpha"
+		if (stability == "beta" || stability.startsWith("beta."))
+			return "beta"
+	}
+	return "release"
+}
+
 modrinth {
 	def pluginJar = project.repack.outputs.files[0]
 
     projectId = 'XTUTy4U4'
     versionNumber = project.mod_version
     versionName = "${mod_name} ${rootProject.mod_version} for ${project.minecraft_version}-FB"
+	versionType = getRootVersionType()
     uploadFile = file(pluginJar)
     gameVersions = [project.minecraft_version]
     loaders = ['fabric']
+	syncBodyFrom = rootProject.file("README.md").text
     dependencies = [
 		new ModDependency('P7dR8mSH', 'required') // Fabric API
     ]
+}
+
+if (project.hasProperty('sync_readme') && project.sync_readme) {
+	tasks.named('modrinth') {
+		finalizedBy modrinthSyncBody
+	}
 }
 
 tasks.register('install', Exec) {
