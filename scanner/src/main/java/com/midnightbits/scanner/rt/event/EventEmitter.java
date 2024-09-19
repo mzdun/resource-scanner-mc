@@ -13,7 +13,7 @@ public interface EventEmitter {
 
     @SuppressWarnings("unchecked")
     default void apply(Iterable<EventListener<?>> listeners, Event event) {
-        for (var listener : listeners) {
+        for (final var listener : listeners) {
             if (event.cancelable() && event.cancelled()) {
                 break;
             }

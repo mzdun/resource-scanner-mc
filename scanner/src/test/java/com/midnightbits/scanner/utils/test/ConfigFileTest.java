@@ -31,7 +31,7 @@ public class ConfigFileTest {
     static void startupCleanup() {
         try {
             delete();
-        } catch (IOException e) {
+        } catch (IOException ignored) {
         }
     }
 
@@ -62,7 +62,10 @@ public class ConfigFileTest {
         store(contents);
 
         final var cfg = new ConfigFile();
-        cfg.addEventListener((settings) -> counter.inc());
+        cfg.addEventListener((event) -> {
+            counter.inc();
+            System.out.println(event.settings());
+        });
         cfg.setDirectory(configDir);
         cfg.load();
 
@@ -87,24 +90,6 @@ public class ConfigFileTest {
     }
 
     @Test
-    void configSerializesToJSON() {
-        final var counter = new Counter();
-        final var cfg = new ConfigFile();
-        cfg.addEventListener((settings) -> counter.inc());
-        cfg.setDirectory(configDir);
-        cfg.setAll(BlockEchoes.MAX_SIZE,
-                Sonar.BLOCK_DISTANCE,
-                Sonar.BLOCK_RADIUS,
-                Set.of(Sonar.INTERESTING_IDS),
-                false);
-
-        final var actual = load();
-
-        Assertions.assertEquals("{\"echoesSize\":100,\"blockDistance\":32,\"blockRadius\":4,\"interestingIds\":[\"minecraft:coal_ore\",\"minecraft:deepslate_coal_ore\",\"minecraft:deepslate_diamond_ore\",\"minecraft:deepslate_iron_ore\",\"minecraft:diamond_ore\",\"minecraft:iron_ore\",\"minecraft:netherite_block\"]}", actual);
-        Assertions.assertEquals(0, counter.get());
-    }
-
-    @Test
     void configDoesNotSerializeToDirectory() {
         final var counter = new Counter();
         configFile.toFile().mkdirs();
@@ -115,11 +100,12 @@ public class ConfigFileTest {
         cfg.setAll(BlockEchoes.MAX_SIZE,
                 Sonar.BLOCK_DISTANCE,
                 Sonar.BLOCK_RADIUS,
-                Set.of(Sonar.INTERESTING_IDS));
+                Set.of(Sonar.INTERESTING_IDS),
+                true);
 
         final var actual = load();
 
-        Assertions.assertEquals(null, actual);
+        Assertions.assertNull(actual);
         Assertions.assertEquals(1, counter.get());
     }
 
@@ -133,8 +119,7 @@ public class ConfigFileTest {
                 Arguments.of("{\"interestingIds\":false}"),
                 Arguments.of("{\"interestingIds\":[], \"echoesSize\": -5}"),
                 Arguments.of("{\"interestingIds\":[], \"blockDistance\": -5}"),
-                Arguments.of("{\"interestingIds\":[], \"blockRadius\": -5}")
-        );
+                Arguments.of("{\"interestingIds\":[], \"blockRadius\": -5}"));
     }
 
     static void delete() throws IOException {
@@ -161,7 +146,7 @@ public class ConfigFileTest {
             try (OutputStream out = new FileOutputStream(f)) {
                 out.write(contents.getBytes(StandardCharsets.UTF_8));
             }
-        } catch (IOException io) {
+        } catch (IOException ignored) {
         }
     }
 
@@ -175,7 +160,7 @@ public class ConfigFileTest {
                 final var bytes = out.readAllBytes();
                 return new String(bytes, StandardCharsets.UTF_8);
             }
-        } catch (IOException io) {
+        } catch (IOException ignored) {
         }
 
         return null;

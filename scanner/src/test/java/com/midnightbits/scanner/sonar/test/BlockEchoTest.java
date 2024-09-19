@@ -19,9 +19,9 @@ public class BlockEchoTest {
 
                 Assertions.assertEquals(echo,
                                 new BlockEcho(new V3i(1, 2, 3), Id.ofVanilla("gold_ore"), 0x11223344));
-                Assertions.assertEquals(new V3i(1, 2, 3), echo.getPosition());
-                Assertions.assertEquals(Id.ofVanilla("gold_ore"), echo.getId());
-                Assertions.assertEquals(287454020, echo.getPingTime());
+                Assertions.assertEquals(new V3i(1, 2, 3), echo.position());
+                Assertions.assertEquals(Id.ofVanilla("gold_ore"), echo.id());
+                Assertions.assertEquals(287454020, echo.pingTime());
                 Assertions.assertEquals(
                                 "new BlockEcho(new V3i(1, 2, 3), Id.ofVanilla(\"gold_ore\"), 287454020)",
                                 echo.toString());
@@ -34,9 +34,9 @@ public class BlockEchoTest {
 
                 Assertions.assertEquals(echo,
                                 new BlockEcho(new V3i(1, 2, 3), Id.of("mod", "gold_ore"), 0x11223344));
-                Assertions.assertEquals(new V3i(1, 2, 3), echo.getPosition());
-                Assertions.assertEquals(Id.of("mod", "gold_ore"), echo.getId());
-                Assertions.assertEquals(287454020, echo.getPingTime());
+                Assertions.assertEquals(new V3i(1, 2, 3), echo.position());
+                Assertions.assertEquals(Id.of("mod", "gold_ore"), echo.id());
+                Assertions.assertEquals(287454020, echo.pingTime());
                 Assertions.assertEquals(
                                 "new BlockEcho(new V3i(1, 2, 3), Id.of(\"mod\", \"gold_ore\"), 287454020)",
                                 echo.toString());

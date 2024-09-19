@@ -1,6 +1,6 @@
 package com.midnightbits.scanner.test.support;
 
-public class Counter {
+public final class Counter {
     int counter = 0;
 
     public void inc() {

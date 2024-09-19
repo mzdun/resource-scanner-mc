@@ -11,7 +11,7 @@ import com.midnightbits.scanner.rt.core.ClientCore;
 import com.midnightbits.scanner.rt.math.V3i;
 import com.midnightbits.scanner.rt.text.Text;
 
-public class MockClientCore implements ClientCore {
+public final class MockClientCore implements ClientCore {
     static final Logger LOGGER = LoggerFactory.getLogger(MockClientCore.class);
     final V3i playerPos;
     final float cameraPitch;

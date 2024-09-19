@@ -2,12 +2,13 @@ package com.midnightbits.scanner.utils;
 
 import java.util.Iterator;
 
+import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4d;
 
 import com.midnightbits.scanner.rt.math.V3d;
 import com.midnightbits.scanner.rt.math.V3i;
 
-public class Circle implements Iterable<V3i> {
+public final class Circle implements Iterable<V3i> {
     public static final int RADIUS = 10;
     private final int radius;
 
@@ -23,7 +24,7 @@ public class Circle implements Iterable<V3i> {
         return radius;
     }
 
-    public static record PitchAndYaw(double pitch, double yaw) {
+    public record PitchAndYaw(double pitch, double yaw) {
     };
 
     private static int sign(int value) {
@@ -60,6 +61,7 @@ public class Circle implements Iterable<V3i> {
         return new Matrix4d().rotateY(-vector.yaw()).rotateX(vector.pitch()).determineProperties();
     }
 
+    @NotNull
     @Override
     public Iterator<V3i> iterator() {
         return this.new PixelIterator();
@@ -80,13 +82,14 @@ public class Circle implements Iterable<V3i> {
             this.rotation = rotation;
         }
 
+        @NotNull
         @Override
         public Iterator<V3i> iterator() {
             return this.new OuterIterator();
         }
 
         private class OuterIterator implements Iterator<V3i> {
-            Iterator<V3i> inner = Circle.this.iterator();
+            final Iterator<V3i> inner = Circle.this.iterator();
 
             @Override
             public boolean hasNext() {

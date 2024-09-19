@@ -7,7 +7,7 @@ import com.midnightbits.scanner.rt.text.TextSupportInterface;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MockTextSupportInterface implements TextSupportInterface {
+public final class MockTextSupportInterface implements TextSupportInterface {
     @Override
     public MutableText literal(String string) {
         return new MockText(new LiteralSegment(string));
@@ -48,7 +48,7 @@ public class MockTextSupportInterface implements TextSupportInterface {
             if (segments.size() == 1)
                 return segments.getFirst().getString();
 
-            StringBuilder builder = new StringBuilder();
+            final var builder = new StringBuilder();
             for (Segment segment : segments) {
                 builder.append(segment.getString());
             }

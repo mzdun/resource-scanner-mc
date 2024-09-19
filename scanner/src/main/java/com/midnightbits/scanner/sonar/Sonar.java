@@ -7,16 +7,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.helpers.MessageFormatter;
 
-import com.midnightbits.scanner.rt.core.BlockInfo;
 import com.midnightbits.scanner.rt.core.ClientCore;
 import com.midnightbits.scanner.rt.core.Id;
 import com.midnightbits.scanner.rt.core.Services;
 import com.midnightbits.scanner.rt.math.V3i;
 import com.midnightbits.scanner.rt.text.MutableText;
 import com.midnightbits.scanner.utils.ConeOfBlocks;
-import com.midnightbits.scanner.utils.LineOfBlocks;
 
-public class Sonar {
+public final class Sonar {
     public static final int BLOCK_RADIUS = 4;
     public static final int BLOCK_DISTANCE = 32;
     public static Id[] INTERESTING_IDS = new Id[] {
@@ -34,7 +32,7 @@ public class Sonar {
     private int blockRadius;
     private Set<Id> blocks;
 
-    public static final Logger LOGGER = LoggerFactory.getLogger("Sonar");
+    private static final Logger LOGGER = LoggerFactory.getLogger("Sonar");
 
     public Sonar(int blockDistance, int blockRadius, Set<Id> blocks, int maxEchoes) {
         this.blockDistance = blockDistance;
@@ -67,21 +65,21 @@ public class Sonar {
     }
 
     public boolean ping(ClientCore client) {
-        boolean blockListChanged = false;
+        var blockListChanged = false;
 
-        Reflections reflections = Reflections.fromPlayerPov(echoes, client);
-        ConeOfBlocks cone = reflections.coneOfBlocksFromCamera(blockDistance, blockRadius);
+        final var reflections = Reflections.fromPlayerPov(echoes, client);
+        final var cone = reflections.coneOfBlocksFromCamera(blockDistance, blockRadius);
 
-        for (LineOfBlocks line : cone.iterate()) {
-            for (V3i pos : line.iterate()) {
-                BlockInfo info = client.getBlockInfo(pos);
+        for (final var line : cone.iterate()) {
+            for (final var pos : line.iterate()) {
+                final var info = client.getBlockInfo(pos);
                 if (info.isAir()) {
                     LOGGER.debug("({}) is air", pos.toString());
                     continue;
                 }
 
-                Id id = info.getId();
-                int dist = (int) Math.round(Math.sqrt(reflections.center.getSquaredDistance(pos)));
+                final var id = info.getId();
+                final var dist = (int) Math.round(Math.sqrt(reflections.center.getSquaredDistance(pos)));
                 LOGGER.debug("({}) > {}m {}", pos.toString(), dist, id);
                 if (!blocks.contains(id))
                     continue;
@@ -98,7 +96,7 @@ public class Sonar {
         return echoes;
     }
 
-    private static class Reflections {
+    private static final class Reflections {
         private final BlockEchoes echoes;
         private final ClientCore client;
         private final V3i center;
@@ -123,8 +121,8 @@ public class Sonar {
             if (!seen.add(pos))
                 return;
 
-            int dist = (int) Math.round(Math.sqrt(center.getSquaredDistance(pos)));
-            MutableText message = Services.TEXT.literal(
+            var dist = (int) Math.round(Math.sqrt(center.getSquaredDistance(pos)));
+            var message = Services.TEXT.literal(
                     MessageFormatter.format("> {}m ", dist).getMessage()).append(name.formattedGold());
             client.sendPlayerMessage(message, false);
 

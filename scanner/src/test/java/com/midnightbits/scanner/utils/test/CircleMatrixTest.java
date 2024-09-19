@@ -2,7 +2,6 @@ package com.midnightbits.scanner.utils.test;
 
 import java.util.stream.Stream;
 
-import org.joml.Matrix4d;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -19,7 +18,7 @@ public class CircleMatrixTest {
     private static final int DISTANCE = 32;
     private static final Logger LOGGER = LoggerFactory.getLogger("MatrixTest");
 
-    private static record Rotate(float pitch, float yaw, PitchAndYaw expected) {
+    private record Rotate(float pitch, float yaw, PitchAndYaw expected) {
         public static Rotate of(float pitchF, float yawF, double pitchD, double yawD) {
             return new Rotate(pitchF, yawF, new PitchAndYaw(pitchD, yawD));
         }
@@ -32,10 +31,10 @@ public class CircleMatrixTest {
     @ParameterizedTest
     @MethodSource("provideTests")
     void retrievePitchAndYaw(Rotate args) {
-        V3i cam = ofCamera(args.pitch(), args.yaw());
-        PitchAndYaw actual = Circle.getPitchAndYaw(cam);
-        double pitchDiff = Math.abs(actual.pitch() - args.expected.pitch());
-        double yawDiff = Math.abs(actual.yaw() - args.expected.yaw());
+        final var cam = ofCamera(args.pitch(), args.yaw());
+        final var actual = Circle.getPitchAndYaw(cam);
+        final var pitchDiff = Math.abs(actual.pitch() - args.expected.pitch());
+        final var yawDiff = Math.abs(actual.yaw() - args.expected.yaw());
         if (pitchDiff > .02 || yawDiff > .005) {
             LOGGER.debug("expected:({}, {}), actual:({}, {}), diff:({}, {}), cam:({})",
                     args.expected.pitch(), args.expected.yaw(), actual.pitch(), actual.yaw(), pitchDiff, yawDiff, cam);
@@ -47,11 +46,11 @@ public class CircleMatrixTest {
     @ParameterizedTest
     @MethodSource("provideTests")
     void rotatePitchAndYaw(Rotate args) {
-        V3i expected = ofCamera(args.pitch(), args.yaw());
-        Matrix4d rot = Circle.rotatePitchYaw(expected);
-        V3i actual = V3i.ofRounded(V3d.of(new V3i(0, 0, DISTANCE)).multiply(rot));
+        final var expected = ofCamera(args.pitch(), args.yaw());
+        final var rot = Circle.rotatePitchYaw(expected);
+        final var actual = V3i.ofRounded(V3d.of(new V3i(0, 0, DISTANCE)).multiply(rot));
 
-        V3i diff = expected.subtract(actual);
+        final var diff = expected.subtract(actual);
 
         if (diff.getX() != 0 || diff.getY() != 0 || diff.getZ() != 0) {
             LOGGER.debug("expected:{}; actual:{}; diff:{}", expected, actual, diff);

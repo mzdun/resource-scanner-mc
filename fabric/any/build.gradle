@@ -6,7 +6,7 @@ plugins {
 	id 'jacoco'
 }
 
-project.setProperty('mod_version', "${rootProject.mod_version}-${project.minecraft_version}-fabric")
+project.setProperty('mod_version', "${rootProject.mod_version}+${project.minecraft_version}-fabric")
 
 version = project.mod_version
 group = project.maven_group
@@ -20,6 +20,14 @@ loom {
 		"resource-scanner" {
 			sourceSet sourceSets.main
 		}
+	}
+}
+
+jar {
+	manifest {
+		attributes(
+			'Scanner-Version': rootProject.mod_version,
+		)
 	}
 }
 
@@ -181,13 +189,13 @@ tasks.register('install', Exec) {
 	def pluginJar = project.repack.outputs.files[0]
 	def baseName = file(pluginJar).name
 
-	def outDir = "${installHome}/.fabric/user-mods/${project.minecraft_version}-fabric"
+	def outDir = "${installHome}/.feather/user-mods/${project.minecraft_version}-fabric"
 
 	dependsOn 'repack'
 	group 'Publishing'
 
 	executable 'python'
-	args = ["${rootDir}/tools/install-fabric.py", "${project.minecraft_version}-fabric", pluginJar]
+	args = ["${rootDir}/tools/install-feather.py", "${project.minecraft_version}-fabric", pluginJar]
 }
 
 // configure the maven publication

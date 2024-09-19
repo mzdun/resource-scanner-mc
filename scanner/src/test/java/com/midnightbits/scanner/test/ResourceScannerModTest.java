@@ -10,7 +10,6 @@ import com.midnightbits.scanner.rt.core.Services;
 import com.midnightbits.scanner.rt.core.ClientCore;
 import com.midnightbits.scanner.rt.core.Id;
 import com.midnightbits.scanner.rt.core.KeyBinding;
-import com.midnightbits.scanner.rt.core.ScannerMod;
 import com.midnightbits.scanner.rt.math.V3i;
 import com.midnightbits.scanner.sonar.BlockEcho;
 import com.midnightbits.scanner.sonar.Sonar;
@@ -27,9 +26,9 @@ public class ResourceScannerModTest {
     @Test
     public void prepareScanner() {
         Assertions.assertInstanceOf(MockPlatform.class, Services.PLATFORM);
-        MockPlatform mockPlatform = (MockPlatform) Services.PLATFORM;
+        final var mockPlatform = (MockPlatform) Services.PLATFORM;
 
-        ScannerMod mod = new ResourceScannerMod();
+        final var mod = new ResourceScannerMod();
         mod.onInitializeClient();
 
         Assertions.assertNotNull(mockPlatform.getHandler(KeyBinding.KEY_M, KeyBinding.MOVEMENT_CATEGORY));
@@ -38,7 +37,7 @@ public class ResourceScannerModTest {
     @Test
     void checkDownwardsDirectionFromMiddle() {
         clock.timeStamp = 0x123456;
-        ClientCore core = new MockClientCore(V3i.ZERO, -90, 0, TEST_WORLD);
+        final var core = new MockClientCore(V3i.ZERO, -90, 0, TEST_WORLD);
         runScannerWith(core, Sonar.narrow(), new BlockEcho[] {
                 new BlockEcho(new V3i(0, 25, 0), Id.ofVanilla("deepslate_diamond_ore"), 0x123456),
                 new BlockEcho(new V3i(0, 23, 0), Id.ofVanilla("deepslate_iron_ore"), 0x123456),
@@ -51,7 +50,7 @@ public class ResourceScannerModTest {
     @Test
     void searchForGold() {
         clock.timeStamp = 0x123456;
-        MockClientCore core = new MockClientCore(new V3i(-60, -60, -51), 0f, 0f, TEST_WORLD);
+        final var core = new MockClientCore(new V3i(-60, -60, -51), 0f, 0f, TEST_WORLD);
         runScannerWith(core, Sonar.narrow(Sonar.BLOCK_DISTANCE, Set.of(Id.ofVanilla("gold_ore"))), new BlockEcho[] {
                 new BlockEcho(new V3i(-60, -60, -50), Id.ofVanilla("gold_ore"), 0x123456),
                 new BlockEcho(new V3i(-60, -60, -33), Id.ofVanilla("gold_ore"), 0x123456),
@@ -60,7 +59,7 @@ public class ResourceScannerModTest {
 
     @Test
     void lookUp() {
-        MockClientCore core = new MockClientCore(V3i.ZERO, 0f, 0f, TEST_WORLD);
+        final var core = new MockClientCore(V3i.ZERO, 0f, 0f, TEST_WORLD);
         runScannerWith(core, new BlockEcho[] {});
     }
 
@@ -70,9 +69,9 @@ public class ResourceScannerModTest {
 
     void runScannerWith(ClientCore core, Sonar sonar, BlockEcho[] expected) {
         Assertions.assertInstanceOf(MockPlatform.class, Services.PLATFORM);
-        MockPlatform mockPlatform = (MockPlatform) Services.PLATFORM;
+        final var mockPlatform = (MockPlatform) Services.PLATFORM;
 
-        ScannerMod mod = new ResourceScannerMod();
+        final var mod = new ResourceScannerMod();
         mod.onInitializeClient();
 
         if (sonar != null) {

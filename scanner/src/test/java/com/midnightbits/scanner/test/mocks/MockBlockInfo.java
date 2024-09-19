@@ -5,7 +5,7 @@ import com.midnightbits.scanner.rt.core.Id;
 import com.midnightbits.scanner.rt.core.Services;
 import com.midnightbits.scanner.rt.text.MutableText;
 
-public class MockBlockInfo implements BlockInfo {
+public final class MockBlockInfo implements BlockInfo {
     private final boolean isAir;
     private final Id id;
     private final MutableText name;

@@ -1,6 +1,6 @@
 package com.midnightbits.scanner.utils;
 
-public class CacheableValue<T> {
+public final class CacheableValue<T> {
 
     @FunctionalInterface
     public static interface Getter<U> {

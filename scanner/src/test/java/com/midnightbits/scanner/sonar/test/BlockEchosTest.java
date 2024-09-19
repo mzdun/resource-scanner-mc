@@ -14,7 +14,7 @@ public class BlockEchosTest {
 
         @Test
         public void onlyKeepsXElementsAtATime() {
-                BlockEchoes echoes = new BlockEchoes(3);
+                final var echoes = new BlockEchoes(3);
                 Iterables.assertEquals(new BlockEcho[] {}, echoes);
 
                 clock.timeStamp = 0x123456;
@@ -54,7 +54,7 @@ public class BlockEchosTest {
 
         @Test
         public void evictsExistingEchoesWithTheSamePosition() {
-                BlockEchoes echoes = new BlockEchoes(3);
+                final var echoes = new BlockEchoes(3);
                 Iterables.assertEquals(new BlockEcho[] {}, echoes);
 
                 clock.timeStamp = 0x123456;

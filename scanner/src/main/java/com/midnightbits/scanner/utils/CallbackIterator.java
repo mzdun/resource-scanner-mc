@@ -3,7 +3,7 @@ package com.midnightbits.scanner.utils;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class CallbackIterator<T> implements Iterator<T> {
+public final class CallbackIterator<T> implements Iterator<T> {
 
     private final Callback<T> cb;
     private T nextValue;
@@ -24,7 +24,7 @@ public class CallbackIterator<T> implements Iterator<T> {
 
     @Override
     public T next() {
-        T current = nextValue;
+        final var current = nextValue;
         if (current == null) {
             throw new NoSuchElementException("No value present");
         }

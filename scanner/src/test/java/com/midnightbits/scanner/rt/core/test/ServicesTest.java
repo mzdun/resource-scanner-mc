@@ -10,7 +10,7 @@ import com.midnightbits.scanner.rt.core.Services;
 import com.midnightbits.scanner.test.mocks.platform.MockPlatform;
 
 public class ServicesTest {
-    private static interface NoSuchService {
+    private interface NoSuchService {
     }
 
     @Test

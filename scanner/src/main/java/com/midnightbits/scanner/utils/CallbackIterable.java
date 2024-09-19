@@ -1,8 +1,10 @@
 package com.midnightbits.scanner.utils;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Iterator;
 
-public class CallbackIterable<T> implements Iterable<T> {
+public final class CallbackIterable<T> implements Iterable<T> {
 
     private final CallbackIterator<T> iter;
 
@@ -14,6 +16,7 @@ public class CallbackIterable<T> implements Iterable<T> {
         return new CallbackIterable<U>(cb);
     }
 
+    @NotNull
     @Override
     public Iterator<T> iterator() {
         return iter;

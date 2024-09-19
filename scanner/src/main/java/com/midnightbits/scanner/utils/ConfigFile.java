@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 import com.midnightbits.scanner.rt.core.Id;
 import com.midnightbits.scanner.rt.event.EventEmitterOf;
 
-public class ConfigFile extends EventEmitterOf.Impl<Settings.Event> {
+public final class ConfigFile extends EventEmitterOf.Impl<Settings.Event> {
     static String JSON_NAME = "resource-scanner.json";
     Path configDir = null;
     Settings settings = null;

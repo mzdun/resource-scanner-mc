@@ -3,7 +3,7 @@ package com.midnightbits.scanner.test.mocks;
 import com.midnightbits.scanner.utils.Clock;
 import com.midnightbits.scanner.utils.ClockInterface;
 
-public class MockedClock implements ClockInterface {
+public final class MockedClock implements ClockInterface {
     public long timeStamp = 0;
 
     public MockedClock() {

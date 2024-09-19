@@ -13,7 +13,7 @@ public class CircleRotationTest {
 
     @Test
     void lookStraightOn() {
-        Circle circle = new Circle(RADIUS);
+        final var circle = new Circle(RADIUS);
         Iterables.assertEquals(new V3i[] {
                 pt(-2, -4, 0), pt(-1, -4, 0), pt(0, -4, 0), pt(1, -4, 0), pt(2, -4, 0), pt(-3, -3, 0), pt(-2, -3, 0),
                 pt(-1, -3, 0), pt(0, -3, 0), pt(1, -3, 0), pt(2, -3, 0), pt(3, -3, 0), pt(-4, -2, 0), pt(-3, -2, 0),
@@ -25,12 +25,12 @@ public class CircleRotationTest {
                 pt(-3, 2, 0), pt(-2, 2, 0), pt(-1, 2, 0), pt(0, 2, 0), pt(1, 2, 0), pt(2, 2, 0), pt(3, 2, 0),
                 pt(4, 2, 0), pt(-3, 3, 0), pt(-2, 3, 0), pt(-1, 3, 0), pt(0, 3, 0), pt(1, 3, 0), pt(2, 3, 0),
                 pt(3, 3, 0), pt(-2, 4, 0), pt(-1, 4, 0), pt(0, 4, 0), pt(1, 4, 0), pt(2, 4, 0),
-        }, circle.iterateAlongCamera(ofCamera(0, 0, DISTANCE)));
+        }, circle.iterateAlongCamera(ofCamera(0, 0)));
     }
 
     @Test
     void lookUp() {
-        Circle circle = new Circle(RADIUS);
+        final var circle = new Circle(RADIUS);
         Iterables.assertEquals(new V3i[] {
                 pt(-2, 0, -4), pt(-1, 0, -4), pt(0, 0, -4), pt(1, 0, -4), pt(2, 0, -4), pt(-3, 0, -3), pt(-2, 0, -3),
                 pt(-1, 0, -3), pt(0, 0, -3), pt(1, 0, -3), pt(2, 0, -3), pt(3, 0, -3), pt(-4, 0, -2), pt(-3, 0, -2),
@@ -42,12 +42,12 @@ public class CircleRotationTest {
                 pt(-3, 0, 2), pt(-2, 0, 2), pt(-1, 0, 2), pt(0, 0, 2), pt(1, 0, 2), pt(2, 0, 2), pt(3, 0, 2),
                 pt(4, 0, 2), pt(-3, 0, 3), pt(-2, 0, 3), pt(-1, 0, 3), pt(0, 0, 3), pt(1, 0, 3), pt(2, 0, 3),
                 pt(3, 0, 3), pt(-2, 0, 4), pt(-1, 0, 4), pt(0, 0, 4), pt(1, 0, 4), pt(2, 0, 4),
-        }, circle.iterateAlongCamera(ofCamera(90, 0, DISTANCE)));
+        }, circle.iterateAlongCamera(ofCamera(90, 0)));
     }
 
     @Test
     void lookDown() {
-        Circle circle = new Circle(RADIUS);
+        final var circle = new Circle(RADIUS);
         Iterables.assertEquals(new V3i[] {
                 pt(-2, 0, 4), pt(-1, 0, 4), pt(0, 0, 4), pt(1, 0, 4), pt(2, 0, 4), pt(-3, 0, 3), pt(-2, 0, 3),
                 pt(-1, 0, 3), pt(0, 0, 3), pt(1, 0, 3), pt(2, 0, 3), pt(3, 0, 3), pt(-4, 0, 2), pt(-3, 0, 2),
@@ -59,12 +59,12 @@ public class CircleRotationTest {
                 pt(-3, 0, -2), pt(-2, 0, -2), pt(-1, 0, -2), pt(0, 0, -2), pt(1, 0, -2), pt(2, 0, -2), pt(3, 0, -2),
                 pt(4, 0, -2), pt(-3, 0, -3), pt(-2, 0, -3), pt(-1, 0, -3), pt(0, 0, -3), pt(1, 0, -3), pt(2, 0, -3),
                 pt(3, 0, -3), pt(-2, 0, -4), pt(-1, 0, -4), pt(0, 0, -4), pt(1, 0, -4), pt(2, 0, -4),
-        }, circle.iterateAlongCamera(ofCamera(-90, 0, DISTANCE)));
+        }, circle.iterateAlongCamera(ofCamera(-90, 0)));
     }
 
     @Test
     void lookBack() {
-        Circle circle = new Circle(RADIUS);
+        final var circle = new Circle(RADIUS);
         Iterables.assertEquals(new V3i[] {
                 pt(2, -4, 0), pt(1, -4, 0), pt(0, -4, 0), pt(-1, -4, 0), pt(-2, -4, 0), pt(3, -3, 0), pt(2, -3, 0),
                 pt(1, -3, 0), pt(0, -3, 0), pt(-1, -3, 0), pt(-2, -3, 0), pt(-3, -3, 0), pt(4, -2, 0), pt(3, -2, 0),
@@ -76,12 +76,12 @@ public class CircleRotationTest {
                 pt(3, 2, 0), pt(2, 2, 0), pt(1, 2, 0), pt(0, 2, 0), pt(-1, 2, 0), pt(-2, 2, 0), pt(-3, 2, 0),
                 pt(-4, 2, 0), pt(3, 3, 0), pt(2, 3, 0), pt(1, 3, 0), pt(0, 3, 0), pt(-1, 3, 0), pt(-2, 3, 0),
                 pt(-3, 3, 0), pt(2, 4, 0), pt(1, 4, 0), pt(0, 4, 0), pt(-1, 4, 0), pt(-2, 4, 0),
-        }, circle.iterateAlongCamera(ofCamera(0, 180, DISTANCE)));
+        }, circle.iterateAlongCamera(ofCamera(0, 180)));
     }
 
     @Test
     void lookToTheSide() {
-        Circle circle = new Circle(RADIUS);
+        final var circle = new Circle(RADIUS);
         Iterables.assertEquals(new V3i[] {
                 pt(3, -2, -2), pt(3, -2, -1), pt(3, -2, 0), pt(3, -2, 1), pt(3, -2, 2), pt(3, -1, -3), pt(3, -1, -2),
                 pt(3, -1, -1), pt(3, -1, 0), pt(3, -1, 1), pt(3, -1, 2), pt(3, -1, 3), pt(2, -1, -4), pt(2, -1, -3),
@@ -93,7 +93,7 @@ public class CircleRotationTest {
                 pt(-2, 1, -3), pt(-2, 1, -2), pt(-2, 1, -1), pt(-2, 1, 0), pt(-2, 1, 1), pt(-2, 1, 2), pt(-2, 1, 3),
                 pt(-2, 1, 4), pt(-3, 1, -3), pt(-3, 1, -2), pt(-3, 1, -1), pt(-3, 1, 0), pt(-3, 1, 1), pt(-3, 1, 2),
                 pt(-3, 1, 3), pt(-3, 2, -2), pt(-3, 2, -1), pt(-3, 2, 0), pt(-3, 2, 1), pt(-3, 2, 2),
-        }, circle.iterateAlongCamera(ofCamera(60, 90, DISTANCE)));
+        }, circle.iterateAlongCamera(ofCamera(60, 90)));
     }
 
     static V3i pt(int x, int y, int z) {
@@ -110,7 +110,7 @@ public class CircleRotationTest {
         System.out.println(builder);
     }
 
-    private static V3i ofCamera(float pitch, float yaw, int distance) {
-        return V3i.ofRounded(V3d.fromPolar(pitch, yaw).multiply(distance));
+    private static V3i ofCamera(float pitch, float yaw) {
+        return V3i.ofRounded(V3d.fromPolar(pitch, yaw).multiply(CircleRotationTest.DISTANCE));
     }
 }

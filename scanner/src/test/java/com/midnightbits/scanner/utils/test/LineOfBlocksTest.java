@@ -9,7 +9,7 @@ import com.midnightbits.scanner.utils.LineOfBlocks;
 public class LineOfBlocksTest {
     @Test
     void moveAlongXAxis() {
-        V3i origin = new V3i(15, 20, 40);
+        final var origin = new V3i(15, 20, 40);
         test(new V3i[] {
                 origin,
                 origin.add(1, 0, 0),
@@ -27,7 +27,7 @@ public class LineOfBlocksTest {
 
     @Test
     void moveAlongXAxisReversed() {
-        V3i origin = new V3i(15, 20, 40);
+        final var origin = new V3i(15, 20, 40);
         test(new V3i[] {
                 origin,
                 origin.add(-1, 0, 0),
@@ -45,7 +45,7 @@ public class LineOfBlocksTest {
 
     @Test
     void moveAlongYAxis() {
-        V3i origin = new V3i(15, 20, 40);
+        final var origin = new V3i(15, 20, 40);
         test(new V3i[] {
                 origin,
                 origin.add(0, 1, 0),
@@ -63,7 +63,7 @@ public class LineOfBlocksTest {
 
     @Test
     void moveAlongYAxisReversed() {
-        V3i origin = new V3i(15, 20, 40);
+        final var origin = new V3i(15, 20, 40);
         test(new V3i[] {
                 origin,
                 origin.add(0, -1, 0),
@@ -81,7 +81,7 @@ public class LineOfBlocksTest {
 
     @Test
     void moveAlongZAxis() {
-        V3i origin = new V3i(15, 20, 40);
+        final var origin = new V3i(15, 20, 40);
         test(new V3i[] {
                 origin,
                 origin.add(0, 0, 1),
@@ -99,7 +99,7 @@ public class LineOfBlocksTest {
 
     @Test
     void moveAlongZAxisReversed() {
-        V3i origin = new V3i(15, 20, 40);
+        final var origin = new V3i(15, 20, 40);
         test(new V3i[] {
                 origin,
                 origin.add(0, 0, -1),
@@ -117,7 +117,7 @@ public class LineOfBlocksTest {
 
     @Test
     void moveAlongXYAxes() {
-        V3i origin = new V3i(15, 20, 40);
+        final var origin = new V3i(15, 20, 40);
         test(new V3i[] {
                 new V3i(15, 20, 40),
                 new V3i(15, 21, 40),
@@ -155,7 +155,7 @@ public class LineOfBlocksTest {
 
     @Test
     void moveAlongAllAxes() {
-        V3i origin = new V3i(15, 20, 40);
+        final var origin = new V3i(15, 20, 40);
         test(new V3i[] {
                 new V3i(15, 20, 40),
                 new V3i(15, 19, 40),
@@ -193,7 +193,7 @@ public class LineOfBlocksTest {
 
     @Test
     void moveAlongAllAxesXThenZ() {
-        V3i origin = new V3i(15, 20, 40);
+        final var origin = new V3i(15, 20, 40);
         test(new V3i[] {
                 new V3i(15, 20, 40),
                 new V3i(16, 20, 41),
@@ -215,7 +215,7 @@ public class LineOfBlocksTest {
 
     @Test
     void brokenRange() {
-        V3i origin = new V3i(15, 20, 40);
+        final var origin = new V3i(15, 20, 40);
         test(new V3i[] { origin }, origin, origin);
     }
 

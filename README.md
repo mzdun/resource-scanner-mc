@@ -13,7 +13,7 @@ Resource locator mod for Fabric.
 
 It helps players to find resources more easily. At start, it only looks for coal, so the player can produce torches and fend-off mobs. At later stages, it can help locate resources near the player that are needed for advancing the session.
 
-**WARNING** - mod is beta quality, not tested with large number of mods, performance impact not known. Please, follow bug tracker to ask questions and report issues.
+**WARNING** - mod is alpha quality, not tested with large number of mods, performance impact not known. Please, follow bug tracker to ask questions and report issues.
 
 ## Features
 

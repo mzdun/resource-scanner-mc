@@ -3,9 +3,9 @@ package com.midnightbits.scanner.test.support;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class ArrayUtils {
+public final class ArrayUtils {
     public static <T> ArrayList<T> listOf(T[] items) {
-        ArrayList<T> result = new ArrayList<>(items.length);
+        final var result = new ArrayList<T>(items.length);
         Collections.addAll(result, items);
         return result;
     }

@@ -7,8 +7,9 @@ import java.util.stream.Stream;
 
 import com.midnightbits.scanner.rt.core.Id;
 import com.midnightbits.scanner.rt.math.V3i;
+import org.jetbrains.annotations.NotNull;
 
-public class BlockEchoes implements Iterable<BlockEcho> {
+public final class BlockEchoes implements Iterable<BlockEcho> {
     private final TreeSet<BlockEcho> echoes = new TreeSet<>();
     public static final int MAX_SIZE = 100;
 
@@ -38,7 +39,7 @@ public class BlockEchoes implements Iterable<BlockEcho> {
      *         otherwise
      */
     public boolean echoFrom(V3i position, Id id) {
-        boolean replaced = evictBlocks(stream().filter(b -> b.getPosition().equals(position)));
+        boolean replaced = evictBlocks(stream().filter(b -> b.position().equals(position)));
         if (echoes.size() >= maxSize) {
             evictBlocks(stream().limit(echoes.size() - maxSize + 1));
         }
@@ -61,6 +62,7 @@ public class BlockEchoes implements Iterable<BlockEcho> {
         return !evictions.isEmpty();
     }
 
+    @NotNull
     @Override
     public Iterator<BlockEcho> iterator() {
         return echoes.iterator();

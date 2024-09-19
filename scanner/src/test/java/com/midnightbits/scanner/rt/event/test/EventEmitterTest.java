@@ -9,13 +9,13 @@ import com.midnightbits.scanner.rt.event.EventListener;
 import com.midnightbits.scanner.test.support.Counter;
 
 public class EventEmitterTest {
-    private class TestEvent extends Event {
+    private final static class TestEvent extends Event {
         public TestEvent(boolean cancelable) {
             super(cancelable);
         }
     };
 
-    private class Emitter extends EventEmitterOf.Impl<TestEvent> {
+    private final static class Emitter extends EventEmitterOf.Impl<TestEvent> {
         public void dispatch(boolean cancelable) {
             dispatchEvent(new TestEvent(cancelable));
         }

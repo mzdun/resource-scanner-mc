@@ -14,6 +14,7 @@ import com.midnightbits.scanner.sonar.BlockEcho;
 import com.midnightbits.scanner.sonar.BlockEchoes;
 import com.midnightbits.scanner.sonar.Sonar;
 import com.midnightbits.scanner.utils.ConfigFile;
+import com.midnightbits.scanner.utils.Manifests;
 
 public class ResourceScannerMod implements ScannerMod {
     public static final String TAG = "resource-scanner";
@@ -30,7 +31,9 @@ public class ResourceScannerMod implements ScannerMod {
                     settings.blockDistance(), settings.blockRadius(), settings.interestingIds(), settings.echoesSize());
         });
 
-        LOGGER.warn("resource-scanner ({}, {})",
+        LOGGER.warn("resource-scanner ({} for {}, {}, {})",
+                Manifests.getTagString(Services.PLATFORM.getScannerVersion()),
+                Manifests.getProductVersion("MC", Services.PLATFORM.getMinecraftVersion()),
                 Services.PLATFORM.getPlatformName(),
                 Services.PLATFORM.getEnvironmentName());
         Path configDir = Services.PLATFORM.getConfigDir();
@@ -58,18 +61,17 @@ public class ResourceScannerMod implements ScannerMod {
             return;
 
         for (BlockEcho echo : sonar.echoes()) {
-            LOGGER.info("{} ({}) {}", echo.getPingTime(), echo.getPosition(), echo.getId());
+            LOGGER.info("{} ({}) {}", echo.pingTime(), echo.position(), echo.id());
         }
         LOGGER.info("");
     }
 
     @Override
-    public void setSonar(Sonar sonar) {
-        this.sonar = sonar;
-    }
-
-    @Override
     public Iterable<BlockEcho> echoes() {
         return sonar.echoes();
+    }
+
+    public void setSonar(Sonar sonar) {
+        this.sonar = sonar;
     }
 }

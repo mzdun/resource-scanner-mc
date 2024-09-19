@@ -29,7 +29,7 @@ public record Settings(int echoesSize, int blockDistance, int blockRadius, Set<I
             }
             var ids = Arrays.stream(settings.interestingIds).map(Id::of).collect(Collectors.toSet());
             return new Settings(settings.echoesSize, settings.blockDistance, settings.blockRadius, ids);
-        } catch(JsonSyntaxException e) {
+        } catch (JsonSyntaxException e) {
             return null;
         }
     }

@@ -9,7 +9,7 @@ import com.midnightbits.scanner.utils.CacheableValue;
 public class CacheableValueTest {
     @Test
     void itOnlyCallsGetterOnce() {
-        Counter c = new Counter();
+        final var c = new Counter();
 
         CacheableValue<Integer> cached = CacheableValue.of(() -> {
             c.inc();

@@ -12,10 +12,10 @@ import com.midnightbits.scanner.utils.CallbackIterator;
 public class CallbackIteratorTest {
     @Test
     void canSeeTheEndEdgeOfReportedItems() {
-        Counter c = new Counter();
+        final var c = new Counter();
         Assertions.assertEquals(0, c.get());
 
-        CallbackIterator<String> it = CallbackIterator.of(() -> {
+        final var it = CallbackIterator.of(() -> {
             if (c.get() == 10) {
                 return Optional.empty();
             }
@@ -24,7 +24,7 @@ public class CallbackIteratorTest {
         });
 
         while (it.hasNext()) {
-            String value = it.next();
+            final var value = it.next();
             Assertions.assertEquals("Sonar", value);
         }
 

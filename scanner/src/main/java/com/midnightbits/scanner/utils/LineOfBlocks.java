@@ -5,7 +5,7 @@ import java.util.Optional;
 import com.midnightbits.scanner.rt.math.V3d;
 import com.midnightbits.scanner.rt.math.V3i;
 
-public class LineOfBlocks {
+public final class LineOfBlocks {
     public final V3i from;
     public final V3i to;
     public final V3i diff;
@@ -30,13 +30,13 @@ public class LineOfBlocks {
         int diffY = Math.abs(to.getY() - from.getY());
         int diffZ = Math.abs(to.getZ() - from.getZ());
 
-        PosExtractor posX = pos -> pos.getX();
-        PosExtractor posY = pos -> pos.getY();
-        PosExtractor posZ = pos -> pos.getZ();
+        PosExtractor posX = V3i::getX;
+        PosExtractor posY = V3i::getY;
+        PosExtractor posZ = V3i::getZ;
 
         if (diffX > diffY) {
             if (diffX > diffZ)
-                return new Slider(from, to, posX, posY, posZ, (x, y, z) -> new V3i(x, y, z));
+                return new Slider(from, to, posX, posY, posZ, V3i::new);
 
             return new Slider(from, to, posZ, posX, posY, (z, x, y) -> new V3i(x, y, z));
         }
@@ -83,8 +83,8 @@ public class LineOfBlocks {
 
     private static class CounterDomain {
         private final double slope;
-        private double dom0;
-        private double counterDom0;
+        private final double dom0;
+        private final double counterDom0;
 
         public CounterDomain(int dom0, int counterDom0, int dom1, int counterDom1) {
             int domSlope = dom1 - dom0;

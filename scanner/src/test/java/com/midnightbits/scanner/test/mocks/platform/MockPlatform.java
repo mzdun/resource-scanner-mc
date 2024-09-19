@@ -9,7 +9,7 @@ import com.midnightbits.scanner.platform.KeyBinder;
 import com.midnightbits.scanner.platform.PlatformInterface;
 import com.midnightbits.scanner.rt.core.ClientCore;
 
-public class MockPlatform implements PlatformInterface, KeyBinder {
+public final class MockPlatform implements PlatformInterface, KeyBinder {
     public record KeyPressHandler(String translation, KeyBinder.KeyPressHandler handler) {
         public void handle(ClientCore client) {
             handler.handle(client);
@@ -18,6 +18,8 @@ public class MockPlatform implements PlatformInterface, KeyBinder {
 
     public static boolean developmentEnvironment = true;
     public Map<String, Map<Integer, KeyPressHandler>> boundKeys = new HashMap<>();
+    private String scannerVersion = null;
+    private String minecraftVersion = null;
 
     @Override
     public String getPlatformName() {
@@ -25,22 +27,18 @@ public class MockPlatform implements PlatformInterface, KeyBinder {
     }
 
     @Override
+    public String getScannerVersion() {
+        return scannerVersion;
+    }
+
+    @Override
+    public String getMinecraftVersion() {
+        return minecraftVersion;
+    }
+
+    @Override
     public boolean isDevelopmentEnvironment() {
         return developmentEnvironment;
-    }
-
-    @Override
-    public boolean isDedicatedServer() {
-        return false;
-    }
-
-    @Override
-    public Path getGameDir() {
-        try {
-            return Path.of(MockPlatform.class.getClassLoader().getResource("").toURI());
-        } catch (URISyntaxException e) {
-            return Path.of("/");
-        }
     }
 
     @Override
@@ -61,6 +59,11 @@ public class MockPlatform implements PlatformInterface, KeyBinder {
     public void bind(String translationKey, int code, String category, KeyBinder.KeyPressHandler handler) {
         boundKeys.computeIfAbsent(category, (key) -> new HashMap<>());
         boundKeys.get(category).put(code, new KeyPressHandler(translationKey, handler));
+    }
+
+    public void setVersions(String scannerVersion, String minecraftVersion) {
+        this.scannerVersion = scannerVersion;
+        this.minecraftVersion = minecraftVersion;
     }
 
     public MockPlatform.KeyPressHandler getHandler(int code, String category) {

@@ -12,7 +12,7 @@ import com.midnightbits.scanner.utils.Circle;
 public class CircleNoRotationTest {
     @Test
     void print0x0() {
-        Circle circle = new Circle(0);
+        final var circle = new Circle(0);
         Assertions.assertEquals(
                 "*\n", asString(circle));
         Iterables.assertEquals(new V3i[] { pt(0, 0) }, circle);
@@ -20,7 +20,7 @@ public class CircleNoRotationTest {
 
     @Test
     void print1x1() {
-        Circle circle = new Circle(1);
+        final var circle = new Circle(1);
         Assertions.assertEquals(
                 """
                         ***
@@ -36,7 +36,7 @@ public class CircleNoRotationTest {
 
     @Test
     void print2x2() {
-        Circle circle = new Circle(2);
+        final var circle = new Circle(2);
         Assertions.assertEquals(
                 """
                         *****
@@ -56,7 +56,7 @@ public class CircleNoRotationTest {
 
     @Test
     void print3x3() {
-        Circle circle = new Circle(3);
+        final var circle = new Circle(3);
         Assertions.assertEquals(
                 """
                         .*****.
@@ -80,7 +80,7 @@ public class CircleNoRotationTest {
 
     @Test
     void printDefault() {
-        Circle circle = new Circle();
+        final var circle = new Circle();
         Assertions.assertEquals(
                 """
                         ......*********......
@@ -163,7 +163,7 @@ public class CircleNoRotationTest {
 
     @Test
     void print25x25() {
-        Circle circle = new Circle(25);
+        final var circle = new Circle(25);
         Assertions.assertEquals(
                 """
                         ..................***************..................
@@ -243,10 +243,6 @@ public class CircleNoRotationTest {
     }
 
     static String asString(Circle circle) {
-        return asString(circle, ".", "*");
-    }
-
-    static String asString(Circle circle, String empty, String filled) {
         final int size = circle.getRadius() * 2 + 1;
         final boolean[] flags = new boolean[size * size];
         Arrays.fill(flags, false);
@@ -258,7 +254,7 @@ public class CircleNoRotationTest {
         StringBuilder builder = new StringBuilder();
         for (int j = 0; j < size; ++j) {
             for (int i = 0; i < size; ++i) {
-                builder.append(flags[j * size + i] ? filled : empty);
+                builder.append(flags[j * size + i] ? "*" : ".");
             }
             builder.append('\n');
         }

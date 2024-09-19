@@ -3,34 +3,14 @@ package com.midnightbits.scanner.sonar;
 import com.midnightbits.scanner.rt.core.Id;
 import com.midnightbits.scanner.rt.math.V3i;
 import com.midnightbits.scanner.utils.Clock;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-public class BlockEcho implements Comparable<BlockEcho> {
-    private final V3i position;
-    private final Id id;
-    private final long pingTime;
-
-    public BlockEcho(V3i position, Id id, long pingTime) {
-        this.position = position;
-        this.id = id;
-        this.pingTime = pingTime;
-    }
+public record BlockEcho(V3i position, Id id, long pingTime) implements Comparable<BlockEcho> {
 
     public static BlockEcho echoFrom(V3i position, Id id) {
         return new BlockEcho(position, id, Clock.currentTimeMillis());
-    }
-
-    public Id getId() {
-        return id;
-    }
-
-    public V3i getPosition() {
-        return position;
-    }
-
-    public long getPingTime() {
-        return pingTime;
     }
 
     public boolean equals(Object obj) {
@@ -45,7 +25,7 @@ public class BlockEcho implements Comparable<BlockEcho> {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
+        final var builder = new StringBuilder();
         builder.append("new BlockEcho(new V3i(")
                 .append(position.getX()).append(", ")
                 .append(position.getY()).append(", ")
@@ -61,11 +41,11 @@ public class BlockEcho implements Comparable<BlockEcho> {
     }
 
     @Override
-    public int compareTo(BlockEcho other) {
+    public int compareTo(@Nullable BlockEcho other) {
         if (other == null) {
             throw new NullPointerException();
         }
-        int result = (int) (pingTime - other.pingTime);
+        var result = (int) (pingTime - other.pingTime);
         if (result != 0) {
             return result;
         }
