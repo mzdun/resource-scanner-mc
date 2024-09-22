@@ -62,7 +62,10 @@ public class ConfigFileTest {
         store(contents);
 
         final var cfg = new ConfigFile();
-        cfg.addEventListener((settings) -> counter.inc());
+        cfg.addEventListener((event) -> {
+            counter.inc();
+            System.out.println(event.settings());
+        });
         cfg.setDirectory(configDir);
         cfg.load();
 
@@ -83,7 +86,24 @@ public class ConfigFileTest {
         cfg.load();
 
         Assertions.assertEquals(1, settings.size());
-        Assertions.assertEquals(new Settings(0, 0, 0, Set.of()), settings.getFirst());
+        Assertions.assertEquals(new Settings(0, 0, 0, Set.of(), true), settings.getFirst());
+    }
+
+    @Test
+    void configHasFairPlaySet() {
+        final List<Settings> settings = new ArrayList<>();
+
+        store("{\"interestingIds\":[], \"fairPlay\": false}");
+
+        final var cfg = new ConfigFile();
+        cfg.addEventListener((e) -> {
+            settings.add(e.settings());
+        });
+        cfg.setDirectory(configDir);
+        cfg.load();
+
+        Assertions.assertEquals(1, settings.size());
+        Assertions.assertEquals(new Settings(0, 0, 0, Set.of(), false), settings.getFirst());
     }
 
     @Test
@@ -96,11 +116,35 @@ public class ConfigFileTest {
                 Sonar.BLOCK_DISTANCE,
                 Sonar.BLOCK_RADIUS,
                 Set.of(Sonar.INTERESTING_IDS),
+                true,
                 false);
 
         final var actual = load();
 
-        Assertions.assertEquals("{\"echoesSize\":100,\"blockDistance\":32,\"blockRadius\":4,\"interestingIds\":[\"minecraft:coal_ore\",\"minecraft:deepslate_coal_ore\",\"minecraft:deepslate_diamond_ore\",\"minecraft:deepslate_iron_ore\",\"minecraft:diamond_ore\",\"minecraft:iron_ore\",\"minecraft:netherite_block\"]}", actual);
+        Assertions.assertEquals(
+                "{\"echoesSize\":100,\"blockDistance\":32,\"blockRadius\":4,\"interestingIds\":[\"minecraft:coal_ore\",\"minecraft:deepslate_coal_ore\",\"minecraft:deepslate_diamond_ore\",\"minecraft:deepslate_iron_ore\",\"minecraft:diamond_ore\",\"minecraft:iron_ore\",\"minecraft:netherite_block\"]}",
+                actual);
+        Assertions.assertEquals(0, counter.get());
+    }
+
+    @Test
+    void noFairPlayConfigSerializesToJSON() {
+        final var counter = new Counter();
+        final var cfg = new ConfigFile();
+        cfg.addEventListener((settings) -> counter.inc());
+        cfg.setDirectory(configDir);
+        cfg.setAll(BlockEchoes.MAX_SIZE,
+                Sonar.BLOCK_DISTANCE,
+                Sonar.BLOCK_RADIUS,
+                Set.of(Sonar.INTERESTING_IDS),
+                false,
+                false);
+
+        final var actual = load();
+
+        Assertions.assertEquals(
+                "{\"echoesSize\":100,\"blockDistance\":32,\"blockRadius\":4,\"interestingIds\":[\"minecraft:coal_ore\",\"minecraft:deepslate_coal_ore\",\"minecraft:deepslate_diamond_ore\",\"minecraft:deepslate_iron_ore\",\"minecraft:diamond_ore\",\"minecraft:iron_ore\",\"minecraft:netherite_block\"],\"fairPlay\":false}",
+                actual);
         Assertions.assertEquals(0, counter.get());
     }
 
@@ -115,7 +159,8 @@ public class ConfigFileTest {
         cfg.setAll(BlockEchoes.MAX_SIZE,
                 Sonar.BLOCK_DISTANCE,
                 Sonar.BLOCK_RADIUS,
-                Set.of(Sonar.INTERESTING_IDS));
+                Set.of(Sonar.INTERESTING_IDS),
+                true);
 
         final var actual = load();
 
@@ -133,8 +178,8 @@ public class ConfigFileTest {
                 Arguments.of("{\"interestingIds\":false}"),
                 Arguments.of("{\"interestingIds\":[], \"echoesSize\": -5}"),
                 Arguments.of("{\"interestingIds\":[], \"blockDistance\": -5}"),
-                Arguments.of("{\"interestingIds\":[], \"blockRadius\": -5}")
-        );
+                Arguments.of("{\"interestingIds\":[], \"blockRadius\": -5}"),
+                Arguments.of("{\"interestingIds\":[], \"fairPlay\": 52}"));
     }
 
     static void delete() throws IOException {

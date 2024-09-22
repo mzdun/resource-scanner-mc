@@ -56,12 +56,13 @@ public class ConfigFile extends EventEmitterOf.Impl<Settings.Event> {
         return false;
     }
 
-    public void setAll(int echoesSize, int blockDistance, int blockRadius, Set<Id> interestingIds) {
-        setAll(echoesSize, blockDistance, blockRadius, interestingIds, true);
+    public void setAll(int echoesSize, int blockDistance, int blockRadius, Set<Id> interestingIds, boolean fairPlay) {
+        setAll(echoesSize, blockDistance, blockRadius, interestingIds, fairPlay, true);
     }
 
-    public void setAll(int echoesSize, int blockDistance, int blockRadius, Set<Id> interestingIds, boolean notify) {
-        settings = new Settings(echoesSize, blockDistance, blockRadius, interestingIds);
+    public void setAll(int echoesSize, int blockDistance, int blockRadius, Set<Id> interestingIds, boolean fairPlay,
+            boolean notify) {
+        settings = new Settings(echoesSize, blockDistance, blockRadius, interestingIds, fairPlay);
         store();
         if (notify) {
             dispatchSettingsEvent(settings);

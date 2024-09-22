@@ -6,6 +6,7 @@ public class Id {
    public static final char NAMESPACE_SEPARATOR = ':';
    public static final String DEFAULT_NAMESPACE = "minecraft";
    public static final String REALMS_NAMESPACE = "realms";
+   public static final String MOD_NAMESPACE_V1 = "resource-scanner-v1";
    private final String namespace;
    private final String path;
 
@@ -30,6 +31,10 @@ public class Id {
 
    public static Id ofVanilla(String path) {
       return new Id(DEFAULT_NAMESPACE, validatePath(DEFAULT_NAMESPACE, path));
+   }
+
+   public static Id ofModuleV1(String path) {
+      return new Id(MOD_NAMESPACE_V1, validatePath(MOD_NAMESPACE_V1, path));
    }
 
    public static Id tryParse(String id) {

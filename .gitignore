@@ -6,3 +6,4 @@ bin/
 .idea/
 .fabric-cache/
 *.pyc
+*.log

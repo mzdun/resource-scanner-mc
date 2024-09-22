@@ -33,6 +33,14 @@ java {
 	}
 }
 
+jar {
+	manifest {
+		attributes(
+			'Scanner-Version': project.mod_version,
+		)
+	}
+}
+
 tasks.withType(JavaCompile).configureEach {
 	options.compilerArgs = ['-Xlint:deprecation']
 }
@@ -46,13 +54,8 @@ jacocoTestReport {
 	dependsOn test // tests are required to run before generating the report
 
 	reports {
-		xml {
-			enabled true // coveralls plugin depends on xml format report
-		}
-
-		html {
-			enabled true
-		}
+		xml.required = true
+		html.required = true
 	}
 
 	afterEvaluate {
@@ -60,9 +63,11 @@ jacocoTestReport {
 			fileTree(
 				dir: it,
 				exclude: [
-					'com/midnightbits/scanner/rt/core/Id*',
-					'com/midnightbits/scanner/rt/core/InvalidIdentifierException*',
-					'com/midnightbits/scanner/rt/math/**'
+					'com/midnightbits/scanner/rt/core/Id.class',
+					'com/midnightbits/scanner/rt/core/InvalidIdentifierException.class',
+					'com/midnightbits/scanner/rt/math/**',
+					'com/midnightbits/scanner/rt/networking/event/ConnectionEstablished.class',
+					'com/midnightbits/scanner/utils/Manifests.class',
 				])
 		})
 	}

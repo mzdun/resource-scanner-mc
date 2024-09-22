@@ -16,9 +16,8 @@
 	"icon": "assets/${id}/icon.png",
 	"environment": "*",
 	"entrypoints": {
-		"client": [
-			"com.midnightbits.scanner.fabric.ResourceScannerFabric"
-		]
+		"main":   ["com.midnightbits.scanner.fabric.ResourceScannerMainFabric"],
+		"client": ["com.midnightbits.scanner.fabric.ResourceScannerClientFabric"]
 	},
 	"mixins": [],
 	"depends": {

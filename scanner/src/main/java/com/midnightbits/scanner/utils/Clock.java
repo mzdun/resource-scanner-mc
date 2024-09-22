@@ -12,4 +12,7 @@ public class Clock {
     public static long currentTimeMillis() {
         return clock.currentTimeMillis();
     }
+
+    private Clock() {
+    }
 }

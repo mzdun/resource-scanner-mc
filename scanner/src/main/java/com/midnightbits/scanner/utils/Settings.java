@@ -8,16 +8,24 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.midnightbits.scanner.rt.core.Id;
 
-public record Settings(int echoesSize, int blockDistance, int blockRadius, Set<Id> interestingIds) {
+public record Settings(int echoesSize, int blockDistance, int blockRadius, Set<Id> interestingIds, boolean fairPlay) {
 
     private static final Gson GSON = new Gson();
 
-    private record JsonSettings(int echoesSize, int blockDistance, int blockRadius, String[] interestingIds) {
+    private record JsonSettings(int echoesSize, int blockDistance, int blockRadius, String[] interestingIds,
+            Boolean fairPlay) {
+    };
+
+    private record JsonSettingsFairPlay(int echoesSize, int blockDistance, int blockRadius, String[] interestingIds) {
     };
 
     String serialize() {
         final var ids = interestingIds.stream().map(Id::toString).sorted().toArray(String[]::new);
-        return GSON.toJson(new JsonSettings(echoesSize, blockDistance, blockRadius, ids));
+
+        if (fairPlay)
+            return GSON.toJson(new JsonSettingsFairPlay(echoesSize, blockDistance, blockRadius, ids));
+
+        return GSON.toJson(new JsonSettings(echoesSize, blockDistance, blockRadius, ids, fairPlay));
     }
 
     static Settings deserialize(String content) {
@@ -28,8 +36,9 @@ public record Settings(int echoesSize, int blockDistance, int blockRadius, Set<I
                 return null;
             }
             var ids = Arrays.stream(settings.interestingIds).map(Id::of).collect(Collectors.toSet());
-            return new Settings(settings.echoesSize, settings.blockDistance, settings.blockRadius, ids);
-        } catch(JsonSyntaxException e) {
+            return new Settings(settings.echoesSize, settings.blockDistance, settings.blockRadius, ids,
+                    settings.fairPlay == null ? true : settings.fairPlay);
+        } catch (JsonSyntaxException e) {
             return null;
         }
     }

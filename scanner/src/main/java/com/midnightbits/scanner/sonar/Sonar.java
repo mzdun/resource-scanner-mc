@@ -67,21 +67,21 @@ public class Sonar {
     }
 
     public boolean ping(ClientCore client) {
-        boolean blockListChanged = false;
+        var blockListChanged = false;
 
-        Reflections reflections = Reflections.fromPlayerPov(echoes, client);
-        ConeOfBlocks cone = reflections.coneOfBlocksFromCamera(blockDistance, blockRadius);
+        final var reflections = Reflections.fromPlayerPov(echoes, client);
+        final var cone = reflections.coneOfBlocksFromCamera(blockDistance, blockRadius);
 
-        for (LineOfBlocks line : cone.iterate()) {
-            for (V3i pos : line.iterate()) {
-                BlockInfo info = client.getBlockInfo(pos);
+        for (final var line : cone.iterate()) {
+            for (final var pos : line.iterate()) {
+                final var info = client.getBlockInfo(pos);
                 if (info.isAir()) {
                     LOGGER.debug("({}) is air", pos.toString());
                     continue;
                 }
 
-                Id id = info.getId();
-                int dist = (int) Math.round(Math.sqrt(reflections.center.getSquaredDistance(pos)));
+                final var id = info.getId();
+                final var dist = (int) Math.round(Math.sqrt(reflections.center.getSquaredDistance(pos)));
                 LOGGER.debug("({}) > {}m {}", pos.toString(), dist, id);
                 if (!blocks.contains(id))
                     continue;

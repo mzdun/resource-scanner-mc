@@ -8,6 +8,8 @@ import java.util.Map;
 import com.midnightbits.scanner.platform.KeyBinder;
 import com.midnightbits.scanner.platform.PlatformInterface;
 import com.midnightbits.scanner.rt.core.ClientCore;
+import com.midnightbits.scanner.utils.CacheableValue;
+import com.midnightbits.scanner.utils.Manifests;
 
 public class MockPlatform implements PlatformInterface, KeyBinder {
     public record KeyPressHandler(String translation, KeyBinder.KeyPressHandler handler) {
@@ -18,10 +20,22 @@ public class MockPlatform implements PlatformInterface, KeyBinder {
 
     public static boolean developmentEnvironment = true;
     public Map<String, Map<Integer, KeyPressHandler>> boundKeys = new HashMap<>();
+    private String scannerVersion = null;
+    private String minecraftVersion = null;
 
     @Override
     public String getPlatformName() {
         return "Mock";
+    }
+
+    @Override
+    public String getScannerVersion() {
+        return scannerVersion;
+    }
+
+    @Override
+    public String getMinecraftVersion() {
+        return minecraftVersion;
     }
 
     @Override
@@ -61,6 +75,11 @@ public class MockPlatform implements PlatformInterface, KeyBinder {
     public void bind(String translationKey, int code, String category, KeyBinder.KeyPressHandler handler) {
         boundKeys.computeIfAbsent(category, (key) -> new HashMap<>());
         boundKeys.get(category).put(code, new KeyPressHandler(translationKey, handler));
+    }
+
+    public void setVersions(String scannerVersion, String minecraftVersion) {
+        this.scannerVersion = scannerVersion;
+        this.minecraftVersion = minecraftVersion;
     }
 
     public MockPlatform.KeyPressHandler getHandler(int code, String category) {

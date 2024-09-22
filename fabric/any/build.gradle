@@ -6,7 +6,7 @@ plugins {
 	id 'jacoco'
 }
 
-project.setProperty('mod_version', "${rootProject.mod_version}-${project.minecraft_version}-fabric")
+project.setProperty('mod_version', "${rootProject.mod_version}+${project.minecraft_version}-fabric")
 
 version = project.mod_version
 group = project.maven_group
@@ -20,6 +20,14 @@ loom {
 		"resource-scanner" {
 			sourceSet sourceSets.main
 		}
+	}
+}
+
+jar {
+	manifest {
+		attributes(
+			'Scanner-Version': rootProject.mod_version,
+		)
 	}
 }
 

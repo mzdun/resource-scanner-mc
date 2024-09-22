@@ -7,8 +7,6 @@ import com.midnightbits.scanner.test.mocks.MockedClock;
 import com.midnightbits.scanner.utils.Clock;
 
 public class ClockTest {
-    public final Clock clock = new Clock(); // so jococo does not mark the c-tor as not visited
-
     @Test
     void clockCanHaveMockAttachedAndDetached() {
         MockedClock clock = new MockedClock();
