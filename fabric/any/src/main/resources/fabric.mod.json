@@ -8,7 +8,7 @@
 		"mzdun"
 	],
 	"contact": {
-		"homepage": "${github}",
+		"homepage": "https://modrinth.com/mod/resource-scanner",
 		"sources": "${github}",
 		"issues": "${github}/issues"
 	},
