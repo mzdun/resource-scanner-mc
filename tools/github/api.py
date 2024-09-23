@@ -158,7 +158,8 @@ class API:
 
     def download_archive(self, ref: str, workflow: str, archive_name: str):
         ref_hash = (
-            capture("git", "rev-list", "--no-walk", ref).stdout.decode("UTF-8").strip()
+            capture("git", "rev-list", "--no-walk",
+                    ref).stdout.decode("UTF-8").strip()
         )
         if Environment.DBG:
             print(ref_hash)
@@ -179,7 +180,8 @@ class API:
                 return None
 
         print(
-            f"{workflow} #{run.get('run_number', 0)}: {run.get('display_title', '-')}"
+            f"{workflow} #{run.get('run_number', 0)}: {
+                run.get('display_title', '-')}"
         )
         if run.get("status") != "completed":
             return None
@@ -207,7 +209,8 @@ class API:
             f"{self.root}/actions/artifacts/{artifact_id}/zip",
         ]
 
-        filename = f"build/downloads/{run.get('run_number', ':RUN_NUMBER' if Environment.DRY_RUN else 'unknown')}/{archive_name}.zip"
+        filename = f"build/downloads/{run.get(
+            'run_number', ':RUN_NUMBER' if Environment.DRY_RUN else 'unknown')}/{archive_name}.zip"
         print_args(cmd)
         if not Environment.DRY_RUN:
             os.makedirs(os.path.dirname(filename), exist_ok=True)
@@ -270,7 +273,8 @@ class API:
             rel_dir = os.path.join(root, "build", "downloads", "releases")
             os.makedirs(rel_dir, exist_ok=True)
 
-            proc = self.gh("/releases/latest" if tag is None else f"/releases/tags/{tag}")
+            proc = self.gh(
+                "/releases/latest" if tag is None else f"/releases/tags/{tag}")
             if proc is None:
                 return None
 
@@ -298,7 +302,7 @@ class API:
                     continue
                 cont = True
                 for ext in exts:
-                    if key[-len(ext) :] == ext:
+                    if key[-len(ext):] == ext:
                         cont = False
                         break
                 if cont:

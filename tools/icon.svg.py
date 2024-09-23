@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# Copyright (c) 2024 Marcin Zdun
+# This code is licensed under MIT license (see LICENSE for details)
 
 import math
 
@@ -12,17 +14,22 @@ scanner_slope_drag = 80
 center = int(size / 2)
 R = center - edge
 
+
 def circle(radius: int):
     print(f'    <circle r="{radius}" cx="{center}" cy="{center}"/>')
+
 
 def line(x1: int, y1: int, x2: int, y2: int):
     print(f'    <line x1="{x1}" y1="{y1}" x2="{x2}" y2="{y2}"/>')
 
+
 def h(x: int, y: int, len: int):
     line(x, y, x + len, y)
 
+
 def v(x: int, y: int, len: int):
     line(x, y, x, y + len)
+
 
 def slope(deg: int):
     rad = deg * math.pi / 180
@@ -30,14 +37,18 @@ def slope(deg: int):
     dy = math.sin(rad)
     return [dx, dy]
 
+
 def coaxial(start: int, stop: int, deg: int):
     [dx, dy] = slope(deg)
-    line(center + start * dx, center + start * dy, center + stop * dx, center + stop * dy)
+    line(center + start * dx, center + start * dy,
+         center + stop * dx, center + stop * dy)
+
 
 [slopeX, slopeY] = slope(scanner_slope)
 [dragX, dragY] = slope(scanner_slope - scanner_slope_drag)
 
-print(f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {size} {size}" width="{size}px" height="{size}px" fill="none" stroke="none">')
+print(f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {size} {
+      size}" width="{size}px" height="{size}px" fill="none" stroke="none">')
 print('''  <style>
     .pen, .heavy-pen {
       stroke: var(--color, #daff99);
@@ -62,7 +73,8 @@ print('''  <style>
   </defs>
   <rect width="128" height="128" fill="url(#bg)" />''')
 
-print(f'  <path fill="url(#scan)" d="M{center},{center} l{R*slopeX},{R*slopeY} A{R},{R} 0 0 0 {center + R*dragX},{center + R*dragY} z" />')
+print(f'  <path fill="url(#scan)" d="M{center},{center} l{
+      R*slopeX},{R*slopeY} A{R},{R} 0 0 0 {center + R*dragX},{center + R*dragY} z" />')
 
 print('  <g class="pen">')
 for radius in range(R - step, 0, -step):
