@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
+# Copyright (c) 2024 Marcin Zdun
+# This code is licensed under MIT license (see LICENSE for details)
 
 import os
 import sys
 import zipfile as z
 
 from typing import List
+
 
 def copyMember(input: z.ZipFile, output: z.ZipFile, member: z.ZipInfo):
     try:
@@ -19,12 +22,14 @@ def copyMember(input: z.ZipFile, output: z.ZipFile, member: z.ZipInfo):
         with output.open(member, mode="w") as outFile:
             outFile.write(inFile.read())
 
+
 def mergeZips(outputFileName: str, *jarFileNames: List[str]):
     with z.ZipFile(outputFileName, 'w', compression=z.ZIP_DEFLATED) as output:
         for inputName in jarFileNames:
             with z.ZipFile(inputName, 'r') as input:
                 for member in input.infolist():
                     copyMember(input, output, member)
+
 
 def __main__():
     libsDirName = sys.argv[1]
@@ -37,6 +42,7 @@ def __main__():
         outputName = os.path.join(libsDirName, basename)
         print(f'Repacking {basename}')
         mergeZips(outputName, pluginFileName, scannerFileName)
+
 
 if __name__ == "__main__":
     __main__()

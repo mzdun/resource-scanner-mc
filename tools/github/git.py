@@ -20,12 +20,14 @@ from .changelog import (
     Commit,
     CommitLink,
 )
-from .cmake import Project
+from .gradle import Project
 
-ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+ROOT = os.path.dirname(os.path.dirname(
+    os.path.dirname(os.path.abspath(__file__))))
 
 COMMIT_SEP = "--{}".format(
-    "".join(secrets.choice(string.ascii_letters + string.digits) for i in range(20))
+    "".join(secrets.choice(string.ascii_letters + string.digits)
+            for i in range(20))
 )
 
 
@@ -50,7 +52,8 @@ def _level_from_commit(commit: Commit) -> Tuple[int, str]:
     except KeyError:
         current_type = commit.type
         current_scope = commit.scope
-    current_type = {"feat": LEVEL_FEATURE, "fix": LEVEL_PATCH}.get(current_type, LEVEL_BENIGN)
+    current_type = {"feat": LEVEL_FEATURE, "fix": LEVEL_PATCH}.get(
+        current_type, LEVEL_BENIGN)
     return (current_type, current_scope)
 
 
@@ -76,7 +79,8 @@ def _get_commit(hash: str, short_hash: str, message: str) -> Commit:
     references = {}
     body = body.strip().split("BREAKING CHANGE:", 1)
     if len(body) > 1:
-        breaking_change = [para.strip() for para in body[1].strip().split("\n\n")]
+        breaking_change = [para.strip()
+                           for para in body[1].strip().split("\n\n")]
 
     lines = body[0].strip().split("\n")
     for index_plus_1 in range(len(lines), 0, -1):
@@ -149,7 +153,8 @@ def get_log(
         if line == COMMIT_SEP:
             if len(amassed):
                 short_hash, hash = amassed[0].split(" ")
-                commit = _get_commit(hash, short_hash, "\n".join(amassed[1:]).strip())
+                commit = _get_commit(
+                    hash, short_hash, "\n".join(amassed[1:]).strip())
                 amassed = []
 
                 if commit is None:

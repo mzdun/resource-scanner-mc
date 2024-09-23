@@ -7,7 +7,8 @@ import re
 from typing import Dict, List, NamedTuple
 from .runner import capture
 
-ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+ROOT = os.path.dirname(os.path.dirname(
+    os.path.dirname(os.path.abspath(__file__))))
 
 
 class Section(NamedTuple):
@@ -130,7 +131,8 @@ def _show_links(
         scope = link.scope
         if scope not in issues:
             issues[scope] = []
-        issues[scope].append(_link_str(github_link, link, show_breaking, for_github))
+        issues[scope].append(
+            _link_str(github_link, link, show_breaking, for_github))
     result = []
     for scope in sorted(issues.keys()):
         result.extend(issues[scope])
@@ -180,7 +182,8 @@ def format_changelog(
         show_breaking = section.key != BREAKING_CHANGE
 
         lines.extend([f"### {section.header}", ""])
-        lines.extend(_show_links(github_link, type_section, show_breaking, for_github))
+        lines.extend(_show_links(github_link, type_section,
+                     show_breaking, for_github))
         breaking.extend(_find_breaking_notes(type_section))
 
     for section in sorted(log.keys()):
