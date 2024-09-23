@@ -48,10 +48,6 @@ jobs:
           name: jar
           path: ${{github.workspace}}/build/libs/
 
-      - name: Publish JAR files
-        if: ${{env.RELEASE}}
-        run: python tools/release.py --upload ${{github.workspace}}/build/libs
-
   publish:
     name: Upload packages
     if: ${{ fromJson(needs.build.outputs.RELEASE) }}
