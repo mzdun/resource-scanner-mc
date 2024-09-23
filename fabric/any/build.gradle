@@ -159,6 +159,14 @@ def getRootVersionType() {
 	return "release"
 }
 
+def getReleaseChangelog() {
+	try {
+		return rootProject.file("build/release_changelog.md").text
+	} catch(Exception e) {
+		return "No changelog was specified.";
+	}
+}
+
 modrinth {
 	def pluginJar = project.repack.outputs.files[0]
 
@@ -169,6 +177,7 @@ modrinth {
 	uploadFile = file(pluginJar)
 	gameVersions = [project.minecraft_version]
 	loaders = ['fabric']
+	changelog = getReleaseChangelog()
 	syncBodyFrom = rootProject.file("README.md").text
 	dependencies = [
 		new ModDependency('P7dR8mSH', 'required') // Fabric API
