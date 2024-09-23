@@ -25,7 +25,8 @@ class Decl(NamedTuple):
 
 
 class Project(NamedTuple):
-    name: Arg
+    package_name: Arg
+    repo: Arg
     version: Arg
     stability: Arg
     description: Arg
@@ -34,7 +35,7 @@ class Project(NamedTuple):
         return f"{self.version.value}{self.stability.value}"
 
     def pkg(self):
-        return f"{self.name.value}-{self.ver()}"
+        return f"{self.package_name.value}-{self.ver()}"
 
     def tag(self):
         return f"v{self.ver()}"
@@ -82,14 +83,19 @@ def get_version() -> Project:
     declarations = _gradle(os.path.join(
         PROJECT_SOURCE_DIRECTORY, "gradle.properties"))
 
-    project_name: Optional[Arg] = None
+    package_name: Optional[Arg] = None
+    repo: Optional[Arg] = None
     version = Arg("0.1.0", -1)
     version_stability: Optional[Arg] = None
     description = Arg("", -1)
 
     for decl in declarations:
         if decl.name == "archives_base_name":
-            project_name = decl.asArg()
+            package_name = decl.asArg()
+        elif decl.name == "url":
+            url = decl.value
+            repo_name = url.split('/')[-1]
+            repo = Arg(repo_name, decl.offset + len(url) - len(repo_name))
         elif decl.name == "mod_version":
             mod_version = decl.asArg()
             split_version = mod_version.value.split('-', 1)
@@ -104,16 +110,19 @@ def get_version() -> Project:
         elif decl.name == "description":
             description = decl.asArg()
 
-    if project_name is None:
-        project_name = Arg("", -1)
+    if package_name is None:
+        package_name = Arg("", -1)
+    if repo is None:
+        repo = package_name
     if version_stability is None:
         version_stability = Arg("", -1)
 
     _project_version = Project(
-        name=project_name,
+        package_name=package_name,
         version=version,
         stability=version_stability,
         description=description,
+        repo=repo,
     )
 
     return _project_version

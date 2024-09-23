@@ -32,7 +32,7 @@ def release(
     show_changelog: bool,
 ):
     project = get_version()
-    github_link = f"https://github.com/{GITHUB_ORG}/{project.name.value}"
+    github_link = f"https://github.com/{GITHUB_ORG}/{project.repo.value}"
     tags = get_tags(project)
     log, level = get_log(tags, SCOPE_FIX, take_all)
     force_stability = False
@@ -77,7 +77,7 @@ def release(
     commit(f"chore: {commit_message}")
     annotated_tag(next_tag, commit_message)
 
-    api = API(GITHUB_ORG, project.name.value)
+    api = API(GITHUB_ORG, project.repo.value)
 
     if api.remote is not None:
         gh_release = format_release(log, next_tag, project.tag(), github_link)
@@ -106,7 +106,7 @@ def _checksums(archive: str, names: List[str], out_name: str):
 
 def upload(archive: str):
     project = get_version()
-    api = API(GITHUB_ORG, project.name.value)
+    api = API(GITHUB_ORG, project.repo.value)
     regex = f"^{project.pkg()}\\+.*\\.jar*$"
     matcher = re.compile(regex)
 
