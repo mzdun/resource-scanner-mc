@@ -1,7 +1,6 @@
 plugins {
 	id 'fabric-loom' version '1.7-SNAPSHOT'
 	id 'com.github.harbby.gradle.serviceloader' version '1.1.8'
-	id "com.modrinth.minotaur" version "2.+"
 	id 'maven-publish'
 	id 'jacoco'
 }
@@ -143,51 +142,6 @@ tasks.register('repack', Exec) {
 
 build {
 	dependsOn 'repack'
-}
-
-import com.modrinth.minotaur.dependencies.ModDependency
-
-def getRootVersionType() {
-	def sem = rootProject.mod_version.split("-")
-	if (sem.size() > 1) {
-		def stability = sem[1]
-		if (stability == "alpha" || stability.startsWith("alpha."))
-			return "alpha"
-		if (stability == "beta" || stability.startsWith("beta."))
-			return "beta"
-	}
-	return "release"
-}
-
-def getReleaseChangelog() {
-	try {
-		return rootProject.file("build/release_changelog.md").text
-	} catch(Exception e) {
-		return "No changelog was specified.";
-	}
-}
-
-modrinth {
-	def pluginJar = project.repack.outputs.files[0]
-
-	projectId = 'XTUTy4U4'
-	versionNumber = project.mod_version
-	versionName = "${mod_name} ${rootProject.mod_version} for ${project.minecraft_version}-FB"
-	versionType = getRootVersionType()
-	uploadFile = file(pluginJar)
-	gameVersions = [project.minecraft_version]
-	loaders = ['fabric']
-	changelog = getReleaseChangelog()
-	syncBodyFrom = rootProject.file("README.md").text
-	dependencies = [
-		new ModDependency('P7dR8mSH', 'required') // Fabric API
-	]
-}
-
-if (project.hasProperty('sync_readme') && project.sync_readme) {
-	tasks.named('modrinth') {
-		finalizedBy modrinthSyncBody
-	}
 }
 
 tasks.register('install', Exec) {

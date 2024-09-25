@@ -9,8 +9,6 @@ on:
 
 env:
   RELEASE: ${{ github.event_name == 'push' && github.ref_type == 'tag' && startsWith(github.ref_name, 'v') }}
-  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  MODRINTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   build:
@@ -54,9 +52,6 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
 
-    env:
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -76,14 +71,15 @@ jobs:
           name: jar
           path: ${{github.workspace}}/build/libs
 
-      - name: Upload to release
-        run: python tools/release.py --upload ${{github.workspace}}/build/libs
-
-      - name: Prepare release changelog
-        run: python tools/changelog-for-repos.py
-
       - name: Upload to modrinth
-        run: ./gradlew modrinth
+        run: python -m tools.ci minotaur send "${{github.workspace}}/build/libs"
+        env:
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+
+      - name: Upload to GitHub release
+        run: python -m tools.ci github publish "${{github.workspace}}/build/libs"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   dependency-submission:
     name: Check dependencies

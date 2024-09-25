@@ -1,0 +1,136 @@
+# Copyright (c) 2024 Marcin Zdun
+# This code is licensed under MIT license (see LICENSE for details)
+
+import secrets
+import string
+from typing import Dict, List, NamedTuple
+
+from .git import parseLog
+
+COMMIT_SEP = "--{}".format(
+    "".join(secrets.choice(string.ascii_letters + string.digits)
+            for i in range(40))
+)
+
+
+class TestCommit(NamedTuple):
+    hash: str
+    message: str
+
+    def toStdout(self):
+        return f"{self.hash[:9]} {self.hash}\n{self.message.strip()}\n{COMMIT_SEP}\n"
+
+    @staticmethod
+    def parse(commits: List["TestCommit"], scopeFix: Dict[str, str] = {}, takeAll: bool = False):
+        stdout = "".join(commit.toStdout() for commit in commits)
+        return parseLog(stdout, COMMIT_SEP, scopeFix, takeAll)
+
+
+lorem1 = '''Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nisi nisl,
+convallis vel convallis sed, faucibus ut eros. Praesent sit amet nunc vitae
+lectus maximus sodales ultrices nec felis. Phasellus lacinia tortor in erat
+posuere suscipit. Proin viverra nisl ac ligula faucibus commodo.'''
+
+lorem2 = '''Phasellus nec mauris in mauris tincidunt gravida auctor sit amet felis. Nam
+eu dapibus neque. Vivamus eget odio erat. Mauris id accumsan felis. Nulla
+euismod feugiat nisi ac sodales. Suspendisse lacus purus, condimentum eu arcu
+quis, ultrices rhoncus ipsum. Curabitur ac tempus lectus.'''
+
+lorem3 = '''In dapibus lacinia dictum. Class aptent taciti sociosqu ad litora torquent
+per conubia nostra, per inceptos himenaeos. Curabitur ultrices lacus et dolor
+pretium, vitae facilisis risus cursus.'''
+
+'''
+69988295cd0999b6b028901645dd06199fb65b6c
+b9b1c858e2c109ec12e845935018f4f080b9cb9f
+2fadf6c4f3daa65804f4fec2caac1d874c5daa23
+d3f26a51630a05120f9fb286b12c6d39142b5004
+fa7c5f4111da14a36e942e751124050258863001
+026f10c5f9783e5c0e161d42e0a669452ec1277a
+1568b4be3d823c766eea69a6ddb40d40050cb2f5
+da139290f2d9abad7c675839669c29a8877ae609
+8fee357c9577b7b6e03502333ad1418e1eefe3cf
+1d5713fd4044e7dafdce61cbeb6ea24fc03d0f0e
+a247c829762b97cab07391bb39af8902bf6474a9
+35963f888f1ef25e959db855cb3fc6baacb4e659
+46c6ab9212ec5be9d15e33b33d2ca3133b6bbab5
+05e9894354e66f79a66f6cbf46ba4e1b60188c30
+9298edabea26f8cbf6eadcd4ed140eafca582c2e
+f4308f45dc5180749f1072b65902bfae3f80182e
+1f6dc7d4f96d1b6435557cb912b56a57abc90cae
+88889513a5020c15acd647d9ac8bf8c2d2679184
+e560a2c6dac3295aeb0e57a5989f6c16bb9a3771
+6015c9ce8865e0d21e45e8647efd5cb74400341d
+b8be13ee27607c77bdb103a192ed22ce4058cef8
+e4c14438e1511e444f4d9647ed35d375ba32853e
+7d347a348556e39a003037851cc1d72186f3af35
+4516049097a71de0c771ccc3a74cce0c8c205f33
+f17405efe4cdcdbde858e88c3d7f63d4c89dfba7
+3aac42a0cb823f5c6e74067706db39fcb8f3c573
+e5d343456ccab0d015b9ea3d8ef1447f1f47506e
+066e6cb8dad17bbc18abc39fa2d79899b5ab7574
+fe6ce2c6442d52e7f4bfc0c251be9591d1f71b1b
+f62aaa75ddd47c9b0c00f078fd599977de3ac992
+c5b3dac4295816a56f024ddc5429efda102b049d
+9f75b417b162f673d3372675a00665516751ac9f
+11811c99d11a3a7e7bc5ceda192be75bc3c1a81c
+043adbf7fba570dcd4eb139cdac9e86ba0c37030
+74871a1a4ade1c57813d44113afedcfb6f332fe7
+21ea84c7ac2c612cf18881ba8349d03cbe797aa9
+cc00643c4e5de0c81707f18972332e2bc144ce0d
+10b7aaefe8993bfc3abd671942ad26c4f9e4223c
+f6064fb7c28a3cd34015337e7d055b5594601442
+999753e6b72e60850e6229751708952da5558845
+f38d5af9925daaa795b34d80f98dfff212bd5ee7
+4f80574ff8a76e74e0f3b910e6ae4ed867215b14
+73b13145239103d0efdcf8f3e130b2be464b8a7f
+0dfcb24d0843417ef778050cb43fbba49b99bebb
+1baa00251eef51013e61c5c18f982a7aafcdc381
+e891015ea81d29a2c1dd377608074e39bab71752
+77e0319048e4d8c2ae2d92f8da44195864b5ed51
+032ef2eda50627baad95b175b43fa0bfcbf4764a
+0ce15d882a06a5d2e3fe5bf86b6d2749c03876f9
+3b180bf6b3ec2716347163ec926791097619b56a
+8b63710b840f32484fecbade8b2ca50704733f10
+efce8da4eb85e22cd538dc55745991cfc3256859
+e35abc58839925ae73f3ef45190bb8902f98aa5e
+796b34df81bd2d696a1f2ef83817ad19f9daae08
+3464ec84827c4914c710f69a12cd4c78510f5436
+d3faae3b769357d806b81b0b9a11055c6644cc6a
+e47e7684b8b063f3d8bd8cdc107d106da349b870
+7b0f03363d4cd031f98b2099236a273922766dae
+a44969caa83e2fa61551c97c6b453bc9c2a49ff7
+c51d92ec7f5e92c90daa8bfb32af882218e3df28
+7220418f1c2fba0b0e90680884307ab08a503f63
+7607bcfc9b461264219e9d28836a76838c727833
+43837c173d28a9129139430dbd2975f9ed62bf34
+1c4964bc33df9a02897a0054edf608c32efe33af
+de43dc2f76fc90e43681949b62498b1eb41daf48
+276ef5f2ac4ba2fa352d7510fb3bf418b7930143
+4ce5cffe1ccda8356633a7eb0428adba2ae2302f
+98f446ffe76fe86090fc441ea229d18ccf980d91
+37f8a32f4b52a3f15d4b6fd23bd9ea47109883a9
+63c4649352e5bf43f14c14c4e6f579f75d8c01f9
+60ef62c2aba35e0d3fbf3b965ff81499d9f58917
+b364cea8fcc3d3e5a4684e585a2d6a8abeb94a4b
+6393bb38c941a3591dae80128c2372b2861d7df0
+0a8c6e5f36bfa666a7db3bfd9a30aa4fbba780b8
+11f1e01eb6de97ee3c6cfc905609b70a72cf023b
+5268dcdddf762c9ac73c0c161ff23908902e44ad
+410367745245fbef8287c952f7e42a03c0e37284
+6f897d95074c35fa73fc78c306481e4c1a8c36eb
+58dfb810a3e3cf12e2b600f4b222ba5302d879b0
+9fc49f45d349534dca6c455fd73ee6d3af8e5393
+ebe5d41b9b3c9050ef268bd27013f608653f913b
+4ff46e59bc17a10c0f4eb716ece9c407d1a16fc8
+d76d163ac68a470432c2fca7204f954f38461ded
+0229023e7b4bd45c5fc829690a2226e7021580bc
+134059556bd92a61107b6d868b4d461f7d01ea1f
+cba1474b2aab6f3a0e0d48a4f29ab278ee2be7d5
+a579c086164165e8c004cfbba1ca1fa679b64824
+16e4bedec215a23b4f4edf33b9c7520e445f02c0
+33a9384cedca1acf04b9c29a0736cea9bb16d345
+1763ef2f93dd11980f9eef34ca472b8954e81c29
+e5f2ef1546a670cbfcb357b6a705f18a285f6ab9
+a83402f04d6c93559bf6750789d43a5274b8b4af
+'''

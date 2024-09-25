@@ -1,0 +1,6 @@
+[run]
+omit =
+    *_test.py
+    __init__.py
+    tools/ci/common/test_commits.py
+    tools/ci/common/test_subprocess.py

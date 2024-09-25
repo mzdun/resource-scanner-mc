@@ -1,6 +1,7 @@
 # Copyright (c) 2023 Marcin Zdun
 # This code is licensed under MIT license (see LICENSE for details)
 
+import argparse
 import shlex
 import subprocess
 import sys
@@ -11,7 +12,41 @@ class Environment:
     DRY_RUN: bool = False
     USE_COLOR: bool = True
     DBG: bool = False
+    SILENT: bool = False
     SECRETS: List[str] = []
+
+    @staticmethod
+    def addArgumentsTo(parser: argparse.ArgumentParser):
+        parser.add_argument(
+            "--dry-run",
+            action="store_true",
+            required=False,
+            help="print commands, change nothing",
+        )
+        parser.add_argument(
+            "--color",
+            required=False,
+            help="should we colorize the output",
+            choices=["always", "never"],
+            default="always",
+        )
+        parser.add_argument(
+            "--debug",
+            required=False,
+            action="store_true",
+        )
+        parser.add_argument(
+            "--silent",
+            required=False,
+            action="store_true",
+        )
+
+    @staticmethod
+    def apply(args: argparse.Namespace):
+        Environment.DRY_RUN = args.dry_run
+        Environment.USE_COLOR = args.color == "always"
+        Environment.DBG = args.debug
+        Environment.SILENT = args.silent
 
 
 def _hide(arg: str):
@@ -34,8 +69,11 @@ def _print_arg(arg: str):
 
 
 def print_args(args: Tuple[str]):
+    if Environment.SILENT:
+        return
+
     if not Environment.USE_COLOR:
-        print(shlex.join(_hide(arg) for arg in args))
+        print(shlex.join(_hide(arg) for arg in args), file=sys.stderr)
         return
 
     cmd = shlex.join([args[0]])
@@ -64,5 +102,5 @@ def checked_capture(
     return subprocess.run(args, shell=False, capture_output=True, check=True, **kwargs)
 
 
-def capture(*args: List[str], **kwargs):
+def capture(*args: str, **kwargs):
     return run(*args, capture_output=True, **kwargs)
