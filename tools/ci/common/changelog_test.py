@@ -72,7 +72,7 @@ class TestChangelog(unittest.TestCase):
         )
         return log
 
-    def test_formatting(self):
+    def test_formatting_commitMessage(self):
         log = self._getLog()
         self.assertEqual(
             '''
@@ -106,9 +106,13 @@ In dapibus lacinia dictum. Class aptent taciti sociosqu ad litora torquent per
 conubia nostra, per inceptos himenaeos. Curabitur ultrices lacus et dolor
 pretium, vitae facilisis risus cursus.''',
             format_commit_message(log))
+
+    def test_formatting_changelog(self):
+        log = self._getLog()
         self.assertEqual(
             '''
 ## [5.0.0]({GITHUB}/compare/v4.78.1258...v5.0.0) (YYYY-MM-DD)
+
 ### Breaking
 
 - **github actions**: update ubuntu runners to ubuntu-latest ([b9b1c858e]({GITHUB}/commit/b9b1c858e2c109ec12e845935018f4f080b9cb9f))
@@ -132,6 +136,9 @@ Phasellus nec mauris in mauris tincidunt gravida auctor sit amet felis. Nam eu d
 In dapibus lacinia dictum. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur ultrices lacus et dolor pretium, vitae facilisis risus cursus.
 '''.lstrip(),
             ChangelogFileUpdate('{GITHUB}', 'v5.0.0', 'v4.78.1258', 'YYYY-MM-DD').format_changelog(log))
+
+    def test_formatting_release(self):
+        log = self._getLog()
         self.assertEqual({'tag_name': 'v5.0.0', 'name': 'v5.0.0', 'body': '''
 ### Breaking
 
@@ -159,7 +166,7 @@ In dapibus lacinia dictum. Class aptent taciti sociosqu ad litora torquent per c
 '''.strip(), 'draft': True, 'prerelease': False},
             format_release(log, 'v5.0.0', 'v4.78.1258', '{GITHUB}'))
 
-    def test_formatting_takeAll(self):
+    def test_formatting_commitMessage_takeAll(self):
         log = self._getLog(takeAll=True)
         self.assertEqual(
             '''
@@ -201,9 +208,13 @@ In dapibus lacinia dictum. Class aptent taciti sociosqu ad litora torquent per
 conubia nostra, per inceptos himenaeos. Curabitur ultrices lacus et dolor
 pretium, vitae facilisis risus cursus.''',
             format_commit_message(log))
+
+    def test_formatting_changelog_takeAll(self):
+        log = self._getLog(takeAll=True)
         self.assertEqual(
             '''
 ## [5.0.0]({GITHUB}/compare/v4.78.1258...v5.0.0) (YYYY-MM-DD)
+
 ### Breaking
 
 - **github actions**: update ubuntu runners to ubuntu-latest ([b9b1c858e]({GITHUB}/commit/b9b1c858e2c109ec12e845935018f4f080b9cb9f))
@@ -235,6 +246,9 @@ Phasellus nec mauris in mauris tincidunt gravida auctor sit amet felis. Nam eu d
 In dapibus lacinia dictum. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur ultrices lacus et dolor pretium, vitae facilisis risus cursus.
 '''.lstrip(),
             ChangelogFileUpdate('{GITHUB}', 'v5.0.0', 'v4.78.1258', 'YYYY-MM-DD').format_changelog(log))
+
+    def test_formatting_release_takeAll(self):
+        log = self._getLog(takeAll=True)
         self.assertEqual({'tag_name': 'v5.0.0-beta', 'name': 'v5.0.0-beta', 'body': '''
 ### Breaking
 
@@ -281,6 +295,7 @@ In dapibus lacinia dictum. Class aptent taciti sociosqu ad litora torquent per c
             b'''# Changelog
 
 ## [5.0.0]({GITHUB}/compare/v4.78.1258...v5.0.0) (YYYY-MM-DD)
+
 ### Breaking
 
 - **github actions**: update ubuntu runners to ubuntu-latest ([b9b1c858e]({GITHUB}/commit/b9b1c858e2c109ec12e845935018f4f080b9cb9f))
@@ -316,6 +331,7 @@ In dapibus lacinia dictum. Class aptent taciti sociosqu ad litora torquent per c
             b'''# Changelog
 
 ## [5.0.0]({GITHUB}/compare/v4.78.1258...v5.0.0) (TODAY)
+
 ### Breaking
 
 - **github actions**: update ubuntu runners to ubuntu-latest ([b9b1c858e]({GITHUB}/commit/b9b1c858e2c109ec12e845935018f4f080b9cb9f))

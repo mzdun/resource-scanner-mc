@@ -252,7 +252,7 @@ class ChangelogFileUpdate(GithubReleaseChangelog):
         range = f"{self.prev_tag}...{self.cur_tag}"
         compare = f"{self.github_link}/compare/{range}"
         return [
-            f"## [{self.cur_tag[1:]}]({compare}) ({self.commit_date})"
+            f"## [{self.cur_tag[1:]}]({compare}) ({self.commit_date})",
             "",
         ]
 
