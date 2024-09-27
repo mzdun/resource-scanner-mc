@@ -7,12 +7,9 @@ import zipfile
 from .project import Project
 
 
-def _safeRegex(value: str) -> str:
-    value = value.replace('\\', '\\\\')
-    value = value.replace('.', '\\.')
-    value = value.replace('+', '\\+')
-    value = value.replace('*', '\\*')
-    value = value.replace('?', '\\?')
+def safeRegex(value: str) -> str:
+    for esc in "\\.+*?()[]":
+        value = value.replace(esc, f'\\{esc}')
     return value
 
 
@@ -34,7 +31,7 @@ def getPackages(src: str, matcher: re.Pattern):
 
 
 def buildRegex(project: Project):
-    regexPre = _safeRegex(project.packagePrefix)
-    regexPost = _safeRegex(project.packageSuffix)
+    regexPre = safeRegex(project.packagePrefix)
+    regexPost = safeRegex(project.packageSuffix)
     regex = f"^{regexPre}(.*){regexPost}$"
     return re.compile(regex)
