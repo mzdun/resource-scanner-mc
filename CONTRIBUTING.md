@@ -213,7 +213,7 @@ The `footer` is optional. The [Commit Message Footer](#commit-message-footer) fo
   │       │
   │       └─> Commit Scope (tbd)
   │
-  └─> Commit Type: build|ci|docs|feat|fix|perf|refactor|test
+  └─> Commit Type: feat|fix|assets|build|chore|ci|docs|perf|refactor|revert|style|test
 ```
 
 The `<type>` and `<summary>` fields are mandatory, the `(<scope>)` field is optional.
@@ -222,14 +222,18 @@ The `<type>` and `<summary>` fields are mandatory, the `(<scope>)` field is opti
 
 Must be one of the following:
 
-- **build**: Changes that affect the build system or external dependencies
-- **ci**: Changes to our CI configuration files and scripts
-- **docs**: Documentation only changes
-- **feat**: A new feature
-- **fix**: A bug fix
-- **perf**: A code change that improves performance
-- **refactor**: A code change that neither fixes a bug nor adds a feature
-- **test**: Adding missing tests or correcting existing tests
+- **feat**: new feature for the user, not a new feature for build script
+- **fix**: bug fix for the user, not a fix to a build script
+- **assets**: only artwork: icons, images, but not css (those belong to `style`)
+- **build**: changes that affect the build system or external dependencies
+- **chore**: updating grunt tasks etc; no production code change
+- **ci**: changes to CI configuration files and scripts (GitHub actions)
+- **docs**: changes to the documentation
+- **perf**: performance improvement for the user
+- **refactor**: changes of the production code that neither fixes a bug nor adds a feature, eg. renaming a variable
+- **revert**: neither fixing a bug nor adding a feature, a result of `git revert`
+- **style**: formatting, missing semi colons, etc; no production code change
+- **test**: adding missing tests or correcting existing tests; no production code change
 
 #### Scope
 
