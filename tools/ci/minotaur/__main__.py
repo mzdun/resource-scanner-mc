@@ -90,8 +90,8 @@ def upload(src: str):
                 url = f"https://modrinth.com/mod/{projectId}/version/{version}"
                 suffixes = ''.join(
                     f'-{loader.name}' for loader in arch.loaders)
-                minecraft_version = f"{arch.minecraft_version}{suffixes}"
-                msg = f">>> You may now visit {minecraft_version} at {url}"
+                minecraftVersion = f"{arch.minecraftVersion}{suffixes}"
+                msg = f">>> You may now visit {minecraftVersion} at {url}"
 
                 if version is not None:
                     print(msg)
