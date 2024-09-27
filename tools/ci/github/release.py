@@ -5,7 +5,6 @@
 
 import argparse
 import os
-from pprint import pprint
 from typing import Optional
 
 from ..common.changelog import FORCED_LEVEL, Level, format_commit_message, update_changelog
@@ -17,8 +16,13 @@ from ..github.api import API, format_release
 
 SCOPE_FIX = {}
 
+savedParser: argparse.ArgumentParser = None
+
 
 def addReleaseArgumentsTo(parser: argparse.ArgumentParser):
+    global savedParser
+    savedParser = parser
+
     parser.add_argument(
         "--show-changelog",
         action="store_true",
@@ -42,14 +46,27 @@ def addReleaseArgumentsTo(parser: argparse.ArgumentParser):
         required=False,
         help="change the stability of the version",
     )
+    parser.add_argument(
+        "--use",
+        required=False,
+        help="ignore the version change from changelog and instead use the version from this param; cannot be used with --force or --stability",
+    )
 
 
 def runReleaseCommand(args: argparse.Namespace):
+    level = FORCED_LEVEL.get(args.force)
+    if args.use is not None and level is not None:
+        savedParser.error("--use and --force cannot be used together")
+
+    if args.use is not None and args.stability is not None:
+        savedParser.error("--use and --force cannot be used together")
+
     release(
         args.all,
-        FORCED_LEVEL.get(args.force),
+        level,
         args.stability,
         args.show_changelog,
+        args.use,
     )
 
 
@@ -90,12 +107,18 @@ def release(
     forced_level: Optional[Level],
     stability: Optional[str],
     show_changelog: bool,
+    use_version: Optional[str],
 ):
     project = getVersion()
 
     tags = getTags(project)
     log, level = getLog(tags, SCOPE_FIX, take_all)
-    next_tag = _nextVersion(project, forced_level, stability, level)
+    if use_version is not None:
+        next_tag = use_version
+        if next_tag[:1] != 'v':
+            next_tag = f'v{next_tag}'
+    else:
+        next_tag = _nextVersion(project, forced_level, stability, level)
 
     if not Environment.DRY_RUN or show_changelog:
         update_changelog(log, next_tag, project.tagName, project.github.url)
