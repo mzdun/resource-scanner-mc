@@ -20,11 +20,11 @@ It helps players to find resources more easily. At start, it only looks for coal
 - scans resources in range of 32 blocks in the direction player is looking.
 - can look for a specific resource or a list of resources
 - _tbd_ presents the echoes of closest resource
-- supports configuration via JSON editing
+- supports configuration via JSON editing or Mod Menu plugin
 
 ## Usage
 
-Pressing the scanner button will reveal the resouces, if any, in your player vicinity.
+Pressing the scanner button will reveal the resouces, if any, in your player vicinity. It starts easy, with coal and deepslate coal ores, but later can be set up to look for anything you want (as long as you want to locate an ore). Just press `M` and enjoy.
 
 The configuration is done through `config/resource-scanner.json` file. It will be created after first run. Alternatively, if you have a Mod Menu plugin installed, you can go into its screen from Minecraft menu and change the options there.
 
