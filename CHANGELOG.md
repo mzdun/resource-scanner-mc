@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) and [COMMITS.md](COMMITS.md) for commit guidelines.
 
+## [0.3.1](https://github.com/mzdun/resource-scanner-mc/compare/v0.3.0...v0.3.1) (2024-10-01)
+
+### Bug Fixes
+
+- decide the environment in the mod manifest ([436199b](https://github.com/mzdun/resource-scanner-mc/commit/436199bbd4f2173bf5f35cbe9c55171a7fa587d9))
+
 ## [0.3.0](https://github.com/mzdun/resource-scanner-mc/compare/v0.2.0...v0.3.0) (2024-10-01)
 
 ### New Features
