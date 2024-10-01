@@ -23,11 +23,6 @@ public final class Sonar {
     public static Id[] INTERESTING_IDS = new Id[] {
             Id.ofVanilla("coal_ore"),
             Id.ofVanilla("deepslate_coal_ore"),
-            Id.ofVanilla("iron_ore"),
-            Id.ofVanilla("deepslate_iron_ore"),
-            Id.ofVanilla("diamond_ore"),
-            Id.ofVanilla("deepslate_diamond_ore"),
-            Id.ofVanilla("netherite_block"),
     };
 
     private final BlockEchoes echoes;

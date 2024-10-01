@@ -20,12 +20,20 @@ import com.midnightbits.scanner.test.support.Iterables;
 public class SonarTest {
         public final static int TEST_BLOCK_DISTANCE = 32;
         public final static int TEST_BLOCK_RADIUS = 4;
+        public static Id[] TEST_INTERESTING_IDS = new Id[] {
+                        Id.ofVanilla("coal_ore"),
+                        Id.ofVanilla("deepslate_coal_ore"),
+                        Id.ofVanilla("iron_ore"),
+                        Id.ofVanilla("deepslate_iron_ore"),
+                        Id.ofVanilla("diamond_ore"),
+                        Id.ofVanilla("deepslate_diamond_ore"),
+                        Id.ofVanilla("netherite_block"),
+        };
         private final MockedClock clock = new MockedClock();
         private final static MockWorld TEST_WORLD = MockWorld.ofResource("test_world.txt");
 
-
         public static Sonar narrowSonar() {
-                return narrowSonar(TEST_BLOCK_DISTANCE, Set.of(Sonar.INTERESTING_IDS));
+                return narrowSonar(TEST_BLOCK_DISTANCE, Set.of(TEST_INTERESTING_IDS));
         }
 
         public static Sonar narrowSonar(int blockDistance, Set<Id> blocks) {
