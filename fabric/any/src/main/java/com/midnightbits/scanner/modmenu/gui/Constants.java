@@ -16,6 +16,7 @@ public interface Constants {
     Identifier ITEMS_BG = Identifier.ofVanilla("textures/gui/container/creative_inventory/tab_items.png");
 
     int ROWS_COUNT = 5;
+    int AT_HAND_ROWS_COUNT = 2;
     int COLUMNS_COUNT = 9;
     int DX = 9;
     int TOP = 18;
@@ -28,7 +29,8 @@ public interface Constants {
     int SCROLLBAR_WIDTH = 12;
     int SCROLLBAR_HEIGHT = 15;
 
-    int INVENTORY_HEIGHT = TOP + ROWS_COUNT * BUTTON_SIZE + VERTICAL_SPACE + BUTTON_SIZE + BOTTOM;
+    int TEXTURE_HEIGHT = TOP + ROWS_COUNT * BUTTON_SIZE + VERTICAL_SPACE + BUTTON_SIZE + BOTTOM;
+    int INVENTORY_HEIGHT = TEXTURE_HEIGHT + BUTTON_SIZE;
     int INVENTORY_WIDTH = DX + COLUMNS_COUNT * BUTTON_SIZE + SCROLLBAR_SEP + SCROLLBAR_WIDTH + DX;
 
     int OPTION_SEP = 4;
