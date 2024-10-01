@@ -3,12 +3,12 @@ package com.midnightbits.scanner.modmenu.gui;
 import com.midnightbits.scanner.modmenu.InventoryHandler;
 import com.midnightbits.scanner.modmenu.ScannerInventory;
 import com.midnightbits.scanner.rt.core.Id;
-import com.mojang.datafixers.kinds.Const;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
 
 import java.util.Set;
 import java.util.function.Consumer;
@@ -16,23 +16,27 @@ import java.util.function.Consumer;
 // TODO: Remaining issues and missing features:
 //       - Picking up item stack from upper slots should leave the stack in the inventory
 //       - Dropping item stack _anywhere_ should merge with preexisting stack (count still 1)
-//       - Add scrolling (low prio, nothing _to_ scroll)
 //       - _Nice to have_: Dropping item to on-hand inventory should re-sort that inventory
 
 @Environment(value = EnvType.CLIENT)
 public class InventoryWidget extends HandledWidget<InventoryHandler> {
+    Identifier SCROLLER_TEXTURE = Identifier.ofVanilla("container/creative_inventory/scroller");
+    Identifier SCROLLER_DISABLED_TEXTURE = Identifier.ofVanilla("container/creative_inventory/scroller_disabled");
+
+    private static final int SCROLLBAR_TOP = Constants.TOP;
+    private static final int SCROLLBAR_BOTTOM = Constants.INVENTORY_HEIGHT - Constants.BOTTOM - 1;
+    private static final int SCROLLBAR_RIGHT = Constants.INVENTORY_WIDTH - Constants.DX + 1;
+    private static final int SCROLLBAR_LEFT = SCROLLBAR_RIGHT - Constants.SCROLLBAR_WIDTH - 2;
+
     private final ScannerInventory inventory;
     private float scrollPosition;
+    private boolean scrolling;
     private final Consumer<Set<Id>> changeCallback;
 
     public InventoryWidget(MinecraftClient client, ScannerInventory inventory, Consumer<Set<Id>> changeCallback) {
         super(new InventoryHandler(inventory), client, Constants.INVENTORY_WIDTH, Constants.INVENTORY_HEIGHT);
         this.inventory = inventory;
         this.changeCallback = changeCallback;
-    }
-
-    public int preferredWidth() {
-        return Constants.INVENTORY_WIDTH;
     }
 
     public int preferredHeight(int parentHeight) {
@@ -61,10 +65,65 @@ public class InventoryWidget extends HandledWidget<InventoryHandler> {
         drawBackgroundSection(context, 0, top_section_y, top_section_h);
         drawBackgroundSection(context, top_section_h, middle_section_y, middle_section_h);
         drawBackgroundSection(context, top_section_h + middle_section_h, bottom_section_y, bottom_section_h);
+
+        Identifier identifier = handler.shouldShowScrollbar() ? SCROLLER_TEXTURE : SCROLLER_DISABLED_TEXTURE;
+
+        final var scrollableSpace = SCROLLBAR_BOTTOM - SCROLLBAR_TOP - Constants.SCROLLBAR_HEIGHT - 1;
+        context.drawGuiTexture(identifier,
+                SCROLLBAR_LEFT + 2,
+                SCROLLBAR_TOP + (int)((float)scrollableSpace * this.scrollPosition),
+                Constants.SCROLLBAR_WIDTH, Constants.SCROLLBAR_HEIGHT);
     }
 
     private void drawBackgroundSection(DrawContext context, int y, int u, int height) {
         context.drawTexture(Constants.ITEMS_BG, 0, y, 0, u, Constants.INVENTORY_WIDTH, height);
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (button == 0 && isClickInScrollbar(mouseX, mouseY)) {
+            scrolling = handler.shouldShowScrollbar();
+            return true;
+        }
+        return super.mouseClicked(mouseX, mouseY, button);
+    }
+
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+        if (this.scrolling) {
+            final int y = centerY();
+            final int top = y + SCROLLBAR_TOP;
+            final int bottom = y + SCROLLBAR_BOTTOM;
+            final float thumb = (float)Constants.SCROLLBAR_HEIGHT;
+
+            scrollPosition = ((float)mouseY - (float)top - thumb/2) / ((float)(bottom - top + 1) - thumb);
+            scrollPosition = MathHelper.clamp(scrollPosition, 0.0F, 1.0F);
+            handler.scrollItems(scrollPosition);
+
+            return true;
+        } else {
+            return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+        }
+    }
+
+    @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        if (button == 0) {
+            this.scrolling = false;
+        }
+
+        return super.mouseReleased(mouseX, mouseY, button);
+    }
+
+    private boolean isClickInScrollbar(double mouseX, double mouseY) {
+        final int y = centerY();
+        final int top = y + Constants.TOP;
+        final int bottom = y + Constants.INVENTORY_HEIGHT - Constants.BOTTOM;
+
+        final int x = centerX();
+        final int left = x + Constants.INVENTORY_WIDTH - Constants.DX;
+        final int right = left - 14;
+        return mouseX >= (double)right && mouseY >= (double)top && mouseX < (double)left && mouseY < (double)bottom;
     }
 
     // Inventory widget
