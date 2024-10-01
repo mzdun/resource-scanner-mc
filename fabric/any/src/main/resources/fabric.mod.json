@@ -8,11 +8,11 @@
 		"mzdun"
 	],
 	"contact": {
-		"homepage": "https://modrinth.com/mod/resource-scanner",
+		"homepage": "${modrinth}",
 		"sources": "${github}",
 		"issues": "${github}/issues"
 	},
-	"license": "CC0-1.0",
+	"license": "MIT",
 	"icon": "assets/${id}/icon.png",
 	"environment": "client",
 	"entrypoints": {
@@ -22,6 +22,14 @@
 		"modmenu": [
 			"com.midnightbits.scanner.modmenu.ResourceScannerModMenu"
 		]
+	},
+	"custom": {
+		"modmenu": {
+			"links": {
+				"modmenu.github_releases": "${github}/releases",
+				"modmenu.modrinth": "${modrinth}"
+			}
+		}
 	},
 	"mixins": [],
 	"depends": {

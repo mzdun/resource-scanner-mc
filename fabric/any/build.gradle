@@ -67,13 +67,8 @@ jacocoTestReport {
 	dependsOn test // tests are required to run before generating the report
 
 	reports {
-		xml {
-			enabled true // coveralls plugin depends on xml format report
-		}
-
-		html {
-			enabled true
-		}
+		xml.required = true
+		html.required = true
 	}
 
 	afterEvaluate {
@@ -121,6 +116,7 @@ processResources {
 			"title": project.mod_name,
 			"description": project.description,
 			"github": project.url,
+			"modrinth": project.modrinth,
 			"version": project.version,
 			"minecraft_dependency": minecraft_dependency
 	}
