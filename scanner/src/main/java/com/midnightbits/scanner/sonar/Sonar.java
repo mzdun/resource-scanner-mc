@@ -18,8 +18,8 @@ import com.midnightbits.scanner.rt.text.MutableText;
 import com.midnightbits.scanner.utils.ConeOfBlocks;
 
 public final class Sonar {
-    public static final int BLOCK_RADIUS = 4;
-    public static final int BLOCK_DISTANCE = 32;
+    public static final int BLOCK_RADIUS = 2;
+    public static final int BLOCK_DISTANCE = 16;
     public static Id[] INTERESTING_IDS = new Id[] {
             Id.ofVanilla("coal_ore"),
             Id.ofVanilla("deepslate_coal_ore"),
@@ -50,14 +50,6 @@ public final class Sonar {
 
     public Sonar() {
         this(BLOCK_DISTANCE, BLOCK_RADIUS, Set.of(INTERESTING_IDS));
-    }
-
-    public static Sonar narrow() {
-        return narrow(BLOCK_DISTANCE, Set.of(INTERESTING_IDS));
-    }
-
-    public static Sonar narrow(int blockDistance, Set<Id> blocks) {
-        return new Sonar(blockDistance, 0, blocks, BlockEchoes.MAX_SIZE);
     }
 
     public void refresh(int blockDistance, int blockRadius, Set<Id> blocks, int maxEchoes) {

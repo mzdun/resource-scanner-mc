@@ -5,6 +5,7 @@ package com.midnightbits.scanner.test;
 
 import java.util.Set;
 
+import com.midnightbits.scanner.sonar.test.SonarTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -41,7 +42,7 @@ public class ResourceScannerModTest {
     void checkDownwardsDirectionFromMiddle() {
         clock.timeStamp = 0x123456;
         final var core = new MockClientCore(V3i.ZERO, -90, 0, TEST_WORLD);
-        runScannerWith(core, Sonar.narrow(), new BlockEcho[] {
+        runScannerWith(core, SonarTest.narrowSonar(), new BlockEcho[] {
                 new BlockEcho(new V3i(0, 25, 0), Id.ofVanilla("deepslate_diamond_ore"), 0x123456),
                 new BlockEcho(new V3i(0, 23, 0), Id.ofVanilla("deepslate_iron_ore"), 0x123456),
                 new BlockEcho(new V3i(0, 27, 0), Id.ofVanilla("diamond_ore"), 0x123456),
@@ -54,7 +55,7 @@ public class ResourceScannerModTest {
     void searchForGold() {
         clock.timeStamp = 0x123456;
         final var core = new MockClientCore(new V3i(-60, -60, -51), 0f, 0f, TEST_WORLD);
-        runScannerWith(core, Sonar.narrow(Sonar.BLOCK_DISTANCE, Set.of(Id.ofVanilla("gold_ore"))), new BlockEcho[] {
+        runScannerWith(core, SonarTest.narrowSonar(SonarTest.TEST_BLOCK_DISTANCE, Set.of(Id.ofVanilla("gold_ore"))), new BlockEcho[] {
                 new BlockEcho(new V3i(-60, -60, -50), Id.ofVanilla("gold_ore"), 0x123456),
                 new BlockEcho(new V3i(-60, -60, -33), Id.ofVanilla("gold_ore"), 0x123456),
         });

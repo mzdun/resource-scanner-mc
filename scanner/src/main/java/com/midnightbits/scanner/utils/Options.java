@@ -17,10 +17,23 @@ import org.slf4j.LoggerFactory;
 import com.midnightbits.scanner.rt.core.Id;
 import com.midnightbits.scanner.rt.event.EventEmitterOf;
 
-public final class ConfigFile extends EventEmitterOf.Impl<Settings.Event> {
+public final class Options extends EventEmitterOf.Impl<Settings.Event> {
     static String JSON_NAME = "resource-scanner.json";
+    static Options instance = null;
     Path configDir = null;
     Settings settings = null;
+
+    private Options() {}
+
+    public static synchronized Options getInstance() {
+        if (instance == null)
+            instance = new Options();
+        return instance;
+    }
+
+    public static synchronized void resetInstance() {
+        instance = null;
+    }
 
     Path getFileName() {
         return configDir.resolve(JSON_NAME);
@@ -58,6 +71,8 @@ public final class ConfigFile extends EventEmitterOf.Impl<Settings.Event> {
 
         return false;
     }
+
+    public Settings settings() { return settings; }
 
     public void setAll(int echoesSize, int blockDistance, int blockRadius, Set<Id> interestingIds) {
         setAll(echoesSize, blockDistance, blockRadius, interestingIds, true);

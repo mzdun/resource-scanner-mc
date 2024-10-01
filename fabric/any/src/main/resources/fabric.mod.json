@@ -18,6 +18,9 @@
 	"entrypoints": {
 		"client": [
 			"com.midnightbits.scanner.fabric.ResourceScannerFabric"
+		],
+		"modmenu": [
+			"com.midnightbits.scanner.modmenu.ResourceScannerModMenu"
 		]
 	},
 	"mixins": [],

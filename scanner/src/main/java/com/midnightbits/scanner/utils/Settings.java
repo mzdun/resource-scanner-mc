@@ -37,6 +37,22 @@ public record Settings(int echoesSize, int blockDistance, int blockRadius, Set<I
         }
     }
 
+    public Settings withEchoesSize(int value) {
+        return new Settings(value, blockDistance, blockRadius, interestingIds);
+    }
+
+    public Settings withBlockDistance(int value) {
+        return new Settings(echoesSize, value, blockRadius, interestingIds);
+    }
+
+    public Settings withBlockRadius(int value) {
+        return new Settings(echoesSize, blockDistance, value, interestingIds);
+    }
+
+    public Settings withIds(Set<Id> value) {
+        return new Settings(echoesSize, blockDistance, blockRadius, value);
+    }
+
     public static class Event extends com.midnightbits.scanner.rt.event.Event {
         private final Settings settings;
 
