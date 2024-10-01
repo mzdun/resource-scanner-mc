@@ -1,0 +1,20 @@
+{
+    "modmenu.nameTranslation.resource-scanner": "Skaner Zasobów",
+    "modmenu.descriptionTranslation.resource-scanner": "Lokalizuje węgiel, żelazo, diamenty, netheryt, itd.",
+
+    "key.resource-scanner.scan": "Skanuj",
+
+    "screens.resource-scanner.options": "Opcje Skanera Zasobów",
+    "option.resource-scanner.message_narrate": "wiadomość %s",
+    "option.resource-scanner.inventory_needs_world": "Musisz być w grze, żeby zmienić rodzaje skanowanej rudy",
+    "option.resource-scanner.echoes": "Widoczne echa",
+    "option.resource-scanner.distance": "Największa odległość",
+    "option.resource-scanner.distance/measure": "%sm",
+    "option.resource-scanner.width": "Szerokość skanera",
+    "option.resource-scanner.width/zero": "pojedynczy punkt",
+    "option.resource-scanner.width/circle": "okrąg %1$sm x %1$sm",
+    "option.resource-scanner.interesting_ids": "Zmień rodzaje skanowanej rudy",
+
+    "screens.resource-scanner.ores": "Wybierz rodzaje rudy",
+    "inventory.resource-scanner.ores": "Rodzaje skanowalnej rudy"
+}

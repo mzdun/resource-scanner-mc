@@ -5,6 +5,7 @@ package com.midnightbits.scanner.sonar.test;
 
 import java.util.Set;
 
+import com.midnightbits.scanner.sonar.BlockEchoes;
 import org.junit.jupiter.api.Test;
 
 import com.midnightbits.scanner.rt.core.Id;
@@ -17,8 +18,19 @@ import com.midnightbits.scanner.test.mocks.MockedClock;
 import com.midnightbits.scanner.test.support.Iterables;
 
 public class SonarTest {
+        public final static int TEST_BLOCK_DISTANCE = 32;
+        public final static int TEST_BLOCK_RADIUS = 4;
         private final MockedClock clock = new MockedClock();
         private final static MockWorld TEST_WORLD = MockWorld.ofResource("test_world.txt");
+
+
+        public static Sonar narrowSonar() {
+                return narrowSonar(TEST_BLOCK_DISTANCE, Set.of(Sonar.INTERESTING_IDS));
+        }
+
+        public static Sonar narrowSonar(int blockDistance, Set<Id> blocks) {
+                return new Sonar(blockDistance, 0, blocks, BlockEchoes.MAX_SIZE);
+        }
 
         @Test
         void checkNewSonarIsEmpty() {
@@ -31,7 +43,7 @@ public class SonarTest {
                 final var core = new MockClientCore(V3i.ZERO, -90, 0, TEST_WORLD);
 
                 clock.timeStamp = 0x123456;
-                final var sonar = Sonar.narrow();
+                final var sonar = narrowSonar();
                 sonar.ping(core);
 
                 Iterables.assertEquals(new BlockEcho[] {
@@ -56,7 +68,7 @@ public class SonarTest {
                 final var core = new MockClientCore(V3i.ZERO, -90f, 0f, TEST_WORLD);
 
                 clock.timeStamp = 0x123456;
-                final var sonar = Sonar.narrow(Sonar.BLOCK_DISTANCE, Set.of(
+                final var sonar = narrowSonar(TEST_BLOCK_DISTANCE, Set.of(
                                 Id.ofVanilla("diamond_ore"),
                                 Id.ofVanilla("deepslate_diamond_ore")));
                 sonar.ping(core);
@@ -72,7 +84,7 @@ public class SonarTest {
                 final var core = new MockClientCore(new V3i(-60, -60, -51), 0f, 0f, TEST_WORLD);
 
                 clock.timeStamp = 0x123456;
-                final var sonar = new Sonar(Sonar.BLOCK_DISTANCE, Sonar.BLOCK_RADIUS, Set.of(Id.ofVanilla("gold_ore")));
+                final var sonar = new Sonar(TEST_BLOCK_DISTANCE, TEST_BLOCK_RADIUS, Set.of(Id.ofVanilla("gold_ore")));
                 sonar.ping(core);
 
                 Iterables.assertEquals(new BlockEcho[] {
@@ -126,7 +138,7 @@ public class SonarTest {
                 final var core = new MockClientCore(new V3i(-60, -60, -51), 0f, 0f, TEST_WORLD);
 
                 clock.timeStamp = 0x123456;
-                final var sonar = Sonar.narrow(Sonar.BLOCK_DISTANCE, Set.of(Id.ofVanilla("gold_ore")));
+                final var sonar = narrowSonar(TEST_BLOCK_DISTANCE, Set.of(Id.ofVanilla("gold_ore")));
                 sonar.ping(core);
 
                 Iterables.assertEquals(new BlockEcho[] {
@@ -145,7 +157,7 @@ public class SonarTest {
                 final var core = new MockClientCore(V3i.ZERO, -75f, 180f, TEST_WORLD);
 
                 clock.timeStamp = 0x123456;
-                final var sonar = Sonar.narrow();
+                final var sonar = narrowSonar();
                 sonar.ping(core);
 
                 Iterables.assertEquals(new BlockEcho[] {

@@ -1,3 +1,20 @@
 {
-    "key.resource-scanner.scan": "Scan"
+    "modmenu.nameTranslation.resource-scanner": "Resource Scanner",
+    "modmenu.descriptionTranslation.resource-scanner": "Locates coal, iron, diamonds, netherite, etc.",
+
+    "key.resource-scanner.scan": "Scan",
+
+    "screens.resource-scanner.options": "Resource Scanner Options",
+    "option.resource-scanner.message_narrate": "%s message",
+    "option.resource-scanner.inventory_needs_world": "You must be in a game to change the kinds of scanned ore",
+    "option.resource-scanner.echoes": "Visible echoes",
+    "option.resource-scanner.distance": "Maximum distance",
+    "option.resource-scanner.distance/measure": "%sm",
+    "option.resource-scanner.width": "Scanner width",
+    "option.resource-scanner.width/zero": "single point",
+    "option.resource-scanner.width/circle": "%1$sm x %1$sm circle",
+    "option.resource-scanner.interesting_ids": "Change scanned ore kinds",
+
+    "screens.resource-scanner.ores": "Select ore kinds",
+    "inventory.resource-scanner.ores": "Scannable ore kinds"
 }

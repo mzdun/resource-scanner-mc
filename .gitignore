@@ -1,5 +1,6 @@
 .fabric-cache/
-.gradle
+.fabric/
+.gradle/
 .idea/
 .vscode/
 bin/

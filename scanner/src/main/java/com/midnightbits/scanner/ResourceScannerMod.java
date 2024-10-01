@@ -16,25 +16,18 @@ import com.midnightbits.scanner.rt.core.ScannerMod;
 import com.midnightbits.scanner.sonar.BlockEcho;
 import com.midnightbits.scanner.sonar.BlockEchoes;
 import com.midnightbits.scanner.sonar.Sonar;
-import com.midnightbits.scanner.utils.ConfigFile;
+import com.midnightbits.scanner.utils.Options;
 import com.midnightbits.scanner.utils.Manifests;
 
 public class ResourceScannerMod implements ScannerMod {
-    public static final String TAG = "resource-scanner";
-    private static final Logger LOGGER = LoggerFactory.getLogger(TAG);
+    public static final Logger LOGGER = LoggerFactory.getLogger(ScannerMod.MOD_ID);
 
-    private final ConfigFile config = new ConfigFile();
     private Sonar sonar = new Sonar();
 
     @Override
     public void onInitializeClient() {
-        config.addEventListener((event) -> {
-            var settings = event.settings();
-            this.sonar.refresh(
-                    settings.blockDistance(), settings.blockRadius(), settings.interestingIds(), settings.echoesSize());
-        });
-
-        LOGGER.warn("resource-scanner ({} for {}, {}, {})",
+        LOGGER.warn("{} ({} for {}, {}, {})",
+                ScannerMod.MOD_ID,
                 Manifests.getTagString(Services.PLATFORM.getScannerVersion()),
                 Manifests.getProductVersion("MC", Services.PLATFORM.getMinecraftVersion()),
                 Services.PLATFORM.getPlatformName(),
@@ -42,9 +35,16 @@ public class ResourceScannerMod implements ScannerMod {
         Path configDir = Services.PLATFORM.getConfigDir();
         LOGGER.debug("conf dir: {}", configDir);
 
-        config.setDirectory(configDir);
-        if (!config.load()) {
-            config.setAll(
+        final var options = Options.getInstance();
+        options.addEventListener((event) -> {
+            var settings = event.settings();
+            this.sonar.refresh(
+                    settings.blockDistance(), settings.blockRadius(), settings.interestingIds(), settings.echoesSize());
+        });
+
+        options.setDirectory(configDir);
+        if (!options.load()) {
+            options.setAll(
                     BlockEchoes.MAX_SIZE,
                     Sonar.BLOCK_DISTANCE,
                     Sonar.BLOCK_RADIUS,
@@ -53,7 +53,7 @@ public class ResourceScannerMod implements ScannerMod {
         }
 
         Services.PLATFORM.getKeyBinder().bind(
-                "key.resource-scanner.scan",
+                ScannerMod.translationKey("key", "scan"),
                 KeyBinding.KEY_M,
                 KeyBinding.MOVEMENT_CATEGORY,
                 this::onScanPressed);

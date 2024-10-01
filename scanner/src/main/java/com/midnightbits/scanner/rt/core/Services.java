@@ -15,7 +15,7 @@ public interface Services {
     PlatformInterface PLATFORM = load(PlatformInterface.class);
     TextSupportInterface TEXT = load(TextSupportInterface.class);
 
-    String TAG = "resource-scanner/services";
+    String TAG = ScannerMod.MOD_ID + "/services";
 
     static <T> T load(Class<T> clazz) {
         final ClassLoader targetClassLoader = clazz.getClassLoader();

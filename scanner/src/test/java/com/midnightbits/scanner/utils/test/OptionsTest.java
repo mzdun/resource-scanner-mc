@@ -21,12 +21,12 @@ import org.junit.jupiter.api.Test;
 
 import com.midnightbits.scanner.rt.core.Services;
 import com.midnightbits.scanner.test.support.Counter;
-import com.midnightbits.scanner.utils.ConfigFile;
+import com.midnightbits.scanner.utils.Options;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-public class ConfigFileTest {
+public class OptionsTest {
     final static Path configDir = Services.PLATFORM.getConfigDir();
     final static Path configFile = configDir.resolve("resource-scanner.json");
 
@@ -49,10 +49,11 @@ public class ConfigFileTest {
 
         configFile.toFile().mkdirs();
 
-        final var cfg = new ConfigFile();
-        cfg.addEventListener((settings) -> counter.inc());
-        cfg.setDirectory(configDir);
-        cfg.load();
+        final var opts = Options.getInstance();
+        opts.addEventListener((settings) -> counter.inc());
+        opts.setDirectory(configDir);
+        opts.load();
+        Options.resetInstance();
 
         Assertions.assertEquals(0, counter.get());
     }
@@ -64,13 +65,14 @@ public class ConfigFileTest {
 
         store(contents);
 
-        final var cfg = new ConfigFile();
-        cfg.addEventListener((event) -> {
+        final var opts = Options.getInstance();
+        opts.addEventListener((event) -> {
             counter.inc();
             System.out.println(event.settings());
         });
-        cfg.setDirectory(configDir);
-        cfg.load();
+        opts.setDirectory(configDir);
+        opts.load();
+        Options.resetInstance();
 
         Assertions.assertEquals(0, counter.get(), contents);
     }
@@ -81,12 +83,13 @@ public class ConfigFileTest {
 
         store("{\"interestingIds\":[]}");
 
-        final var cfg = new ConfigFile();
-        cfg.addEventListener((e) -> {
+        final var opts = Options.getInstance();
+        opts.addEventListener((e) -> {
             settings.add(e.settings());
         });
-        cfg.setDirectory(configDir);
-        cfg.load();
+        opts.setDirectory(configDir);
+        opts.load();
+        Options.resetInstance();
 
         Assertions.assertEquals(1, settings.size());
         Assertions.assertEquals(new Settings(0, 0, 0, Set.of()), settings.getFirst());
@@ -97,14 +100,15 @@ public class ConfigFileTest {
         final var counter = new Counter();
         configFile.toFile().mkdirs();
 
-        final var cfg = new ConfigFile();
-        cfg.addEventListener((settings) -> counter.inc());
-        cfg.setDirectory(configDir);
-        cfg.setAll(BlockEchoes.MAX_SIZE,
+        final var opts = Options.getInstance();
+        opts.addEventListener((settings) -> counter.inc());
+        opts.setDirectory(configDir);
+        opts.setAll(BlockEchoes.MAX_SIZE,
                 Sonar.BLOCK_DISTANCE,
                 Sonar.BLOCK_RADIUS,
                 Set.of(Sonar.INTERESTING_IDS),
                 true);
+        Options.resetInstance();
 
         final var actual = load();
 
