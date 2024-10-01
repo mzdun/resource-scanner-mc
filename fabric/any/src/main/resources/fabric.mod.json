@@ -14,7 +14,7 @@
 	},
 	"license": "CC0-1.0",
 	"icon": "assets/${id}/icon.png",
-	"environment": "*",
+	"environment": "client",
 	"entrypoints": {
 		"client": [
 			"com.midnightbits.scanner.fabric.ResourceScannerFabric"
