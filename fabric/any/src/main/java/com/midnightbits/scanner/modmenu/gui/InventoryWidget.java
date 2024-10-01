@@ -3,10 +3,12 @@ package com.midnightbits.scanner.modmenu.gui;
 import com.midnightbits.scanner.modmenu.InventoryHandler;
 import com.midnightbits.scanner.modmenu.ScannerInventory;
 import com.midnightbits.scanner.rt.core.Id;
+import com.mojang.datafixers.kinds.Const;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.util.Identifier;
 
 import java.util.Set;
 import java.util.function.Consumer;
@@ -16,8 +18,6 @@ import java.util.function.Consumer;
 //       - Dropping item stack _anywhere_ should merge with preexisting stack (count still 1)
 //       - Add scrolling (low prio, nothing _to_ scroll)
 //       - _Nice to have_: Dropping item to on-hand inventory should re-sort that inventory
-//       - _Nice to have_: Expand the on-hand inventory to two rows (paint the texture, then
-//         overlay with the bottom of the same texture)
 
 @Environment(value = EnvType.CLIENT)
 public class InventoryWidget extends HandledWidget<InventoryHandler> {
@@ -47,6 +47,24 @@ public class InventoryWidget extends HandledWidget<InventoryHandler> {
     @Override
     protected void drawForeground(DrawContext context, int mouseX, int mouseY) {
         context.drawText(client.textRenderer, inventory.getName(), 8, 6, 0x404040, false);
+    }
+
+    @Override
+    protected void drawBackground(DrawContext context) {
+        final var mid_bottom_cut = 2;
+        final var top_section_y = 0;
+        final var top_section_h = Constants.TEXTURE_HEIGHT - Constants.BUTTON_SIZE - Constants.BOTTOM;
+        final var middle_section_y = Constants.TOP + Constants.BUTTON_SIZE;
+        final var middle_section_h = 2 * Constants.BUTTON_SIZE - mid_bottom_cut;
+        final var bottom_section_y = Constants.TEXTURE_HEIGHT - Constants.BOTTOM - mid_bottom_cut;
+        final var bottom_section_h = Constants.BOTTOM + mid_bottom_cut;
+        drawBackgroundSection(context, 0, top_section_y, top_section_h);
+        drawBackgroundSection(context, top_section_h, middle_section_y, middle_section_h);
+        drawBackgroundSection(context, top_section_h + middle_section_h, bottom_section_y, bottom_section_h);
+    }
+
+    private void drawBackgroundSection(DrawContext context, int y, int u, int height) {
+        context.drawTexture(Constants.ITEMS_BG, 0, y, 0, u, Constants.INVENTORY_WIDTH, height);
     }
 
     // Inventory widget

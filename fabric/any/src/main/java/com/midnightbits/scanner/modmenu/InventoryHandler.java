@@ -31,9 +31,13 @@ public class InventoryHandler extends ScreenHandler {
                         Constants.TOP + row * Constants.BUTTON_SIZE));
             }
         }
-        for (int col = 0; col < Constants.COLUMNS_COUNT; ++col) {
-            this.addSlot(new Slot(inventory, col, Constants.DX + col * Constants.BUTTON_SIZE,
-                    Constants.INVENTORY_HEIGHT - Constants.BOTTOM - Constants.BUTTON_SIZE));
+        final var topRow = Constants.INVENTORY_HEIGHT - Constants.BOTTOM - 2 * Constants.BUTTON_SIZE;
+        for (int row = 0; row < Constants.AT_HAND_ROWS_COUNT; ++row) {
+            final var idOffset = row * Constants.COLUMNS_COUNT;
+            for (int col = 0; col < Constants.COLUMNS_COUNT; ++col) {
+                this.addSlot(new Slot(inventory, idOffset + col, Constants.DX + col * Constants.BUTTON_SIZE,
+                        topRow + row * Constants.BUTTON_SIZE));
+            }
         }
         this.scrollItems(0.0f);
     }
