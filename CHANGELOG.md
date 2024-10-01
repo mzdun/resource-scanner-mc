@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) and [COMMITS.md](COMMITS.md) for commit guidelines.
 
+## [0.3.0](https://github.com/mzdun/resource-scanner-mc/compare/v0.2.0...v0.3.0) (2024-10-01)
+
+### New Features
+
+- add scrollbar to inventory widget ([cb03d1f](https://github.com/mzdun/resource-scanner-mc/commit/cb03d1f6c29de7b529e178ec408ecb9242261428))
+- expand inventory to two rows at the bottom ([9f79e9c](https://github.com/mzdun/resource-scanner-mc/commit/9f79e9c74882b9a4878220b97e587e18fa81e4a8))
+- add modmenu settings screens ([47bc149](https://github.com/mzdun/resource-scanner-mc/commit/47bc149a865355d3827239e62516cb6e21443483))
+
+### Bug Fixes
+
+- cut down initial ore set to coal ([36cd931](https://github.com/mzdun/resource-scanner-mc/commit/36cd931185baeba60720891563a97f95ab90a955))
+- **docs**: show first screenshots ([3b8422e](https://github.com/mzdun/resource-scanner-mc/commit/3b8422e1220d727054c6dd1a1969525a5b63db98))
+
 ## [0.2.0](https://github.com/mzdun/resource-scanner-mc/compare/v0.2.0-alpha...v0.2.0) (2024-09-27)
 
 ### Bug Fixes
