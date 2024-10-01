@@ -44,6 +44,7 @@ class Archive(NamedTuple):
     minecraftVersion: str
     loaders: List[Loader]
     project: Project
+    otherDeps: List[Dep]
 
     @property
     def properties(self):
@@ -80,6 +81,12 @@ class Archive(NamedTuple):
                     continue
                 results.append(dep)
                 ids.add(project_id)
+            for dep in [d.json() for d in self.otherDeps]:
+                project_id = dep["project_id"]
+                if project_id in ids:
+                    continue
+                results.append(dep)
+                ids.add(project_id)
         return results
 
 
@@ -92,7 +99,7 @@ def _loadersFromIds(loaderIds: List[str], knownLoaders: Dict[str, Loader]):
     return loaders
 
 
-def enumArchives(src: str, project: Project, knownLoaders: Dict[str, Loader]):
+def enumArchives(src: str, project: Project, knownLoaders: Dict[str, Loader], *otherDeps: Dep):
     matcher = buildRegex(project)
     src, names = getPackages(src, matcher)
 
@@ -102,6 +109,7 @@ def enumArchives(src: str, project: Project, knownLoaders: Dict[str, Loader]):
         loaders = _loadersFromIds(loaderIds, knownLoaders)
         if len(loaders) == 0:
             continue
-        uploads.append(Archive(src, name, mcVersion, loaders, project))
+        uploads.append(Archive(src, name, mcVersion,
+                       loaders, project, otherDeps))
 
     return uploads
