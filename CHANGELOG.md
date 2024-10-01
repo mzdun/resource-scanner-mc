@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) and [COMMITS.md](COMMITS.md) for commit guidelines.
 
+## [0.3.2](https://github.com/mzdun/resource-scanner-mc/compare/v0.3.1...v0.3.2) (2024-10-01)
+
+### Bug Fixes
+
+- align Fabric-facing license with GitHub one ([9f81b24](https://github.com/mzdun/resource-scanner-mc/commit/9f81b2495990cab9447107fa2e58a48d2ec7c54f))
+
 ## [0.3.1](https://github.com/mzdun/resource-scanner-mc/compare/v0.3.0...v0.3.1) (2024-10-01)
 
 ### Bug Fixes
