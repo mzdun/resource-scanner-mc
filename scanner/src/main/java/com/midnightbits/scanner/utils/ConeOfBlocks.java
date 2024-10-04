@@ -81,7 +81,6 @@ public final class ConeOfBlocks {
 
         @Override
         public RangedPositions next() {
-            // ResourceScannerMod.LOGGER.warn("NEXT {} {}", sliceDistance, sliceStart);
             for (int index = sliceStart; index < items.size(); ++index) {
                 final var ranged = items.get(index);
                 if (sliceDistance != ranged.distance && sliceStart < index) {
@@ -97,8 +96,6 @@ public final class ConeOfBlocks {
         }
 
         private RangedPositions getSlice(List<RangedPosition> allBlocks, int sliceStartIncl, int sliceEndExcl) {
-            // ResourceScannerMod.LOGGER.warn(" TAKE {} [{}, {}), {}", sliceDistance,
-            // sliceStartIncl, sliceEndExcl, sliceEndExcl - sliceStartIncl);
             return new RangedPositions(sliceDistance, allBlocks.stream()
                     .skip(sliceStartIncl)
                     .limit(sliceEndExcl - sliceStartIncl)

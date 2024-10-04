@@ -11,14 +11,12 @@ import java.util.List;
 
 public class Scene {
     public static final Logger LOGGER = LoggerFactory.getLogger("resources-scanner/gfx");
-    final AbstractAnimatorHost runner;
     final Sonar target;
     final TickSet<Shimmers> shimmers = new TickSet<>();
     long then;
     long frames;
 
     public Scene(Sonar target) {
-        this.runner = Services.PLATFORM.getAnimatorHost();
         this.target = target;
     }
 
@@ -28,13 +26,12 @@ public class Scene {
         if (attach) {
             then = Clock.currentTimeMillis();
             frames = 0;
-            runner.addRenderer(this::render);
+            Services.PLATFORM.getAnimatorHost().addRenderer(this::render);
         }
     }
 
     public void remove(Shimmers shimmers) {
         this.shimmers.remove(shimmers);
-        LOGGER.info("shimmers: {}", this.shimmers.size());
     }
 
     public boolean isEmpty() {
