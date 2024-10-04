@@ -6,11 +6,17 @@ package com.midnightbits.scanner.test.mocks.platform;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import com.midnightbits.scanner.platform.KeyBinder;
 import com.midnightbits.scanner.platform.PlatformInterface;
 import com.midnightbits.scanner.rt.core.ClientCore;
+import com.midnightbits.scanner.sonar.BlockEcho;
+import com.midnightbits.scanner.sonar.graphics.AbstractAnimatorHost;
+import com.midnightbits.scanner.sonar.graphics.GraphicContext;
+import com.midnightbits.scanner.sonar.graphics.Shimmers;
 
 public final class MockPlatform implements PlatformInterface, KeyBinder {
     public record KeyPressHandler(String translation, KeyBinder.KeyPressHandler handler) {
@@ -23,6 +29,11 @@ public final class MockPlatform implements PlatformInterface, KeyBinder {
     public Map<String, Map<Integer, KeyPressHandler>> boundKeys = new HashMap<>();
     private String scannerVersion = null;
     private String minecraftVersion = null;
+    private MockAnimatorHost host = null;
+
+    public MockPlatform() {
+        setDefaultHostBackend();
+    }
 
     @Override
     public String getPlatformName() {
@@ -47,7 +58,7 @@ public final class MockPlatform implements PlatformInterface, KeyBinder {
     @Override
     public Path getConfigDir() {
         try {
-            return Path.of(MockPlatform.class.getClassLoader().getResource("").toURI());
+            return Path.of(Objects.requireNonNull(MockPlatform.class.getClassLoader().getResource("")).toURI());
         } catch (URISyntaxException e) {
             return Path.of("/");
         }
@@ -59,9 +70,30 @@ public final class MockPlatform implements PlatformInterface, KeyBinder {
     }
 
     @Override
+    public AbstractAnimatorHost getAnimatorHost() {
+        if (host == null) {
+            throw new NullPointerException();
+        }
+        return host;
+    }
+
+    @Override
     public void bind(String translationKey, int code, String category, KeyBinder.KeyPressHandler handler) {
         boundKeys.computeIfAbsent(category, (key) -> new HashMap<>());
         boundKeys.get(category).put(code, new KeyPressHandler(translationKey, handler));
+    }
+
+    public interface ScanDrawer {
+        void drawScan(Iterable<BlockEcho> echoes, List<Shimmers> shimmers);
+    }
+
+    public void setHostBackend(GraphicContext painter) {
+        host = new MockAnimatorHost(() -> painter);
+    }
+
+    public void setDefaultHostBackend() {
+        host = new MockAnimatorHost(() -> (echoes, shimmers) -> {
+        });
     }
 
     public void setVersions(String scannerVersion, String minecraftVersion) {
@@ -76,12 +108,11 @@ public final class MockPlatform implements PlatformInterface, KeyBinder {
         return catKeys.get(code);
     }
 
-    public boolean press(int code, String category, ClientCore client) {
+    public void press(int code, String category, ClientCore client) {
         MockPlatform.KeyPressHandler handler = getHandler(code, category);
         if (handler == null)
-            return false;
+            return;
 
         handler.handle(client);
-        return true;
     }
 }

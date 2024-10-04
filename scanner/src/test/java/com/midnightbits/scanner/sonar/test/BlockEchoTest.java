@@ -90,4 +90,39 @@ public class BlockEchoTest {
                                 () -> BlockEcho.echoFrom(V3i.ZERO, Id.ofVanilla("dirt"))
                                                 .equals(blocks));
         }
+
+        @Test
+        public void partialEchoWorks() {
+                BlockEcho.Partial echo = new BlockEcho.Partial(new V3i(1, 2, 3), Id.ofVanilla("gold_ore"));
+
+                Assertions.assertEquals(echo, new BlockEcho.Partial(new V3i(1, 2, 3), Id.ofVanilla("gold_ore")));
+                Assertions.assertNotEquals(echo, new BlockEcho.Partial(new V3i(1, 2, 3), Id.ofVanilla("iron_ore")));
+                Assertions.assertNotEquals(echo, new BlockEcho.Partial(new V3i(2, 3, 1), Id.ofVanilla("gold_ore")));
+                Assertions.assertEquals(new V3i(1, 2, 3), echo.position());
+                Assertions.assertEquals(Id.ofVanilla("gold_ore"), echo.id());
+                Assertions.assertEquals(
+                                "new BlockEcho.Partial(new V3i(1, 2, 3), Id.ofVanilla(\"gold_ore\"))",
+                                echo.toString());
+
+                BlockEchoes blocks = new BlockEchoes();
+                Assertions.assertThrows(ClassCastException.class,
+                                () -> new BlockEcho.Partial(V3i.ZERO, Id.ofVanilla("dirt"))
+                                                .equals(blocks));
+                Assertions.assertThrows(NullPointerException.class,
+                                () -> new BlockEcho.Partial(V3i.ZERO, Id.ofVanilla("dirt"))
+                                                .equals(null));
+        }
+
+        @Test
+        public void nonVanillaPartialEchoWorks() {
+                BlockEcho.Partial echo = new BlockEcho.Partial(new V3i(1, 2, 3), Id.of("mod:gold_ore"));
+
+                Assertions.assertEquals(echo,
+                                new BlockEcho.Partial(new V3i(1, 2, 3), Id.of("mod", "gold_ore")));
+                Assertions.assertEquals(new V3i(1, 2, 3), echo.position());
+                Assertions.assertEquals(Id.of("mod", "gold_ore"), echo.id());
+                Assertions.assertEquals(
+                                "new BlockEcho.Partial(new V3i(1, 2, 3), Id.of(\"mod\", \"gold_ore\"))",
+                                echo.toString());
+        }
 }

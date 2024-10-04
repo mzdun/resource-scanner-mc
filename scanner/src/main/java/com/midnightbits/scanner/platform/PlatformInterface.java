@@ -3,6 +3,8 @@
 
 package com.midnightbits.scanner.platform;
 
+import com.midnightbits.scanner.sonar.graphics.AbstractAnimatorHost;
+
 import java.nio.file.Path;
 
 public interface PlatformInterface {
@@ -21,4 +23,6 @@ public interface PlatformInterface {
     Path getConfigDir();
 
     KeyBinder getKeyBinder();
+
+    AbstractAnimatorHost getAnimatorHost();
 }

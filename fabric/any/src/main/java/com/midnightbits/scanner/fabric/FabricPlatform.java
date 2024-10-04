@@ -7,6 +7,7 @@ import java.nio.file.Path;
 
 import com.midnightbits.scanner.platform.KeyBinder;
 import com.midnightbits.scanner.platform.PlatformInterface;
+import com.midnightbits.scanner.sonar.graphics.AbstractAnimatorHost;
 import com.midnightbits.scanner.utils.CacheableValue;
 import com.midnightbits.scanner.utils.Manifests;
 
@@ -48,5 +49,10 @@ public class FabricPlatform implements PlatformInterface {
     @Override
     public KeyBinder getKeyBinder() {
         return binder;
+    }
+
+    @Override
+    public AbstractAnimatorHost getAnimatorHost() {
+        return FabricAnimationHost.INSTANCE;
     }
 }
