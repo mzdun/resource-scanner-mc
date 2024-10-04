@@ -30,29 +30,32 @@ public class WaveAnimator implements ScanWaveConsumer {
         private final Shimmers shimmers;
         private final List<BlockEcho.Partial> echoes;
         private final Sonar target;
+        private final int sliceId;
 
-        Slice(List<V3i> shimmers, List<BlockEcho.Partial> echoes, Sonar target) {
+        Slice(List<V3i> shimmers, List<BlockEcho.Partial> echoes, Sonar target, int sliceId) {
             this.shimmers = new Shimmers(shimmers);
             this.echoes = echoes;
             this.target = target;
+            this.sliceId = sliceId;
+            System.out.printf("Slice[%d]: shimmers:%d / echoes:%d%n", sliceId, shimmers.size(), echoes.size());
         }
 
         public Shimmers shimmers() {
             return shimmers;
         }
 
-        public Animation buildAnimation(Scene scene, int id, StageReporter reporter) {
+        public Animation buildAnimation(Scene scene, StageReporter reporter) {
             Consumer<Double> alphaConsumer = shimmers::setAlpha;
             var sequence = connectSlice(scene::add, shimmers);
 
-            sequence = reportUsing(sequence, reporter, id, AnimationStep.START);
+            sequence = reportUsing(sequence, reporter, sliceId, AnimationStep.START);
             sequence = sequence.andThen(rampUp(alphaConsumer));
 
-            sequence = reportUsing(sequence, reporter, id, AnimationStep.REPORT);
+            sequence = reportUsing(sequence, reporter, sliceId, AnimationStep.REPORT);
             sequence = sequence.andThen(registerEchoes());
 
             sequence = sequence.andThen(rampDown(alphaConsumer));
-            sequence = reportUsing(sequence, reporter, id, AnimationStep.HIDE);
+            sequence = reportUsing(sequence, reporter, sliceId, AnimationStep.HIDE);
 
             sequence = sequence.andThen(connectSlice(scene::remove, shimmers));
 
@@ -113,10 +116,10 @@ public class WaveAnimator implements ScanWaveConsumer {
 
     @Override
     public void advance(List<V3i> shimmers, List<BlockEcho.Partial> echoes) {
-        final var slice = new Slice(shimmers, echoes, target);
+        final var slice = new Slice(shimmers, echoes, target, sliceId);
         items.add(slice);
         scene.add(slice.shimmers());
-        animator.add(slice.buildAnimation(scene, sliceId, reporter));
+        animator.add(slice.buildAnimation(scene, reporter));
         ++sliceId;
     }
 }

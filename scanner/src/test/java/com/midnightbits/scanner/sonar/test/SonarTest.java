@@ -15,6 +15,7 @@ import com.midnightbits.scanner.sonar.graphics.WaveAnimator;
 import com.midnightbits.scanner.test.mocks.platform.MockAnimatorHost;
 import com.midnightbits.scanner.test.mocks.platform.MockPlatform;
 import com.midnightbits.scanner.utils.Clock;
+import com.midnightbits.scanner.utils.Settings;
 import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -48,11 +49,11 @@ public class SonarTest {
 		long then = Clock.currentTimeMillis();
 
 		Setup(int blockDistance, int blockRadius, Set<Id> blocks) {
-			this(new Sonar(blockDistance, blockRadius, blocks));
+			this(new Settings(BlockEchoes.MAX_SIZE, blockDistance, blockRadius, blocks));
 		}
 
-		Setup(Sonar sonar) {
-			this.sonar = sonar;
+		Setup(Settings settings) {
+			this.sonar = new Sonar(settings);
 			((MockPlatform) Services.PLATFORM).setHostBackend((echoes, shimmers) -> {
 			});
 			this.animation = new SonarAnimation(sonar);
@@ -82,18 +83,18 @@ public class SonarTest {
 
 		void report(long now, int id, WaveAnimator.AnimationStep animationStep) {
 			final var diff = now - then;
-			Scene.LOGGER.warn("{}.{} {}: {}", diff / 1000, String.format("%03d", diff % 1000),
+			Scene.LOGGER.debug("{}.{} {}: {}", diff / 1000, String.format("%03d", diff % 1000),
 					String.format("%2d", id),
 					animationStep.name());
 		}
 	}
 
-	public static Sonar narrowSonar() {
+	public static Settings narrowSonar() {
 		return narrowSonar(TEST_BLOCK_DISTANCE, Set.of(TEST_INTERESTING_IDS));
 	}
 
-	public static Sonar narrowSonar(int blockDistance, Set<Id> blocks) {
-		return new Sonar(blockDistance, 0, blocks, BlockEchoes.MAX_SIZE);
+	public static Settings narrowSonar(int blockDistance, Set<Id> blocks) {
+		return new Settings(BlockEchoes.MAX_SIZE, blockDistance, 0, blocks);
 	}
 
 	@Test

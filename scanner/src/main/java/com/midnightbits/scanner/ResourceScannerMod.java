@@ -6,6 +6,9 @@ package com.midnightbits.scanner;
 import java.nio.file.Path;
 import java.util.Set;
 
+import com.midnightbits.scanner.sonar.graphics.SonarAnimation;
+
+import com.midnightbits.scanner.utils.Settings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +25,17 @@ import com.midnightbits.scanner.utils.Manifests;
 public class ResourceScannerMod implements ScannerMod {
     public static final Logger LOGGER = LoggerFactory.getLogger(ScannerMod.MOD_ID);
 
-    private Sonar sonar = new Sonar();
+    private final Sonar sonar;
+    private final SonarAnimation animation;
+
+    public ResourceScannerMod(Sonar sonar) {
+        this.sonar = sonar;
+        this.animation = new SonarAnimation(sonar);
+    }
+
+    public ResourceScannerMod() {
+        this(new Sonar());
+    }
 
     @Override
     public void onInitializeClient() {
@@ -37,9 +50,7 @@ public class ResourceScannerMod implements ScannerMod {
 
         final var options = Options.getInstance();
         options.addEventListener((event) -> {
-            var settings = event.settings();
-            this.sonar.refresh(
-                    settings.blockDistance(), settings.blockRadius(), settings.interestingIds(), settings.echoesSize());
+            refresh(event.settings());
         });
 
         options.setDirectory(configDir);
@@ -59,14 +70,14 @@ public class ResourceScannerMod implements ScannerMod {
                 this::onScanPressed);
     }
 
-    private void onScanPressed(ClientCore client) {
-        if (!sonar.ping(client))
-            return;
+    public void refresh(Settings settings) {
+        this.sonar.refresh(settings);
+    }
 
-        for (BlockEcho echo : sonar.echoes()) {
-            LOGGER.info("{} ({}) {}", echo.pingTime(), echo.position(), echo.id());
+    private void onScanPressed(ClientCore client) {
+        if (animation.sendPing(client, this::listEchoes)) {
+            playScannerActivated();
         }
-        LOGGER.info("");
     }
 
     @Override
@@ -74,7 +85,13 @@ public class ResourceScannerMod implements ScannerMod {
         return sonar.echoes();
     }
 
-    public void setSonar(Sonar sonar) {
-        this.sonar = sonar;
+    private void listEchoes() {
+        for (BlockEcho echo : sonar.echoes()) {
+            LOGGER.info("{} ({}) {}", echo.pingTime(), echo.position(), echo.id());
+        }
+        LOGGER.info("");
+    }
+
+    private void playScannerActivated() {
     }
 }

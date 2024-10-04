@@ -6,8 +6,10 @@ package com.midnightbits.scanner.sonar;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import com.midnightbits.scanner.utils.NotificationConsumer;
+import com.midnightbits.scanner.utils.Settings;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +19,6 @@ import com.midnightbits.scanner.rt.core.ClientCore;
 import com.midnightbits.scanner.rt.core.Id;
 import com.midnightbits.scanner.rt.core.Services;
 import com.midnightbits.scanner.rt.math.V3i;
-import com.midnightbits.scanner.rt.text.MutableText;
 import com.midnightbits.scanner.utils.ConeOfBlocks;
 
 public final class Sonar {
@@ -39,58 +40,39 @@ public final class Sonar {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("Sonar");
 
-    public Sonar(int blockDistance, int blockRadius, Set<Id> blocks, int maxEchoes) {
+    public Sonar(int echoesSize, int blockDistance, int blockRadius, Set<Id> interestingIds) {
         this.blockDistance = blockDistance;
         this.blockRadius = blockRadius;
-        this.blocks = blocks;
-        this.echoes = new BlockEchoes(maxEchoes);
+        this.blocks = interestingIds;
+        this.echoes = new BlockEchoes(echoesSize);
     }
 
-    public Sonar(int blockDistance, int blockRadius, Set<Id> blocks) {
-        this(blockDistance, blockRadius, blocks, BlockEchoes.MAX_SIZE);
+    public Sonar(Settings settings) {
+        this(settings.echoesSize(), settings.blockDistance(),
+                settings.blockRadius(),
+                settings.interestingIds());
     }
 
     public Sonar() {
-        this(BLOCK_DISTANCE, BLOCK_RADIUS, Set.of(INTERESTING_IDS));
+        this(BlockEchoes.MAX_SIZE, BLOCK_DISTANCE, BLOCK_RADIUS, Set.of(INTERESTING_IDS));
     }
 
     public void setEchoConsumer(@Nullable Consumer<BlockEcho> echoConsumer) {
         this.echoConsumer = echoConsumer;
     }
 
-    public void refresh(int blockDistance, int blockRadius, Set<Id> blocks, int maxEchoes) {
+    public void refresh(Settings settings) {
+        refresh(settings.echoesSize(),
+                settings.blockDistance(),
+                settings.blockRadius(),
+                settings.interestingIds());
+    }
+
+    public void refresh(int maxEchoes, int blockDistance, int blockRadius, Set<Id> blocks) {
         this.blockDistance = blockDistance;
         this.blockRadius = blockRadius;
         this.blocks = blocks;
         this.echoes.refresh(maxEchoes);
-    }
-
-    public boolean ping(ClientCore client) {
-        var blockListChanged = false;
-
-        final var reflections = Reflections.fromPlayerPov(echoes, client, blockDistance, blockRadius);
-        final var cone = reflections.coneOfBlocksFromCamera(blockDistance, blockRadius);
-
-        for (final var line : cone.iterate()) {
-            for (final var pos : line.iterate()) {
-                final var info = client.getBlockInfo(pos);
-                if (info.isAir()) {
-                    LOGGER.debug("({}) is air", pos);
-                    continue;
-                }
-
-                final var id = info.getId();
-                final var dist = (int) Math.round(Math.sqrt(reflections.center.getSquaredDistance(pos)));
-                LOGGER.debug("({}) > {}m {}", pos, dist, id);
-                if (!blocks.contains(id))
-                    continue;
-
-                reflections.echoFrom(pos, id, info.getName());
-                blockListChanged = true;
-            }
-        }
-
-        return blockListChanged;
     }
 
     public interface SliceSpacing {
@@ -101,7 +83,7 @@ public final class Sonar {
             @Nullable NotificationConsumer pingEnd) {
         if (reflections != null)
             return false;
-        reflections = Reflections.fromPlayerPov(echoes, client, blockDistance, blockRadius);
+        reflections = Reflections.fromPlayerPov(client, blockDistance, blockRadius);
         spacer.registerCallback((now) -> {
             if (!reflections.hasNextSlice()) {
                 reflections = null;
@@ -127,14 +109,11 @@ public final class Sonar {
     }
 
     private static final class Reflections {
-        private final BlockEchoes echoes;
         private final ClientCore client;
         private final V3i center;
-        private final Set<V3i> seen = new TreeSet<>();
         private final ConeOfBlocks.Slicer slices;
 
-        Reflections(BlockEchoes echoes, ClientCore client, V3i center, int blockDistance, int blockRadius) {
-            this.echoes = echoes;
+        Reflections(ClientCore client, V3i center, int blockDistance, int blockRadius) {
             this.client = client;
             this.center = center;
             this.slices = coneOfBlocksFromCamera(blockDistance, blockRadius).sliced();
@@ -148,11 +127,12 @@ public final class Sonar {
             final var slice = slices.next();
             final var dist = (int) Math.round((double) slice.distance() / ConeOfBlocks.Slicer.PRECISION);
             final Set<BlockEcho.Partial> echoes = new HashSet<>();
+            final var blockIds = blocks.stream().map(String::valueOf).collect(Collectors.joining(","));
 
             for (final var pos : slice.items()) {
                 final var info = client.getBlockInfo(pos);
                 if (info.isAir()) {
-                    // LOGGER.debug("({}) is air", pos);
+                    LOGGER.debug("({}) is air", pos);
                     continue;
                 }
 
@@ -160,38 +140,25 @@ public final class Sonar {
                 if (!blocks.contains(id))
                     continue;
 
-                // LOGGER.debug("({}) > {}m {}", pos, dist, id);
-
+                LOGGER.debug("({}) > {}m {} ({})", pos, dist, id, blockIds);
                 var message = Services.TEXT
                         .literal(MessageFormatter.format("> {}m ", dist).getMessage())
                         .append(info.getName().formattedGold());
                 client.sendPlayerMessage(message, false);
 
-                // this.echoes.echoFrom(pos, id);
                 echoes.add(new BlockEcho.Partial(pos, id));
             }
+
             waveConsumer.advance(slice.items(), echoes.stream().toList());
         }
 
-        static Reflections fromPlayerPov(BlockEchoes echoes, ClientCore client, int blockDistance, int blockRadius) {
-            return new Reflections(echoes, client, client.getPlayerPos(), blockDistance, blockRadius);
+        static Reflections fromPlayerPov(ClientCore client, int blockDistance, int blockRadius) {
+            return new Reflections(client, client.getPlayerPos(), blockDistance, blockRadius);
         }
 
         private ConeOfBlocks coneOfBlocksFromCamera(int blockDistance, int blockRadius) {
             return ConeOfBlocks.fromCamera(center, client.getCameraPitch(), client.getCameraYaw(),
                     blockDistance, blockRadius);
-        }
-
-        public void echoFrom(V3i pos, Id id, MutableText name) {
-            if (!seen.add(pos))
-                return;
-
-            var dist = (int) Math.round(Math.sqrt(center.getSquaredDistance(pos)));
-            var message = Services.TEXT.literal(
-                    MessageFormatter.format("> {}m ", dist).getMessage()).append(name.formattedGold());
-            client.sendPlayerMessage(message, false);
-
-            echoes.echoFrom(pos, id);
         }
     };
 }

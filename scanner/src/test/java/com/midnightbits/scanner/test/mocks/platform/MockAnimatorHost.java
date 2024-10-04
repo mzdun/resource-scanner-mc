@@ -23,6 +23,13 @@ public class MockAnimatorHost extends AbstractAnimatorHost {
         this.tick(now);
     }
 
+    public void tickWith(MockedClock clock) {
+        if (!isEmpty()) {
+            tick();
+            clock.timeStamp += 1;
+        }
+    }
+
     public void runAll(MockedClock clock) {
         while (!isEmpty()) {
             tick();

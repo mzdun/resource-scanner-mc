@@ -3,6 +3,7 @@ package com.midnightbits.scanner.sonar.graphics;
 import com.midnightbits.scanner.rt.core.ClientCore;
 import com.midnightbits.scanner.rt.core.Services;
 import com.midnightbits.scanner.sonar.Sonar;
+import com.midnightbits.scanner.utils.NotificationConsumer;
 
 public class SonarAnimation {
     private final Sonar target;
@@ -15,8 +16,16 @@ public class SonarAnimation {
         this.spacer = new SliceSpacing(SliceSpacing.DURATION);
     }
 
+    public boolean sendPing(ClientCore client, NotificationConsumer pingEnd) {
+        return sendPing(client, null, pingEnd);
+    }
+
     public boolean sendPing(ClientCore client, WaveAnimator.StageReporter stageReporter) {
+        return sendPing(client, stageReporter, null);
+    }
+
+    public boolean sendPing(ClientCore client, WaveAnimator.StageReporter stageReporter, NotificationConsumer pingEnd) {
         return target.sendPing(client, spacer,
-                new WaveAnimator(scene, Services.PLATFORM.getAnimatorHost(), target, stageReporter), null);
+                new WaveAnimator(scene, Services.PLATFORM.getAnimatorHost(), target, stageReporter), pingEnd);
     }
 }
