@@ -8,6 +8,10 @@ import com.midnightbits.scanner.sonar.graphics.AbstractAnimatorHost;
 import java.nio.file.Path;
 
 public interface PlatformInterface {
+    enum Sample {
+        ACTIVATED,
+    };
+
     String getPlatformName();
 
     String getScannerVersion();
@@ -25,4 +29,6 @@ public interface PlatformInterface {
     KeyBinder getKeyBinder();
 
     AbstractAnimatorHost getAnimatorHost();
+
+    void playSample(Sample id);
 }

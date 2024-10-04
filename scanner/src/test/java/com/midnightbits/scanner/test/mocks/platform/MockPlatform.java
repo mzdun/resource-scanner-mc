@@ -70,6 +70,12 @@ public final class MockPlatform implements PlatformInterface, KeyBinder {
     }
 
     @Override
+    public void bind(String translationKey, int code, String category, KeyBinder.KeyPressHandler handler) {
+        boundKeys.computeIfAbsent(category, (key) -> new HashMap<>());
+        boundKeys.get(category).put(code, new KeyPressHandler(translationKey, handler));
+    }
+
+    @Override
     public AbstractAnimatorHost getAnimatorHost() {
         if (host == null) {
             throw new NullPointerException();
@@ -78,9 +84,7 @@ public final class MockPlatform implements PlatformInterface, KeyBinder {
     }
 
     @Override
-    public void bind(String translationKey, int code, String category, KeyBinder.KeyPressHandler handler) {
-        boundKeys.computeIfAbsent(category, (key) -> new HashMap<>());
-        boundKeys.get(category).put(code, new KeyPressHandler(translationKey, handler));
+    public void playSample(Sample id) {
     }
 
     public interface ScanDrawer {

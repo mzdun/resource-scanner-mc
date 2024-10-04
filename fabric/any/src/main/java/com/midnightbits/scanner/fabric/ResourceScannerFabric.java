@@ -14,5 +14,8 @@ public class ResourceScannerFabric implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		scanner.onInitializeClient();
+
+		FabricAnimationHost.INSTANCE.initialize();
+		FabricSoundManager.initialize();
 	}
 }
