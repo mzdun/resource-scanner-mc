@@ -75,16 +75,16 @@ public final class Sonar {
         this.echoes.refresh(maxEchoes);
     }
 
-    public interface SliceSpacing {
+    public interface SlicePacer {
         void registerCallback(Predicate<Long> cb);
     }
 
-    public boolean sendPing(ClientCore client, SliceSpacing spacer, ScanWaveConsumer waveConsumer,
+    public boolean sendPing(ClientCore client, SlicePacer pacer, ScanWaveConsumer waveConsumer,
             @Nullable NotificationConsumer pingEnd) {
         if (reflections != null)
             return false;
         reflections = Reflections.fromPlayerPov(client, blockDistance, blockRadius);
-        spacer.registerCallback((now) -> {
+        pacer.registerCallback((now) -> {
             if (!reflections.hasNextSlice()) {
                 reflections = null;
                 if (pingEnd != null)

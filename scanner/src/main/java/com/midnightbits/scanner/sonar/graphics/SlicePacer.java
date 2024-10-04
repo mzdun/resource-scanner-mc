@@ -7,7 +7,7 @@ import com.midnightbits.scanner.utils.Clock;
 
 import java.util.function.Predicate;
 
-public class SliceSpacing implements Sonar.SliceSpacing {
+public class SlicePacer implements Sonar.SlicePacer {
     public static final long DURATION = 100;
 
     private static class Scan {
@@ -35,7 +35,7 @@ public class SliceSpacing implements Sonar.SliceSpacing {
     final long delay;
     TickSet<Scan> scans = new TickSet<>();
 
-    public SliceSpacing(long delay) {
+    public SlicePacer(long delay) {
         this.host = Services.PLATFORM.getAnimatorHost();
         this.delay = delay;
     }
