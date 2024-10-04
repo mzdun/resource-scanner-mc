@@ -8,11 +8,11 @@ import com.midnightbits.scanner.test.mocks.platform.MockPlatform;
 
 import org.junit.jupiter.api.Test;
 
-import com.midnightbits.scanner.sonar.graphics.SliceSpacing;
+import com.midnightbits.scanner.sonar.graphics.SlicePacer;
 import com.midnightbits.scanner.test.mocks.MockedClock;
 import com.midnightbits.scanner.test.support.Counter;
 
-public class SliceSpacingTest {
+public class SlicePacerTest {
     final MockedClock clock = new MockedClock();
 
     @Test
@@ -20,7 +20,7 @@ public class SliceSpacingTest {
         ((MockPlatform) Services.PLATFORM).setHostBackend((a, b) -> {
         });
         final var ticker = (MockAnimatorHost) Services.PLATFORM.getAnimatorHost();
-        final var tested = new SliceSpacing(SliceSpacing.DURATION);
+        final var tested = new SlicePacer(SlicePacer.DURATION);
         final var counter = new Counter();
 
         appendScanProcess(tested, 0x65432, counter);
@@ -30,9 +30,9 @@ public class SliceSpacingTest {
         ticker.runAll(clock);
     }
 
-    void appendScanProcess(SliceSpacing tested, long time, Counter counter) {
+    void appendScanProcess(SlicePacer tested, long time, Counter counter) {
         clock.timeStamp = time;
-        final var target = time + 10 * SliceSpacing.DURATION;
+        final var target = time + 10 * SlicePacer.DURATION;
         Predicate<Long> scan = (now) -> {
             counter.inc();
             return now <= target;

@@ -8,12 +8,12 @@ import com.midnightbits.scanner.utils.NotificationConsumer;
 public class SonarAnimation {
     private final Sonar target;
     private final Scene scene;
-    private final SliceSpacing spacer;
+    private final SlicePacer pacer;
 
     public SonarAnimation(Sonar target) {
         this.target = target;
         this.scene = new Scene(target);
-        this.spacer = new SliceSpacing(SliceSpacing.DURATION);
+        this.pacer = new SlicePacer(SlicePacer.DURATION);
     }
 
     public boolean sendPing(ClientCore client, NotificationConsumer pingEnd) {
@@ -25,7 +25,7 @@ public class SonarAnimation {
     }
 
     public boolean sendPing(ClientCore client, WaveAnimator.StageReporter stageReporter, NotificationConsumer pingEnd) {
-        return target.sendPing(client, spacer,
+        return target.sendPing(client, pacer,
                 new WaveAnimator(scene, Services.PLATFORM.getAnimatorHost(), target, stageReporter), pingEnd);
     }
 }
