@@ -55,4 +55,9 @@ public class FabricPlatform implements PlatformInterface {
     public AbstractAnimatorHost getAnimatorHost() {
         return FabricAnimationHost.INSTANCE;
     }
+
+    @Override
+    public void playSample(Sample id) {
+        FabricSoundManager.playSample(id);
+    }
 }

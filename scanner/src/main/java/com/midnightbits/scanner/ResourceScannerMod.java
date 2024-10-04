@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.midnightbits.scanner.rt.core.Services;
+import com.midnightbits.scanner.platform.PlatformInterface;
 import com.midnightbits.scanner.rt.core.ClientCore;
 import com.midnightbits.scanner.rt.core.KeyBinding;
 import com.midnightbits.scanner.rt.core.ScannerMod;
@@ -76,7 +77,7 @@ public class ResourceScannerMod implements ScannerMod {
 
     private void onScanPressed(ClientCore client) {
         if (animation.sendPing(client, this::listEchoes)) {
-            playScannerActivated();
+            Services.PLATFORM.playSample(PlatformInterface.Sample.ACTIVATED);
         }
     }
 
@@ -90,8 +91,5 @@ public class ResourceScannerMod implements ScannerMod {
             LOGGER.info("{} ({}) {}", echo.pingTime(), echo.position(), echo.id());
         }
         LOGGER.info("");
-    }
-
-    private void playScannerActivated() {
     }
 }
