@@ -38,31 +38,39 @@ public final class BlockEchoes implements Iterable<BlockEcho> {
      *
      * @param position where the ping was registered
      * @param id       what did the echo bounced off of
-     * @return true, if there were previously no blocks at this location, false
-     *         otherwise
+     * @return resulting block
      */
-    public boolean echoFrom(V3i position, Id id) {
-        boolean replaced = evictBlocks(stream().filter(b -> b.position().equals(position)));
+    public BlockEcho echoFrom(V3i position, Id id) {
+        return echoFrom(new BlockEcho.Partial(position, id));
+    }
+
+    /**
+     * Adds pinged block to list of all seen blocks.
+     *
+     * @param partial where the ping was registered and what did the echo bounced
+     *                off of
+     * @return resulting block
+     */
+    public BlockEcho echoFrom(BlockEcho.Partial partial) {
+        evictBlocks(stream().filter(b -> b.position().equals(partial.position())));
         if (echoes.size() >= maxSize) {
             evictBlocks(stream().limit(echoes.size() - maxSize + 1));
         }
 
-        BlockEcho echo = BlockEcho.echoFrom(position, id);
+        BlockEcho echo = BlockEcho.echoFrom(partial);
         echoes.add(echo);
-        return !replaced;
+        return echo;
     }
 
     private Stream<BlockEcho> stream() {
         return echoes.stream();
     }
 
-    private boolean evictBlocks(Stream<BlockEcho> stream) {
+    private void evictBlocks(Stream<BlockEcho> stream) {
         List<BlockEcho> evictions = stream.toList();
         for (BlockEcho evicted : evictions) {
             echoes.remove(evicted);
         }
-
-        return !evictions.isEmpty();
     }
 
     @NotNull

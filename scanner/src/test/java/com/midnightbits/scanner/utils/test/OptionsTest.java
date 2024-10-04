@@ -19,6 +19,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import com.midnightbits.scanner.rt.core.Id;
 import com.midnightbits.scanner.rt.core.Services;
 import com.midnightbits.scanner.test.support.Counter;
 import com.midnightbits.scanner.utils.Options;
@@ -113,6 +114,27 @@ public class OptionsTest {
         final var actual = load();
 
         Assertions.assertNull(actual);
+        Assertions.assertEquals(1, counter.get());
+    }
+
+    @Test
+    void optionsUseModifiers() {
+        final var counter = new Counter();
+        final var opts = Options.getInstance();
+        opts.addEventListener((settings) -> counter.inc());
+        opts.setDirectory(configDir);
+
+        opts.setAll(100, 64, 0, Set.of());
+        final var starting = opts.settings();
+
+        final var expected = new Settings(10, 4, 1, Set.of(Id.of("that:thing")));
+
+        final var actual = starting
+                .withEchoesSize(expected.echoesSize())
+                .withBlockDistance(expected.blockDistance())
+                .withBlockRadius(expected.blockRadius())
+                .withIds(expected.interestingIds());
+        Assertions.assertEquals(expected, actual);
         Assertions.assertEquals(1, counter.get());
     }
 
