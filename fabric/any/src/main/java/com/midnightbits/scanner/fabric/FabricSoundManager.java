@@ -30,7 +30,7 @@ public class FabricSoundManager {
         if (client.player == null) {
             return;
         }
-        client.player.playSound(sample, 2F, 0.7F);
+        client.player.playSound(sample, 1F, 3F);
     }
 
     private static SoundEvent addEvent(PlatformInterface.Sample id, String path) {
