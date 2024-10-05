@@ -18,6 +18,9 @@ cache = Cache(os.path.join(__root__, "tools", ".fabric-cache"))
 def fabric(path: str):
     return cache.json(f'https://meta.fabricmc.net/v2/versions/{path}')
 
+def modrinth(endpoint):
+    return cache.json(f'https://api.modrinth.com/v2{endpoint}')
+
 
 def getFirst(flt, data):
     for item in filter(flt, data):
@@ -75,7 +78,8 @@ def __main__():
     version = sys.argv[1]
 
     game = fabric('game')
-    game = getFirstStable(game) if version == '--stable' \
+    stableGame = getFirstStable(game)
+    game = stableGame if version == '--stable' \
         else getFirst(any, game) if version == '--latest' \
         else getFirst(
             lambda item: item.get('version') == version,
@@ -88,6 +92,14 @@ def __main__():
 
     version = game['version']
     apiVersion = gameVersionForApi(version)
+    
+    modmenu_versions = modrinth('/project/mOgUt4GM/version')
+    matching = list(filter(lambda ver: version in ver['game_versions'], modmenu_versions))
+    if len(matching) == 0:
+        stableGameVersion = stableGame['version']
+        matching = list(filter(lambda ver: stableGameVersion in ver['game_versions'], modmenu_versions))
+    matching.sort(key=lambda v: v['date_published'], reverse=True)
+    modmenu_version = matching[0]['version_number']
 
     def validApiVersion(api: str) -> bool:
         return api.endswith(f'-{apiVersion}') or api.endswith(f'+{apiVersion}')
@@ -130,12 +142,10 @@ def __main__():
 minecraft_version={game['version']}{minecraft_dependency}
 yarn_mappings={yarn['version']}
 loader_version={loader['version']}
+modmenu_version={modmenu_version}
 
 # Fabric API
 fabric_version={fabricAPI}
-
-# Mod Properties
-mod_version=${{mod_version}}-${{minecraft_version}}-fabric
 """
     print(template)
 

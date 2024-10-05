@@ -155,10 +155,6 @@ class Cache:
         return item.load(self.dirName, binary)
 
     def _store(self, item: CacheItem, data: bytes):
-        useItem = item.expires is not None or item.modified is not None
-        if not useItem:
-            return
-
         prev = self.refs.get(item.uri)
         if prev:
             self.items.remove(prev)
