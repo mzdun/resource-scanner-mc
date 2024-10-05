@@ -7,6 +7,9 @@
 	"authors": [
 		"mzdun"
 	],
+	"contributors" : [
+		"amaneog"
+	],
 	"contact": {
 		"homepage": "${modrinth}",
 		"sources": "${github}",
