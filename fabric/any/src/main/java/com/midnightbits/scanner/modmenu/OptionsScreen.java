@@ -37,8 +37,12 @@ public class OptionsScreen extends SingleColumnOptions {
             "echoes", 10, 200,
             Settings::echoesSize, Settings::withEchoesSize,
             (value) -> Text.literal(String.valueOf(value)));
-    static final SettingSliderOption[] OPTIONS = new SettingSliderOption[]{
-            DISTANCE_OPTION, WIDTH_OPTION, ECHOES_OPTION
+    static final SettingSliderOption LIFETIME_OPTION = new SettingSliderOption(
+            "lifetime", 1000, 3600000,
+            Settings::lifetime, Settings::withLifetime,
+            makeLifetimeLabeler());
+    static final SettingSliderOption[] OPTIONS = new SettingSliderOption[] {
+            DISTANCE_OPTION, WIDTH_OPTION, ECHOES_OPTION, LIFETIME_OPTION
     };
 
     public static final String TAG = ScannerMod.MOD_ID;
@@ -53,9 +57,10 @@ public class OptionsScreen extends SingleColumnOptions {
         final var echoesSize = settings.echoesSize();
         final var blockDistance = settings.blockDistance();
         final var blockRadius = settings.blockRadius();
+        final var lifetime = settings.lifetime();
         final var interestingIds = settings.interestingIds();
 
-        this.settings = new Settings(echoesSize, blockDistance, blockRadius, interestingIds);
+        this.settings = new Settings(echoesSize, blockDistance, blockRadius, lifetime, interestingIds);
     }
 
     static String optionKey(String id) {
@@ -72,6 +77,29 @@ public class OptionsScreen extends SingleColumnOptions {
                 return translatableOption("width/zero", 1);
             final var width = radius * 2 + 1;
             return translatableOption("width/circle", width);
+        };
+    }
+
+    static Function<Integer, Text> makeLifetimeLabeler() {
+        return (lifetime) -> {
+            lifetime /= 1000;
+            int seconds = lifetime % 60;
+
+            lifetime /= 60;
+            int minutes = lifetime % 60;
+
+            lifetime /= 60;
+            int hours = lifetime;
+
+            if (hours != 0) {
+                return translatableOption("lifetime/hours", seconds, minutes, hours);
+            }
+
+            if (minutes != 0) {
+                return translatableOption("lifetime/minutes", seconds, minutes);
+            }
+
+            return translatableOption("lifetime/seconds", seconds);
         };
     }
 
@@ -116,9 +144,10 @@ public class OptionsScreen extends SingleColumnOptions {
         final var echoesSize = settings.echoesSize();
         final var blockDistance = settings.blockDistance();
         final var blockRadius = settings.blockRadius();
+        final var lifetime = settings.lifetime();
         final var interestingIds = settings.interestingIds();
 
-        Options.getInstance().setAll(echoesSize, blockDistance, blockRadius, interestingIds);
+        Options.getInstance().setAll(echoesSize, blockDistance, blockRadius, lifetime, interestingIds);
         super.removed();
     }
 

@@ -60,6 +60,7 @@ public class ResourceScannerMod implements ScannerMod {
                     BlockEchoes.MAX_SIZE,
                     Sonar.BLOCK_DISTANCE,
                     Sonar.BLOCK_RADIUS,
+                    BlockEchoes.ECHO_LIFETIME,
                     Set.of(Sonar.INTERESTING_IDS),
                     false);
         }

@@ -10,6 +10,7 @@ import com.midnightbits.scanner.sonar.BlockEcho;
 import com.midnightbits.scanner.sonar.BlockEchoes;
 import com.midnightbits.scanner.sonar.Sonar;
 import com.midnightbits.scanner.sonar.graphics.Scene;
+import com.midnightbits.scanner.sonar.graphics.SlicePacer;
 import com.midnightbits.scanner.sonar.graphics.SonarAnimation;
 import com.midnightbits.scanner.sonar.graphics.WaveAnimator;
 import com.midnightbits.scanner.test.mocks.platform.MockAnimatorHost;
@@ -31,6 +32,7 @@ import com.midnightbits.scanner.test.support.Iterables;
 public class SonarTest {
 	public final static int TEST_BLOCK_DISTANCE = 32;
 	public final static int TEST_BLOCK_RADIUS = 4;
+	public final static int TEST_ECHO_LIFETIME = 10000;
 	public static Id[] TEST_INTERESTING_IDS = new Id[] {
 			Id.ofVanilla("coal_ore"),
 			Id.ofVanilla("deepslate_coal_ore"),
@@ -48,8 +50,8 @@ public class SonarTest {
 		SonarAnimation animation;
 		long then = Clock.currentTimeMillis();
 
-		Setup(int blockDistance, int blockRadius, Set<Id> blocks) {
-			this(new Settings(BlockEchoes.MAX_SIZE, blockDistance, blockRadius, blocks));
+		Setup(int blockDistance, int blockRadius, int lifetime, Set<Id> blocks) {
+			this(new Settings(BlockEchoes.MAX_SIZE, blockDistance, blockRadius, lifetime, blocks));
 		}
 
 		Setup(Settings settings) {
@@ -94,7 +96,7 @@ public class SonarTest {
 	}
 
 	public static Settings narrowSonar(int blockDistance, Set<Id> blocks) {
-		return new Settings(BlockEchoes.MAX_SIZE, blockDistance, 0, blocks);
+		return new Settings(BlockEchoes.MAX_SIZE, blockDistance, 0, TEST_ECHO_LIFETIME, blocks);
 	}
 
 	@Test
@@ -129,6 +131,14 @@ public class SonarTest {
 		}, core.getPlayerMessages());
 
 		Assertions.assertEquals(5, counter.get());
+
+		clock.timeStamp = offset + 27 * SlicePacer.DURATION + TEST_ECHO_LIFETIME;
+		setup.sonar.removeOldEchoes();
+		Iterables.assertEquals(new BlockEcho[] {
+				new BlockEcho(new V3i(0, 27, 0), Id.ofVanilla("diamond_ore"), offset + 27 * SlicePacer.DURATION),
+				new BlockEcho(new V3i(0, 28, 0), Id.ofVanilla("iron_ore"), offset + 28 * SlicePacer.DURATION),
+				new BlockEcho(new V3i(0, 30, 0), Id.ofVanilla("iron_ore"), offset + 30 * SlicePacer.DURATION),
+		}, setup.sonar.echoes());
 	}
 
 	@Test
@@ -154,7 +164,8 @@ public class SonarTest {
 		clock.timeStamp = 0x123456;
 
 		final var core = new MockClientCore(new V3i(-60, -60, -51), 0f, 0f, TEST_WORLD);
-		final var setup = new Setup(TEST_BLOCK_DISTANCE, TEST_BLOCK_RADIUS, Set.of(Id.ofVanilla("gold_ore")));
+		final var setup = new Setup(TEST_BLOCK_DISTANCE, TEST_BLOCK_RADIUS, TEST_ECHO_LIFETIME,
+				Set.of(Id.ofVanilla("gold_ore")));
 
 		final var started = setup.sendPing(core);
 		Assertions.assertTrue(started);
