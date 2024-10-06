@@ -71,8 +71,7 @@ public class Pixel {
     }
 
     static Pixel of(BlockEcho echo) {
-        final var pos = echo.position();
-        return new Pixel(pos, 0x40000000);
+        return new Pixel(echo.position(), echo.argb32());
     }
 
     void draw(BufferBuilder buffer, MatrixStack stack, Camera camera) {

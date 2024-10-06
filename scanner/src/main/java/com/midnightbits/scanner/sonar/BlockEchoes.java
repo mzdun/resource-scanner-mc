@@ -39,8 +39,8 @@ public final class BlockEchoes implements Iterable<BlockEcho> {
      * @param id       what did the echo bounced off of
      * @return resulting block
      */
-    public BlockEcho echoFrom(V3i position, Id id) {
-        return echoFrom(new BlockEcho.Partial(position, id));
+    public BlockEcho echoFrom(V3i position, Id id, int argb32) {
+        return echoFrom(new BlockEcho.Partial(position, id, argb32));
     }
 
     /**
