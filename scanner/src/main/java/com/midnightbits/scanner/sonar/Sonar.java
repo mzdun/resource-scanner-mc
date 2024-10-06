@@ -75,10 +75,6 @@ public final class Sonar {
         this.echoes.refresh(maxEchoes);
     }
 
-    public interface SlicePacer {
-        void registerCallback(Predicate<Long> cb);
-    }
-
     public boolean sendPing(ClientCore client, SlicePacer pacer, ScanWaveConsumer waveConsumer,
             @Nullable NotificationConsumer pingEnd) {
         if (reflections != null)
@@ -106,6 +102,10 @@ public final class Sonar {
 
     public Iterable<BlockEcho> echoes() {
         return echoes;
+    }
+
+    public void removeOldEchoes() {
+        echoes.removeOldEchoes();
     }
 
     private static final class Reflections {
@@ -161,4 +161,8 @@ public final class Sonar {
                     blockDistance, blockRadius);
         }
     };
+
+    public interface SlicePacer {
+        void registerCallback(Predicate<Long> cb);
+    }
 }

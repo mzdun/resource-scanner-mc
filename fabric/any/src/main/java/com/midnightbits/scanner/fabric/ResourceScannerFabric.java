@@ -15,7 +15,7 @@ public class ResourceScannerFabric implements ClientModInitializer {
 	public void onInitializeClient() {
 		scanner.onInitializeClient();
 
-		FabricAnimationHost.INSTANCE.initialize();
+		FabricAnimationHost.INSTANCE.initialize(scanner.getSonar());
 		FabricSoundManager.initialize();
 	}
 }

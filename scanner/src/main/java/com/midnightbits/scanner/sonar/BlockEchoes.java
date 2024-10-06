@@ -10,11 +10,14 @@ import java.util.stream.Stream;
 
 import com.midnightbits.scanner.rt.core.Id;
 import com.midnightbits.scanner.rt.math.V3i;
+import com.midnightbits.scanner.utils.Clock;
+
 import org.jetbrains.annotations.NotNull;
 
 public final class BlockEchoes implements Iterable<BlockEcho> {
     private final TreeSet<BlockEcho> echoes = new TreeSet<>();
     public static final int MAX_SIZE = 100;
+    public static final int ECHO_LIFETIME = 10000;
 
     private int maxSize;
 
@@ -62,6 +65,11 @@ public final class BlockEchoes implements Iterable<BlockEcho> {
         return echo;
     }
 
+    public void removeOldEchoes() {
+        final var now = Clock.currentTimeMillis();
+        evictBlocks(stream().filter(b -> (now - b.pingTime()) > ECHO_LIFETIME));
+    }
+
     private Stream<BlockEcho> stream() {
         return echoes.stream();
     }
@@ -78,5 +86,4 @@ public final class BlockEchoes implements Iterable<BlockEcho> {
     public Iterator<BlockEcho> iterator() {
         return echoes.iterator();
     }
-
 }

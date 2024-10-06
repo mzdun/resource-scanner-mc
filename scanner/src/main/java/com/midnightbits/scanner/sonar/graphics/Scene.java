@@ -39,7 +39,7 @@ public class Scene {
     }
 
     private boolean render(GraphicContext context) {
-        context.drawScan(target.echoes(), List.copyOf(shimmers.copy()));
+        context.drawScan(List.copyOf(shimmers.copy()));
         ++frames;
 
         final var done = isEmpty();

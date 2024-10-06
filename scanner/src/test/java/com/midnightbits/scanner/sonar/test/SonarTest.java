@@ -54,7 +54,7 @@ public class SonarTest {
 
 		Setup(Settings settings) {
 			this.sonar = new Sonar(settings);
-			((MockPlatform) Services.PLATFORM).setHostBackend((echoes, shimmers) -> {
+			((MockPlatform) Services.PLATFORM).setHostBackend((shimmers) -> {
 			});
 			this.animation = new SonarAnimation(sonar);
 		}
