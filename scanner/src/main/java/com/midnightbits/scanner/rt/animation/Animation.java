@@ -35,7 +35,7 @@ public interface Animation {
 
         @Override
         public boolean apply(long now) {
-            if (index < sequence.size()) {
+            while (index < sequence.size()) {
                 final var current = sequence.get(index);
 
                 if (index != prevIndex) {
@@ -45,6 +45,12 @@ public interface Animation {
                 final var result = current.apply(now);
                 if (!result) {
                     ++index;
+                    if (current instanceof ActionAnimation) {
+                        continue;
+                    }
+                    if (index < sequence.size() && sequence.get(index) instanceof ActionAnimation) {
+                        continue;
+                    }
                 }
                 return index < sequence.size();
             }

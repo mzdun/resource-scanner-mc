@@ -26,7 +26,7 @@ public class BlockEchoTest {
                 Assertions.assertEquals(Id.ofVanilla("gold_ore"), echo.id());
                 Assertions.assertEquals(287454020, echo.pingTime());
                 Assertions.assertEquals(
-                                "new BlockEcho(new V3i(1, 2, 3), Id.ofVanilla(\"gold_ore\"), 287454020)",
+                                "\nnew BlockEcho(new V3i(1, 2, 3), Id.ofVanilla(\"gold_ore\"), 287454020)",
                                 echo.toString());
         }
 
@@ -41,7 +41,7 @@ public class BlockEchoTest {
                 Assertions.assertEquals(Id.of("mod", "gold_ore"), echo.id());
                 Assertions.assertEquals(287454020, echo.pingTime());
                 Assertions.assertEquals(
-                                "new BlockEcho(new V3i(1, 2, 3), Id.of(\"mod\", \"gold_ore\"), 287454020)",
+                                "\nnew BlockEcho(new V3i(1, 2, 3), Id.of(\"mod\", \"gold_ore\"), 287454020)",
                                 echo.toString());
         }
 
