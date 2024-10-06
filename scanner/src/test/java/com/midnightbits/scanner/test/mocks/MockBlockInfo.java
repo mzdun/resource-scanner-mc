@@ -46,6 +46,11 @@ public final class MockBlockInfo implements BlockInfo {
     }
 
     @Override
+    public boolean inTag(Id id) {
+        return this.id.equals(Id.ofVanilla("iron_ore")) && id.equals(Id.ofVanilla("iron_ores"));
+    }
+
+    @Override
     public Id getId() {
         return id;
     }

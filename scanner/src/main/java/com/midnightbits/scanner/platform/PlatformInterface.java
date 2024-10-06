@@ -3,9 +3,12 @@
 
 package com.midnightbits.scanner.platform;
 
+import com.midnightbits.scanner.rt.core.Id;
 import com.midnightbits.scanner.sonar.graphics.AbstractAnimatorHost;
+import com.midnightbits.scanner.sonar.graphics.ColorDefaults;
 
 import java.nio.file.Path;
+import java.util.Map;
 
 public interface PlatformInterface {
     enum Sample {
@@ -31,4 +34,8 @@ public interface PlatformInterface {
     AbstractAnimatorHost getAnimatorHost();
 
     void playSample(Sample id);
+
+    default Map<Id, Integer> getBlockTagColors() {
+        return ColorDefaults.BLOCK_TAG_COLORS;
+    }
 }

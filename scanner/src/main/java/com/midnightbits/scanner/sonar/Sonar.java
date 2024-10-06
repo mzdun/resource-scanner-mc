@@ -148,7 +148,16 @@ public final class Sonar {
                         .append(info.getName().formattedGold());
                 client.sendPlayerMessage(message, false);
 
-                echoes.add(new BlockEcho.Partial(pos, id, Colors.VANILLA));
+                var color = Colors.VANILLA;
+                for (final var entry : Colors.BLOCK_TAG_COLORS.entrySet()) {
+                    if (info.inTag(entry.getKey())) {
+                        color = entry.getValue();
+                        break;
+                    }
+                }
+                color = Colors.ECHO_ALPHA | (color & Colors.RGB_MASK);
+
+                echoes.add(new BlockEcho.Partial(pos, id, color));
             }
 
             waveConsumer.advance(slice.items(), echoes.stream().toList());
