@@ -61,6 +61,7 @@ public class BlockEchoTest {
                 Assertions.assertNotEquals(echo2, echo3);
                 Assertions.assertNotEquals(echo3, echo4);
                 Assertions.assertEquals(echo4, echo5);
+                Assertions.assertNotEquals(echo5, echo6);
 
                 Assertions.assertTrue(echo1.compareTo(echo2) < 0);
                 Assertions.assertTrue(echo2.compareTo(echo1) > 0);
@@ -103,11 +104,24 @@ public class BlockEchoTest {
                 Assertions.assertEquals(echo, new BlockEcho.Partial(new V3i(1, 2, 3), Id.ofVanilla("gold_ore"), Colors.VANILLA));
                 Assertions.assertNotEquals(echo, new BlockEcho.Partial(new V3i(1, 2, 3), Id.ofVanilla("iron_ore"), Colors.VANILLA));
                 Assertions.assertNotEquals(echo, new BlockEcho.Partial(new V3i(2, 3, 1), Id.ofVanilla("gold_ore"), Colors.VANILLA));
+                Assertions.assertNotEquals(echo, new BlockEcho.Partial(new V3i(1, 2, 3), Id.ofVanilla("gold_ore"), Colors.GOLD));
                 Assertions.assertEquals(new V3i(1, 2, 3), echo.position());
                 Assertions.assertEquals(Id.ofVanilla("gold_ore"), echo.id());
                 Assertions.assertEquals(
-                                "new BlockEcho.Partial(new V3i(1, 2, 3), Id.ofVanilla(\"gold_ore\"), Colors.VANILLA)",
-                                echo.toString());
+                        "new BlockEcho.Partial(new V3i(1, 2, 3), Id.ofVanilla(\"gold_ore\"), Colors.VANILLA)",
+                        echo.toString());
+                Assertions.assertEquals(
+                        "new BlockEcho.Partial(new V3i(1, 2, 3), Id.ofVanilla(\"gold_ore\"), 0xFAEE4D)",
+                        new BlockEcho.Partial(new V3i(1, 2, 3), Id.ofVanilla("gold_ore"), Colors.GOLD).toString());
+                Assertions.assertEquals(
+                        "new BlockEcho.Partial(new V3i(1, 2, 3), Id.ofVanilla(\"gold_ore\"), 0x44FAEE4D)",
+                        new BlockEcho.Partial(new V3i(1, 2, 3), Id.ofVanilla("gold_ore"), 0x44FAEE4D).toString());
+                Assertions.assertEquals(
+                        "new BlockEcho.Partial(new V3i(1, 2, 3), Id.ofVanilla(\"gold_ore\"), Colors.ECHO_ALPHA | 0xFAEE4D)",
+                        new BlockEcho.Partial(new V3i(1, 2, 3), Id.ofVanilla("gold_ore"), 0x80FAEE4D).toString());
+                Assertions.assertEquals(
+                        "new BlockEcho.Partial(new V3i(1, 2, 3), Id.ofVanilla(\"gold_ore\"), Colors.ECHO_ALPHA | Colors.BROWN)",
+                        new BlockEcho.Partial(new V3i(1, 2, 3), Id.ofVanilla("gold_ore"), Colors.ECHO_ALPHA | Colors.BROWN).toString());
 
                 BlockEchoes blocks = new BlockEchoes();
                 Assertions.assertThrows(ClassCastException.class,

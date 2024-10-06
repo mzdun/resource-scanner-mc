@@ -8,6 +8,8 @@ import com.midnightbits.scanner.rt.text.MutableText;
 public interface BlockInfo {
     boolean isAir();
 
+    boolean inTag(Id id);
+
     Id getId();
 
     MutableText getName();

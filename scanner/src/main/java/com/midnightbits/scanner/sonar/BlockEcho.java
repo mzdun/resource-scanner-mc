@@ -77,10 +77,26 @@ public record BlockEcho(V3i position, Id id, int argb32, long pingTime) implemen
     }
 
     private static String colorOf(int argb32) {
-        if (argb32 == Colors.VANILLA) {
+        String alpha = "";
+        if ((argb32 & ~Colors.RGB_MASK) == Colors.ECHO_ALPHA) {
+            argb32 &= Colors.RGB_MASK;
+            alpha = "Colors.ECHO_ALPHA | ";
+        }
+
+        if ((argb32 & ~Colors.RGB_MASK) == 0)
+            return alpha + rgbOf(argb32);
+
+        return String.format("0x%08X", argb32);
+    }
+
+    private static String rgbOf(int rgb24) {
+        if (rgb24 == Colors.VANILLA) {
             return "Colors.VANILLA";
         }
-        return String.format("0x%08X", argb32);
+        if (rgb24 == Colors.BROWN) {
+            return "Colors.BROWN";
+        }
+        return String.format("0x%06X", rgb24);
     }
 
     @Override

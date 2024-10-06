@@ -142,7 +142,7 @@ parser = argparse.ArgumentParser(
 
 commands = parser.add_subparsers(required=True, dest='command')
 send = commands.add_parser('send', help=__doc__, description=__doc__)
-readme = commands.add_parser('readme', help=__doc__, description=__doc__)
+readme = commands.add_parser('readme', help="prints out parsed README.md", description="prints out parsed README.md")
 
 Environment.addArgumentsTo(send)
 Environment.addArgumentsTo(readme)
