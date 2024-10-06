@@ -8,6 +8,7 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import com.midnightbits.scanner.sonar.graphics.Colors;
 import com.midnightbits.scanner.utils.NotificationConsumer;
 import com.midnightbits.scanner.utils.Settings;
 import org.jetbrains.annotations.Nullable;
@@ -147,7 +148,7 @@ public final class Sonar {
                         .append(info.getName().formattedGold());
                 client.sendPlayerMessage(message, false);
 
-                echoes.add(new BlockEcho.Partial(pos, id));
+                echoes.add(new BlockEcho.Partial(pos, id, Colors.VANILLA));
             }
 
             waveConsumer.advance(slice.items(), echoes.stream().toList());

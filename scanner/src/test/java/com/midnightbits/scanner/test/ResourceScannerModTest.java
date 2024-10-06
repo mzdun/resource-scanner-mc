@@ -5,6 +5,7 @@ package com.midnightbits.scanner.test;
 
 import java.util.Set;
 
+import com.midnightbits.scanner.sonar.graphics.Colors;
 import com.midnightbits.scanner.sonar.graphics.SlicePacer;
 import com.midnightbits.scanner.sonar.graphics.WaveAnimator;
 import com.midnightbits.scanner.sonar.test.SonarTest;
@@ -47,12 +48,16 @@ public class ResourceScannerModTest {
         final var core = new MockClientCore(V3i.ZERO, -90, 0, TEST_WORLD);
         final var offset = 0x123456 + WaveAnimator.DURATION + SlicePacer.DURATION;
         runScannerWith(core, SonarTest.narrowSonar(), new BlockEcho[] {
-                new BlockEcho(new V3i(0, 23, 0), Id.ofVanilla("deepslate_iron_ore"), offset + 23 * SlicePacer.DURATION),
-                new BlockEcho(new V3i(0, 25, 0), Id.ofVanilla("deepslate_diamond_ore"),
+                new BlockEcho(new V3i(0, 23, 0), Id.ofVanilla("deepslate_iron_ore"), Colors.VANILLA,
+                        offset + 23 * SlicePacer.DURATION),
+                new BlockEcho(new V3i(0, 25, 0), Id.ofVanilla("deepslate_diamond_ore"), Colors.VANILLA,
                         offset + 25 * SlicePacer.DURATION),
-                new BlockEcho(new V3i(0, 27, 0), Id.ofVanilla("diamond_ore"), offset + 27 * SlicePacer.DURATION),
-                new BlockEcho(new V3i(0, 28, 0), Id.ofVanilla("iron_ore"), offset + 28 * SlicePacer.DURATION),
-                new BlockEcho(new V3i(0, 30, 0), Id.ofVanilla("iron_ore"), offset + 30 * SlicePacer.DURATION),
+                new BlockEcho(new V3i(0, 27, 0), Id.ofVanilla("diamond_ore"), Colors.VANILLA,
+                        offset + 27 * SlicePacer.DURATION),
+                new BlockEcho(new V3i(0, 28, 0), Id.ofVanilla("iron_ore"), Colors.VANILLA,
+                        offset + 28 * SlicePacer.DURATION),
+                new BlockEcho(new V3i(0, 30, 0), Id.ofVanilla("iron_ore"), Colors.VANILLA,
+                        offset + 30 * SlicePacer.DURATION),
         });
     }
 
@@ -63,8 +68,9 @@ public class ResourceScannerModTest {
         final var offset = 0x123456 + WaveAnimator.DURATION + SlicePacer.DURATION;
         runScannerWith(core, SonarTest.narrowSonar(SonarTest.TEST_BLOCK_DISTANCE, Set.of(Id.ofVanilla("gold_ore"))),
                 new BlockEcho[] {
-                        new BlockEcho(new V3i(-60, -60, -50), Id.ofVanilla("gold_ore"), offset + SlicePacer.DURATION),
-                        new BlockEcho(new V3i(-60, -60, -33), Id.ofVanilla("gold_ore"),
+                        new BlockEcho(new V3i(-60, -60, -50), Id.ofVanilla("gold_ore"), Colors.VANILLA,
+                                offset + SlicePacer.DURATION),
+                        new BlockEcho(new V3i(-60, -60, -33), Id.ofVanilla("gold_ore"), Colors.VANILLA,
                                 offset + 18 * SlicePacer.DURATION),
                 });
     }
@@ -91,7 +97,7 @@ public class ResourceScannerModTest {
             final var prevSonar = mod.getSonar();
             mod.refresh(settings);
             // refresh must not re-create the sonar
-            Assertions.assertTrue(prevSonar == mod.getSonar());
+            Assertions.assertSame(prevSonar, mod.getSonar());
         }
 
         mockPlatform.press(KeyBinding.KEY_M, KeyBinding.MOVEMENT_CATEGORY, core);
