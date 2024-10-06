@@ -93,7 +93,7 @@ public class OptionsTest {
         Options.resetInstance();
 
         Assertions.assertEquals(1, settings.size());
-        Assertions.assertEquals(new Settings(0, 0, 0, 10000, Set.of()), settings.getFirst());
+        Assertions.assertEquals(new Settings(0, 0, 10000, Set.of()), settings.getFirst());
     }
 
     @Test
@@ -104,8 +104,7 @@ public class OptionsTest {
         final var opts = Options.getInstance();
         opts.addEventListener((settings) -> counter.inc());
         opts.setDirectory(configDir);
-        opts.setAll(BlockEchoes.MAX_SIZE,
-                Sonar.BLOCK_DISTANCE,
+        opts.setAll(Sonar.BLOCK_DISTANCE,
                 Sonar.BLOCK_RADIUS,
                 BlockEchoes.ECHO_LIFETIME,
                 Set.of(Sonar.INTERESTING_IDS),
@@ -125,13 +124,12 @@ public class OptionsTest {
         opts.addEventListener((settings) -> counter.inc());
         opts.setDirectory(configDir);
 
-        opts.setAll(100, 64, 0, 0, Set.of());
+        opts.setAll(64, 0, 0, Set.of());
         final var starting = opts.settings();
 
-        final var expected = new Settings(10, 4, 1, 500, Set.of(Id.of("that:thing")));
+        final var expected = new Settings(4, 1, 500, Set.of(Id.of("that:thing")));
 
         final var actual = starting
-                .withEchoesSize(expected.echoesSize())
                 .withBlockDistance(expected.blockDistance())
                 .withBlockRadius(expected.blockRadius())
                 .withLifetime(expected.lifetime())
@@ -148,7 +146,6 @@ public class OptionsTest {
                 Arguments.of("{\"interestingIds\":null}"),
                 Arguments.of("{\"interestingIds\":true}"),
                 Arguments.of("{\"interestingIds\":false}"),
-                Arguments.of("{\"interestingIds\":[], \"echoesSize\": -5}"),
                 Arguments.of("{\"interestingIds\":[], \"blockDistance\": -5}"),
                 Arguments.of("{\"interestingIds\":[], \"blockRadius\": -5}"),
                 Arguments.of("{\"interestingIds\":[], \"lifetime\": -5}"));

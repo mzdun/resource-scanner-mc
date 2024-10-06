@@ -51,7 +51,7 @@ public class SonarTest {
 		long then = Clock.currentTimeMillis();
 
 		Setup(int blockDistance, int blockRadius, int lifetime, Set<Id> blocks) {
-			this(new Settings(BlockEchoes.MAX_SIZE, blockDistance, blockRadius, lifetime, blocks));
+			this(new Settings(blockDistance, blockRadius, lifetime, blocks));
 		}
 
 		Setup(Settings settings) {
@@ -96,7 +96,7 @@ public class SonarTest {
 	}
 
 	public static Settings narrowSonar(int blockDistance, Set<Id> blocks) {
-		return new Settings(BlockEchoes.MAX_SIZE, blockDistance, 0, TEST_ECHO_LIFETIME, blocks);
+		return new Settings(blockDistance, 0, TEST_ECHO_LIFETIME, blocks);
 	}
 
 	@Test
