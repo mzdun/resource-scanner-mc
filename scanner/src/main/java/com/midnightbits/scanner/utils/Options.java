@@ -23,7 +23,8 @@ public final class Options extends EventEmitterOf.Impl<Settings.Event> {
     Path configDir = null;
     Settings settings = null;
 
-    private Options() {}
+    private Options() {
+    }
 
     public static synchronized Options getInstance() {
         if (instance == null)
@@ -72,14 +73,16 @@ public final class Options extends EventEmitterOf.Impl<Settings.Event> {
         return false;
     }
 
-    public Settings settings() { return settings; }
-
-    public void setAll(int echoesSize, int blockDistance, int blockRadius, int lifetime, Set<Id> interestingIds) {
-        setAll(echoesSize, blockDistance, blockRadius, lifetime, interestingIds, true);
+    public Settings settings() {
+        return settings;
     }
 
-    public void setAll(int echoesSize, int blockDistance, int blockRadius, int lifetime, Set<Id> interestingIds, boolean notify) {
-        settings = new Settings(echoesSize, blockDistance, blockRadius, lifetime, interestingIds);
+    public void setAll(int blockDistance, int blockRadius, int lifetime, Set<Id> interestingIds) {
+        setAll(blockDistance, blockRadius, lifetime, interestingIds, true);
+    }
+
+    public void setAll(int blockDistance, int blockRadius, int lifetime, Set<Id> interestingIds, boolean notify) {
+        settings = new Settings(blockDistance, blockRadius, lifetime, interestingIds);
         store();
         if (notify) {
             dispatchSettingsEvent(settings);

@@ -16,27 +16,20 @@ import org.jetbrains.annotations.NotNull;
 
 public final class BlockEchoes implements Iterable<BlockEcho> {
     private final TreeSet<BlockEcho> echoes = new TreeSet<>();
-    public static final int MAX_SIZE = 100;
     public static final int ECHO_LIFETIME = 10000;
 
-    private int maxSize;
     private int lifetime;
 
-    public BlockEchoes(int maxSize, int lifetime) {
-        this.maxSize = maxSize;
+    public BlockEchoes(int lifetime) {
         this.lifetime = lifetime;
     }
 
     public BlockEchoes() {
-        this(MAX_SIZE, ECHO_LIFETIME);
+        this(ECHO_LIFETIME);
     }
 
-    public void refresh(int maxSize, int lifetime) {
-        this.maxSize = maxSize;
+    public void refresh(int lifetime) {
         this.lifetime = lifetime;
-        if (echoes.size() >= maxSize) {
-            evictBlocks(stream().limit(echoes.size() - maxSize));
-        }
     }
 
     /**
@@ -59,9 +52,6 @@ public final class BlockEchoes implements Iterable<BlockEcho> {
      */
     public BlockEcho echoFrom(BlockEcho.Partial partial) {
         evictBlocks(stream().filter(b -> b.position().equals(partial.position())));
-        if (echoes.size() >= maxSize) {
-            evictBlocks(stream().limit(echoes.size() - maxSize + 1));
-        }
 
         BlockEcho echo = BlockEcho.echoFrom(partial);
         echoes.add(echo);

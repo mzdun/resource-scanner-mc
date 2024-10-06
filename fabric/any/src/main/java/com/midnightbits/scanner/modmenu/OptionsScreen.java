@@ -31,18 +31,14 @@ public class OptionsScreen extends SingleColumnOptions {
             Settings::blockDistance, Settings::withBlockDistance,
             (meters) -> translatableOption("distance/measure", meters));
     static final SettingSliderOption WIDTH_OPTION = new SettingSliderOption(
-            "width", 0, 10,
+            "width", 0, 100,
             Settings::blockRadius, Settings::withBlockRadius, makeRadiusLabeler());
-    static final SettingSliderOption ECHOES_OPTION = new SettingSliderOption(
-            "echoes", 10, 200,
-            Settings::echoesSize, Settings::withEchoesSize,
-            (value) -> Text.literal(String.valueOf(value)));
     static final SettingSliderOption LIFETIME_OPTION = new SettingSliderOption(
             "lifetime", 1000, 3600000,
             Settings::lifetime, Settings::withLifetime,
             makeLifetimeLabeler());
     static final SettingSliderOption[] OPTIONS = new SettingSliderOption[] {
-            DISTANCE_OPTION, WIDTH_OPTION, ECHOES_OPTION, LIFETIME_OPTION
+            DISTANCE_OPTION, WIDTH_OPTION, LIFETIME_OPTION
     };
 
     public static final String TAG = ScannerMod.MOD_ID;
@@ -54,13 +50,12 @@ public class OptionsScreen extends SingleColumnOptions {
         final var settings = Options.getInstance().settings();
         assert settings != null;
 
-        final var echoesSize = settings.echoesSize();
         final var blockDistance = settings.blockDistance();
         final var blockRadius = settings.blockRadius();
         final var lifetime = settings.lifetime();
         final var interestingIds = settings.interestingIds();
 
-        this.settings = new Settings(echoesSize, blockDistance, blockRadius, lifetime, interestingIds);
+        this.settings = new Settings(blockDistance, blockRadius, lifetime, interestingIds);
     }
 
     static String optionKey(String id) {
@@ -141,13 +136,12 @@ public class OptionsScreen extends SingleColumnOptions {
 
     @Override
     public void removed() {
-        final var echoesSize = settings.echoesSize();
         final var blockDistance = settings.blockDistance();
         final var blockRadius = settings.blockRadius();
         final var lifetime = settings.lifetime();
         final var interestingIds = settings.interestingIds();
 
-        Options.getInstance().setAll(echoesSize, blockDistance, blockRadius, lifetime, interestingIds);
+        Options.getInstance().setAll(blockDistance, blockRadius, lifetime, interestingIds);
         super.removed();
     }
 

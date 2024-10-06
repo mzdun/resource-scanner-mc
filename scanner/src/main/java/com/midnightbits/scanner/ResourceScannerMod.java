@@ -57,7 +57,6 @@ public class ResourceScannerMod implements ScannerMod {
         options.setDirectory(configDir);
         if (!options.load()) {
             options.setAll(
-                    BlockEchoes.MAX_SIZE,
                     Sonar.BLOCK_DISTANCE,
                     Sonar.BLOCK_RADIUS,
                     BlockEchoes.ECHO_LIFETIME,

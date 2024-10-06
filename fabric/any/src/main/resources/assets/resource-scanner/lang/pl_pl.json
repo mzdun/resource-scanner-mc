@@ -7,7 +7,6 @@
   "screens.resource-scanner.options": "Opcje Skanera Zasobów",
   "option.resource-scanner.message_narrate": "wiadomość %s",
   "option.resource-scanner.inventory_needs_world": "Musisz być w grze, żeby zmienić rodzaje skanowanej rudy",
-  "option.resource-scanner.echoes": "Widoczne echa",
   "option.resource-scanner.distance": "Największa odległość",
   "option.resource-scanner.distance/measure": "%sm",
   "option.resource-scanner.width": "Szerokość skanera",

@@ -40,22 +40,22 @@ public final class Sonar {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("Sonar");
 
-    public Sonar(int echoesSize, int blockDistance, int blockRadius, int lifetime, Set<Id> interestingIds) {
+    public Sonar(int blockDistance, int blockRadius, int lifetime, Set<Id> interestingIds) {
         this.blockDistance = blockDistance;
         this.blockRadius = blockRadius;
         this.blocks = interestingIds;
-        this.echoes = new BlockEchoes(echoesSize, lifetime);
+        this.echoes = new BlockEchoes(lifetime);
     }
 
     public Sonar(Settings settings) {
-        this(settings.echoesSize(), settings.blockDistance(),
+        this(settings.blockDistance(),
                 settings.blockRadius(),
                 settings.lifetime(),
                 settings.interestingIds());
     }
 
     public Sonar() {
-        this(BlockEchoes.MAX_SIZE, BLOCK_DISTANCE, BLOCK_RADIUS, BlockEchoes.ECHO_LIFETIME, Set.of(INTERESTING_IDS));
+        this(BLOCK_DISTANCE, BLOCK_RADIUS, BlockEchoes.ECHO_LIFETIME, Set.of(INTERESTING_IDS));
     }
 
     public void setEchoConsumer(@Nullable Consumer<BlockEcho> echoConsumer) {
@@ -63,18 +63,17 @@ public final class Sonar {
     }
 
     public void refresh(Settings settings) {
-        refresh(settings.echoesSize(),
-                settings.blockDistance(),
+        refresh(settings.blockDistance(),
                 settings.blockRadius(),
                 settings.lifetime(),
                 settings.interestingIds());
     }
 
-    public void refresh(int maxEchoes, int blockDistance, int blockRadius, int lifetime, Set<Id> blocks) {
+    public void refresh(int blockDistance, int blockRadius, int lifetime, Set<Id> blocks) {
         this.blockDistance = blockDistance;
         this.blockRadius = blockRadius;
         this.blocks = blocks;
-        this.echoes.refresh(maxEchoes, lifetime);
+        this.echoes.refresh(lifetime);
     }
 
     public boolean sendPing(ClientCore client, SlicePacer pacer, ScanWaveConsumer waveConsumer,

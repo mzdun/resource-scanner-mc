@@ -7,7 +7,6 @@
     "screens.resource-scanner.options": "Resource Scanner Options",
     "option.resource-scanner.message_narrate": "%s message",
     "option.resource-scanner.inventory_needs_world": "You must be in a game to change the kinds of scanned ore",
-    "option.resource-scanner.echoes": "Visible echoes",
     "option.resource-scanner.distance": "Maximum distance",
     "option.resource-scanner.distance/measure": "%sm",
     "option.resource-scanner.width": "Scanner width",

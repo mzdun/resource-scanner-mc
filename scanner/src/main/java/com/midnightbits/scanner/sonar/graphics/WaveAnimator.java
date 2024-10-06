@@ -32,12 +32,11 @@ public class WaveAnimator implements ScanWaveConsumer {
         private final Sonar target;
         private final int sliceId;
 
-        Slice(List<V3i> shimmers, List<BlockEcho.Partial> echoes, Sonar target, int sliceId) {
+        public Slice(List<V3i> shimmers, List<BlockEcho.Partial> echoes, Sonar target, int sliceId) {
             this.shimmers = new Shimmers(shimmers);
             this.echoes = echoes;
             this.target = target;
             this.sliceId = sliceId;
-            System.out.printf("Slice[%d]: shimmers:%d / echoes:%d%n", sliceId, shimmers.size(), echoes.size());
         }
 
         public Shimmers shimmers() {

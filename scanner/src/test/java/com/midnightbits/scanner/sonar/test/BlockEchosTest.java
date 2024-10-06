@@ -16,48 +16,9 @@ public class BlockEchosTest {
         private MockedClock clock = new MockedClock();
 
         @Test
-        public void onlyKeepsXElementsAtATime() {
-                final var echoes = new BlockEchoes(3, BlockEchoes.ECHO_LIFETIME);
-                Iterables.assertEquals(new BlockEcho[] {}, echoes);
-
-                clock.timeStamp = 0x123456;
-                echoes.echoFrom(V3i.ZERO, Id.ofVanilla("coal_ore"));
-                Iterables.assertEquals(new BlockEcho[] {
-                                new BlockEcho(V3i.ZERO, Id.ofVanilla("coal_ore"), 0x123456),
-                }, echoes);
-
-                clock.timeStamp = 0x123457;
-                echoes.echoFrom(new V3i(1, 1, 1), Id.ofVanilla("coal_ore"));
-                Iterables.assertEquals(new BlockEcho[] {
-                                new BlockEcho(V3i.ZERO, Id.ofVanilla("coal_ore"), 0x123456),
-                                new BlockEcho(new V3i(1, 1, 1), Id.ofVanilla("coal_ore"), 0x123457),
-                }, echoes);
-
-                clock.timeStamp = 0x123458;
-                echoes.echoFrom(new V3i(1, 2, 1), Id.ofVanilla("iron_ore"));
-                Iterables.assertEquals(new BlockEcho[] {
-                                new BlockEcho(V3i.ZERO, Id.ofVanilla("coal_ore"), 0x123456),
-                                new BlockEcho(new V3i(1, 1, 1), Id.ofVanilla("coal_ore"), 0x123457),
-                                new BlockEcho(new V3i(1, 2, 1), Id.ofVanilla("iron_ore"), 0x123458),
-                }, echoes);
-
-                clock.timeStamp = 0x123459;
-                echoes.echoFrom(new V3i(1, 2, 2), Id.ofVanilla("iron_ore"));
-                Iterables.assertEquals(new BlockEcho[] {
-                                new BlockEcho(new V3i(1, 1, 1), Id.ofVanilla("coal_ore"), 0x123457),
-                                new BlockEcho(new V3i(1, 2, 1), Id.ofVanilla("iron_ore"), 0x123458),
-                                new BlockEcho(new V3i(1, 2, 2), Id.ofVanilla("iron_ore"), 0x123459),
-                }, echoes);
-
-                echoes.refresh(1, BlockEchoes.ECHO_LIFETIME);
-                Iterables.assertEquals(new BlockEcho[] {
-                                new BlockEcho(new V3i(1, 2, 2), Id.ofVanilla("iron_ore"), 0x123459),
-                }, echoes);
-        }
-
-        @Test
         public void removesOldEchoes() {
-                final var echoes = new BlockEchoes(Integer.MAX_VALUE, 10000);
+                final var tenSeconds = 10000;
+                final var echoes = new BlockEchoes(tenSeconds);
                 Iterables.assertEquals(new BlockEcho[] {}, echoes);
 
                 clock.timeStamp = 0x123456;
@@ -86,7 +47,7 @@ public class BlockEchosTest {
 
         @Test
         public void evictsExistingEchoesWithTheSamePosition() {
-                final var echoes = new BlockEchoes(3, BlockEchoes.ECHO_LIFETIME);
+                final var echoes = new BlockEchoes(BlockEchoes.ECHO_LIFETIME);
                 Iterables.assertEquals(new BlockEcho[] {}, echoes);
 
                 clock.timeStamp = 0x123456;
