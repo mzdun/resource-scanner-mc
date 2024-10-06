@@ -8,7 +8,7 @@ import com.midnightbits.scanner.utils.Clock;
 import java.util.function.Predicate;
 
 public class SlicePacer implements Sonar.SlicePacer {
-    public static final long DURATION = 100;
+    public static final long DURATION = 10;
 
     private static class Scan {
         final Predicate<Long> callback;

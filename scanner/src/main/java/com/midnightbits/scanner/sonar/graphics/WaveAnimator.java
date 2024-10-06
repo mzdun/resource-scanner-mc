@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 
 public class WaveAnimator implements ScanWaveConsumer {
     private static final TimeFunction TIME = TimeFunction.LINEAR;
-    private static final long DURATION = 300;
+    private static final long DURATION = 3 * SlicePacer.DURATION;
     private static final double TRANSPARENT = 0.0;
     private static final double OPAQUE = 1.0;
 
