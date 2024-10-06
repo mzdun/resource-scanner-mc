@@ -96,7 +96,7 @@ public final class MockPlatform implements PlatformInterface, KeyBinder {
     }
 
     public void setDefaultHostBackend() {
-        host = new MockAnimatorHost(() -> (echoes, shimmers) -> {
+        host = new MockAnimatorHost(() -> (shimmers) -> {
         });
     }
 

@@ -86,6 +86,11 @@ public class ResourceScannerMod implements ScannerMod {
         return sonar.echoes();
     }
 
+    @Override
+    public Sonar getSonar() {
+        return sonar;
+    }
+
     private void listEchoes() {
         for (BlockEcho echo : sonar.echoes()) {
             LOGGER.info("{} ({}) {}", echo.pingTime(), echo.position(), echo.id());

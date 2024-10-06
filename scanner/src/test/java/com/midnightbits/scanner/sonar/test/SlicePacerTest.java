@@ -17,7 +17,7 @@ public class SlicePacerTest {
 
     @Test
     void addMultipleScans() {
-        ((MockPlatform) Services.PLATFORM).setHostBackend((a, b) -> {
+        ((MockPlatform) Services.PLATFORM).setHostBackend((shimmers) -> {
         });
         final var ticker = (MockAnimatorHost) Services.PLATFORM.getAnimatorHost();
         final var tested = new SlicePacer(SlicePacer.DURATION);

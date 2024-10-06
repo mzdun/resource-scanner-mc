@@ -15,6 +15,7 @@ import java.util.function.Consumer;
 
 // TODO: Remaining issues and missing features:
 //       - Picking up item stack from upper slots should leave the stack in the inventory
+//       - Shift-click should put item in / remove from the lower part
 //       - Dropping item stack _anywhere_ should merge with preexisting stack (count still 1)
 //       - _Nice to have_: Dropping item to on-hand inventory should re-sort that inventory
 
