@@ -13,6 +13,10 @@
     "option.resource-scanner.width": "Scanner width",
     "option.resource-scanner.width/zero": "single point",
     "option.resource-scanner.width/circle": "%1$sm x %1$sm circle",
+    "option.resource-scanner.lifetime": "Echoes vanish after",
+    "option.resource-scanner.lifetime/seconds": "%1$d s",
+    "option.resource-scanner.lifetime/minutes": "%2$d min %1$d s",
+    "option.resource-scanner.lifetime/hours": "%3$d h %2$d min %1$d s",
     "option.resource-scanner.interesting_ids": "Change scanned ore kinds",
 
     "screens.resource-scanner.ores": "Select ore kinds",

@@ -74,12 +74,12 @@ public final class Options extends EventEmitterOf.Impl<Settings.Event> {
 
     public Settings settings() { return settings; }
 
-    public void setAll(int echoesSize, int blockDistance, int blockRadius, Set<Id> interestingIds) {
-        setAll(echoesSize, blockDistance, blockRadius, interestingIds, true);
+    public void setAll(int echoesSize, int blockDistance, int blockRadius, int lifetime, Set<Id> interestingIds) {
+        setAll(echoesSize, blockDistance, blockRadius, lifetime, interestingIds, true);
     }
 
-    public void setAll(int echoesSize, int blockDistance, int blockRadius, Set<Id> interestingIds, boolean notify) {
-        settings = new Settings(echoesSize, blockDistance, blockRadius, interestingIds);
+    public void setAll(int echoesSize, int blockDistance, int blockRadius, int lifetime, Set<Id> interestingIds, boolean notify) {
+        settings = new Settings(echoesSize, blockDistance, blockRadius, lifetime, interestingIds);
         store();
         if (notify) {
             dispatchSettingsEvent(settings);

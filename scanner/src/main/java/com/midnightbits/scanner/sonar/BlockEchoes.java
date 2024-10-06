@@ -20,17 +20,20 @@ public final class BlockEchoes implements Iterable<BlockEcho> {
     public static final int ECHO_LIFETIME = 10000;
 
     private int maxSize;
+    private int lifetime;
 
-    public BlockEchoes(int maxSize) {
+    public BlockEchoes(int maxSize, int lifetime) {
         this.maxSize = maxSize;
+        this.lifetime = lifetime;
     }
 
     public BlockEchoes() {
-        this(MAX_SIZE);
+        this(MAX_SIZE, ECHO_LIFETIME);
     }
 
-    public void refresh(int maxSize) {
+    public void refresh(int maxSize, int lifetime) {
         this.maxSize = maxSize;
+        this.lifetime = lifetime;
         if (echoes.size() >= maxSize) {
             evictBlocks(stream().limit(echoes.size() - maxSize));
         }
@@ -67,7 +70,7 @@ public final class BlockEchoes implements Iterable<BlockEcho> {
 
     public void removeOldEchoes() {
         final var now = Clock.currentTimeMillis();
-        evictBlocks(stream().filter(b -> (now - b.pingTime()) > ECHO_LIFETIME));
+        evictBlocks(stream().filter(b -> (now - b.pingTime()) > lifetime));
     }
 
     private Stream<BlockEcho> stream() {
