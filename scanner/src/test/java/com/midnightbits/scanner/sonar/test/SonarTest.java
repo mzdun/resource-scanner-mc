@@ -113,12 +113,14 @@ public class SonarTest {
 		setup.sonar.setEchoConsumer((echo) -> counter.inc());
 		setup.sendPingBlocking(core, clock);
 
+		final var offset = 0x123456 + WaveAnimator.DURATION + SlicePacer.DURATION;
 		Iterables.assertEquals(new BlockEcho[] {
-				new BlockEcho(new V3i(0, 23, 0), Id.ofVanilla("deepslate_iron_ore"), 1195750),
-				new BlockEcho(new V3i(0, 25, 0), Id.ofVanilla("deepslate_diamond_ore"), 1195950),
-				new BlockEcho(new V3i(0, 27, 0), Id.ofVanilla("diamond_ore"), 1196150),
-				new BlockEcho(new V3i(0, 28, 0), Id.ofVanilla("iron_ore"), 1196250),
-				new BlockEcho(new V3i(0, 30, 0), Id.ofVanilla("iron_ore"), 1196450),
+				new BlockEcho(new V3i(0, 23, 0), Id.ofVanilla("deepslate_iron_ore"), offset + 23 * SlicePacer.DURATION),
+				new BlockEcho(new V3i(0, 25, 0), Id.ofVanilla("deepslate_diamond_ore"),
+						offset + 25 * SlicePacer.DURATION),
+				new BlockEcho(new V3i(0, 27, 0), Id.ofVanilla("diamond_ore"), offset + 27 * SlicePacer.DURATION),
+				new BlockEcho(new V3i(0, 28, 0), Id.ofVanilla("iron_ore"), offset + 28 * SlicePacer.DURATION),
+				new BlockEcho(new V3i(0, 30, 0), Id.ofVanilla("iron_ore"), offset + 30 * SlicePacer.DURATION),
 		}, setup.sonar.echoes());
 
 		Iterables.assertEquals(new String[] {
@@ -139,9 +141,11 @@ public class SonarTest {
 				Id.ofVanilla("deepslate_diamond_ore"))));
 		setup.sendPingBlocking(core, clock, null);
 
+		final var offset = 0x123456 + WaveAnimator.DURATION + SlicePacer.DURATION;
 		Iterables.assertEquals(new BlockEcho[] {
-				new BlockEcho(new V3i(0, 25, 0), Id.ofVanilla("deepslate_diamond_ore"), 1195948),
-				new BlockEcho(new V3i(0, 27, 0), Id.ofVanilla("diamond_ore"), 1196148),
+				new BlockEcho(new V3i(0, 25, 0), Id.ofVanilla("deepslate_diamond_ore"),
+						offset + 25 * SlicePacer.DURATION),
+				new BlockEcho(new V3i(0, 27, 0), Id.ofVanilla("diamond_ore"), offset + 27 * SlicePacer.DURATION),
 		}, setup.sonar.echoes());
 	}
 
@@ -158,38 +162,39 @@ public class SonarTest {
 
 		((MockAnimatorHost) Services.PLATFORM.getAnimatorHost()).runAll(clock);
 
+		final var offset = 0x123456 + WaveAnimator.DURATION + SlicePacer.DURATION;
 		Iterables.assertEquals(new BlockEcho[] {
-				new BlockEcho(new V3i(-60, -60, -50), Id.ofVanilla("gold_ore"), 1193550),
-				new BlockEcho(new V3i(-60, -59, -39), Id.ofVanilla("gold_ore"), 1194850),
-				new BlockEcho(new V3i(-58, -59, -39), Id.ofVanilla("gold_ore"), 1194950),
-				new BlockEcho(new V3i(-60, -59, -37), Id.ofVanilla("gold_ore"), 1195250),
-				new BlockEcho(new V3i(-59, -59, -35), Id.ofVanilla("gold_ore"), 1195650),
-				new BlockEcho(new V3i(-59, -59, -34), Id.ofVanilla("gold_ore"), 1195850),
-				new BlockEcho(new V3i(-60, -58, -34), Id.ofVanilla("gold_ore"), 1195850),
-				new BlockEcho(new V3i(-60, -60, -33), Id.ofVanilla("gold_ore"), 1196050),
-				new BlockEcho(new V3i(-57, -59, -30), Id.ofVanilla("gold_ore"), 1196750),
-				new BlockEcho(new V3i(-59, -60, -29), Id.ofVanilla("gold_ore"), 1196850),
-				new BlockEcho(new V3i(-57, -60, -28), Id.ofVanilla("gold_ore"), 1197150),
-				new BlockEcho(new V3i(-57, -60, -27), Id.ofVanilla("gold_ore"), 1197350),
-				new BlockEcho(new V3i(-60, -57, -27), Id.ofVanilla("gold_ore"), 1197350),
-				new BlockEcho(new V3i(-58, -59, -26), Id.ofVanilla("gold_ore"), 1197450),
-				new BlockEcho(new V3i(-57, -60, -26), Id.ofVanilla("gold_ore"), 1197550),
-				new BlockEcho(new V3i(-59, -57, -26), Id.ofVanilla("gold_ore"), 1197550),
-				new BlockEcho(new V3i(-58, -60, -25), Id.ofVanilla("gold_ore"), 1197650),
-				new BlockEcho(new V3i(-59, -58, -25), Id.ofVanilla("gold_ore"), 1197650),
-				new BlockEcho(new V3i(-59, -57, -25), Id.ofVanilla("gold_ore"), 1197750),
-				new BlockEcho(new V3i(-58, -60, -24), Id.ofVanilla("gold_ore"), 1197850),
-				new BlockEcho(new V3i(-60, -59, -23), Id.ofVanilla("gold_ore"), 1198050),
-				new BlockEcho(new V3i(-60, -58, -23), Id.ofVanilla("gold_ore"), 1198050),
-				new BlockEcho(new V3i(-56, -58, -23), Id.ofVanilla("gold_ore"), 1198150),
-				new BlockEcho(new V3i(-59, -60, -22), Id.ofVanilla("gold_ore"), 1198250),
-				new BlockEcho(new V3i(-58, -58, -22), Id.ofVanilla("gold_ore"), 1198350),
-				new BlockEcho(new V3i(-59, -57, -22), Id.ofVanilla("gold_ore"), 1198350),
-				new BlockEcho(new V3i(-59, -58, -21), Id.ofVanilla("gold_ore"), 1198450),
-				new BlockEcho(new V3i(-57, -58, -21), Id.ofVanilla("gold_ore"), 1198550),
-				new BlockEcho(new V3i(-56, -59, -20), Id.ofVanilla("gold_ore"), 1198750),
-				new BlockEcho(new V3i(-56, -59, -19), Id.ofVanilla("gold_ore"), 1198950),
-				new BlockEcho(new V3i(-59, -56, -19), Id.ofVanilla("gold_ore"), 1198950),
+				new BlockEcho(new V3i(-60, -60, -50), Id.ofVanilla("gold_ore"), offset + SlicePacer.DURATION),
+				new BlockEcho(new V3i(-60, -59, -39), Id.ofVanilla("gold_ore"), offset + 14 * SlicePacer.DURATION),
+				new BlockEcho(new V3i(-58, -59, -39), Id.ofVanilla("gold_ore"), offset + 15 * SlicePacer.DURATION),
+				new BlockEcho(new V3i(-60, -59, -37), Id.ofVanilla("gold_ore"), offset + 18 * SlicePacer.DURATION),
+				new BlockEcho(new V3i(-59, -59, -35), Id.ofVanilla("gold_ore"), offset + 22 * SlicePacer.DURATION),
+				new BlockEcho(new V3i(-59, -59, -34), Id.ofVanilla("gold_ore"), offset + 24 * SlicePacer.DURATION),
+				new BlockEcho(new V3i(-60, -58, -34), Id.ofVanilla("gold_ore"), offset + 24 * SlicePacer.DURATION),
+				new BlockEcho(new V3i(-60, -60, -33), Id.ofVanilla("gold_ore"), offset + 26 * SlicePacer.DURATION),
+				new BlockEcho(new V3i(-57, -59, -30), Id.ofVanilla("gold_ore"), offset + 33 * SlicePacer.DURATION),
+				new BlockEcho(new V3i(-59, -60, -29), Id.ofVanilla("gold_ore"), offset + 34 * SlicePacer.DURATION),
+				new BlockEcho(new V3i(-57, -60, -28), Id.ofVanilla("gold_ore"), offset + 37 * SlicePacer.DURATION),
+				new BlockEcho(new V3i(-57, -60, -27), Id.ofVanilla("gold_ore"), offset + 39 * SlicePacer.DURATION),
+				new BlockEcho(new V3i(-60, -57, -27), Id.ofVanilla("gold_ore"), offset + 39 * SlicePacer.DURATION),
+				new BlockEcho(new V3i(-58, -59, -26), Id.ofVanilla("gold_ore"), offset + 40 * SlicePacer.DURATION),
+				new BlockEcho(new V3i(-57, -60, -26), Id.ofVanilla("gold_ore"), offset + 41 * SlicePacer.DURATION),
+				new BlockEcho(new V3i(-59, -57, -26), Id.ofVanilla("gold_ore"), offset + 41 * SlicePacer.DURATION),
+				new BlockEcho(new V3i(-58, -60, -25), Id.ofVanilla("gold_ore"), offset + 42 * SlicePacer.DURATION),
+				new BlockEcho(new V3i(-59, -58, -25), Id.ofVanilla("gold_ore"), offset + 42 * SlicePacer.DURATION),
+				new BlockEcho(new V3i(-59, -57, -25), Id.ofVanilla("gold_ore"), offset + 43 * SlicePacer.DURATION),
+				new BlockEcho(new V3i(-58, -60, -24), Id.ofVanilla("gold_ore"), offset + 44 * SlicePacer.DURATION),
+				new BlockEcho(new V3i(-60, -59, -23), Id.ofVanilla("gold_ore"), offset + 46 * SlicePacer.DURATION),
+				new BlockEcho(new V3i(-60, -58, -23), Id.ofVanilla("gold_ore"), offset + 46 * SlicePacer.DURATION),
+				new BlockEcho(new V3i(-56, -58, -23), Id.ofVanilla("gold_ore"), offset + 47 * SlicePacer.DURATION),
+				new BlockEcho(new V3i(-59, -60, -22), Id.ofVanilla("gold_ore"), offset + 48 * SlicePacer.DURATION),
+				new BlockEcho(new V3i(-58, -58, -22), Id.ofVanilla("gold_ore"), offset + 49 * SlicePacer.DURATION),
+				new BlockEcho(new V3i(-59, -57, -22), Id.ofVanilla("gold_ore"), offset + 49 * SlicePacer.DURATION),
+				new BlockEcho(new V3i(-59, -58, -21), Id.ofVanilla("gold_ore"), offset + 50 * SlicePacer.DURATION),
+				new BlockEcho(new V3i(-57, -58, -21), Id.ofVanilla("gold_ore"), offset + 51 * SlicePacer.DURATION),
+				new BlockEcho(new V3i(-56, -59, -20), Id.ofVanilla("gold_ore"), offset + 53 * SlicePacer.DURATION),
+				new BlockEcho(new V3i(-56, -59, -19), Id.ofVanilla("gold_ore"), offset + 55 * SlicePacer.DURATION),
+				new BlockEcho(new V3i(-59, -56, -19), Id.ofVanilla("gold_ore"), offset + 55 * SlicePacer.DURATION),
 		}, setup.sonar.echoes());
 
 		Iterables.assertEquals(new String[] {
@@ -212,9 +217,10 @@ public class SonarTest {
 		final var setup = new Setup(narrowSonar(TEST_BLOCK_DISTANCE, Set.of(Id.ofVanilla("gold_ore"))));
 		setup.sendPingBlocking(core, clock);
 
+		final var offset = 0x123456 + WaveAnimator.DURATION + SlicePacer.DURATION;
 		Iterables.assertEquals(new BlockEcho[] {
-				new BlockEcho(new V3i(-60, -60, -50), Id.ofVanilla("gold_ore"), 1193550),
-				new BlockEcho(new V3i(-60, -60, -33), Id.ofVanilla("gold_ore"), 1195250),
+				new BlockEcho(new V3i(-60, -60, -50), Id.ofVanilla("gold_ore"), offset + SlicePacer.DURATION),
+				new BlockEcho(new V3i(-60, -60, -33), Id.ofVanilla("gold_ore"), offset + 18 * SlicePacer.DURATION),
 		}, setup.sonar.echoes());
 
 		Iterables.assertEquals(new String[] {
@@ -230,9 +236,10 @@ public class SonarTest {
 		final var setup = new Setup(narrowSonar());
 		setup.sendPingBlocking(core, clock);
 
+		final var offset = 0x123456 + WaveAnimator.DURATION + SlicePacer.DURATION;
 		Iterables.assertEquals(new BlockEcho[] {
-				new BlockEcho(new V3i(0, 30, -8), Id.ofVanilla("coal_ore"), 1196450),
-				new BlockEcho(new V3i(0, 31, -8), Id.ofVanilla("iron_ore"), 1196550),
+				new BlockEcho(new V3i(0, 30, -8), Id.ofVanilla("coal_ore"), offset + 30 * SlicePacer.DURATION),
+				new BlockEcho(new V3i(0, 31, -8), Id.ofVanilla("iron_ore"), offset + 31 * SlicePacer.DURATION),
 		}, setup.sonar.echoes());
 
 		Iterables.assertEquals(new String[] {

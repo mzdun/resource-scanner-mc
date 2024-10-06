@@ -60,7 +60,7 @@ public record BlockEcho(V3i position, Id id, long pingTime) implements Comparabl
     @Override
     public String toString() {
         final var builder = new StringBuilder();
-        builder.append("new BlockEcho(new V3i(")
+        builder.append("\nnew BlockEcho(new V3i(")
                 .append(position.getX()).append(", ")
                 .append(position.getY()).append(", ")
                 .append(position.getZ()).append("), Id.of");
