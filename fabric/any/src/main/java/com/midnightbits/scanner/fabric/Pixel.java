@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import com.midnightbits.scanner.rt.core.Id;
+import com.midnightbits.scanner.rt.core.fabric.Minecraft;
 import org.joml.Matrix4f;
 
 import com.midnightbits.scanner.rt.math.V3i;
@@ -16,20 +18,22 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
-import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.BufferRenderer;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.ColorHelper;
+import net.minecraft.util.math.Vec3d;
 
 public class Pixel {
     private record Vertex(int dx, int dy, int dz) {
-        void apply(BufferBuilder buffer, Matrix4f matrix, int argb) {
+        void apply(VertexConsumer buffer, Matrix4f matrix, int argb) {
             buffer.vertex(matrix, dx, dy, dz).color(argb);
         }
     }
@@ -60,31 +64,37 @@ public class Pixel {
     final static int SIDE_Z1 = 1 << 2;
     final static int ALL_SIDES = SIDE_X0 | SIDE_X1 | SIDE_Y0 | SIDE_Y1 | SIDE_Z0 | SIDE_Z1;
 
+    private static final Id EMPTY_ID = Id.of("", "");
+
     final V3i position;
+    final Id id;
     final int argb;
     int sides = ALL_SIDES;
+    final double distanceSquared;
 
-    Pixel(V3i position, int argb) {
+    Pixel(V3i position, Id id, int argb, Vec3d camera) {
         this.position = position;
+        this.id = id;
         this.argb = argb;
+        this.distanceSquared = new BlockPos(Minecraft.vec3iOf(position)).toCenterPos().squaredDistanceTo(camera);
     }
 
     public V3i position() {
         return position;
     }
 
-    static Pixel of(BlockEcho echo) {
-        return new Pixel(echo.position(), echo.argb32());
+    static Pixel of(BlockEcho echo, Vec3d camera) {
+        return new Pixel(echo.position(), echo.id(), echo.argb32(), camera);
     }
 
-    void draw(BufferBuilder buffer, MatrixStack stack, Camera camera) {
+    void draw(VertexConsumer buffer, MatrixStack matrices, Camera camera) {
         final var cam = camera.getPos();
         final var x = position.getX() - cam.x;
         final var y = position.getY() - cam.y;
         final var z = position.getZ() - cam.z;
-        stack.push();
-        stack.translate(x, y, z);
-        final var m = stack.peek().getPositionMatrix();
+        matrices.push();
+        matrices.translate(x, y, z);
+        final var m = matrices.peek().getPositionMatrix();
 
         for (var side = 0; side < triangles.length; ++side) {
             final var flag = 1 << side;
@@ -98,16 +108,19 @@ public class Pixel {
             }
         }
 
-        stack.pop();
+        matrices.pop();
     }
 
     public static void renderLevel(WorldRenderContext context, Iterable<BlockEcho> echoes, List<Shimmers> shimmers) {
         final var frustum = context.frustum();
         assert frustum != null;
 
+        final var camera = context.camera();
+        final var cameraPosF = camera.getPos();
+
         final var allPixels = StreamSupport
                 .stream(echoes.spliterator(), false)
-                .map(Pixel::of)
+                .map((echo) -> Pixel.of(echo, cameraPosF))
                 .collect(Collectors.toSet());
 
         for (final var shimmer : shimmers) {
@@ -115,13 +128,13 @@ public class Pixel {
             int argbWalls = ColorHelper.Argb.withAlpha(alpha, 0x8080FF);
 
             for (final var pos : shimmer.blocks()) {
-                allPixels.add(new Pixel(pos, argbWalls));
+                allPixels.add(new Pixel(pos, EMPTY_ID, argbWalls, cameraPosF));
             }
         }
 
         Mesh.cleanPixels(allPixels);
 
-        final var visiblePixels = allPixels
+        final var visiblePixels = new java.util.ArrayList<>(allPixels
                 .stream()
                 .filter((pixel) -> {
                     if ((pixel.sides & Pixel.ALL_SIDES) == 0) {
@@ -132,15 +145,15 @@ public class Pixel {
                             (pos.getZ() + 1));
                     return frustum.isVisible(box);
                 })
-                .collect(Collectors.toSet());
+                .toList());
+        visiblePixels.sort((lhs, rhs) -> Double.compare(rhs.distanceSquared, lhs.distanceSquared));
 
         if (visiblePixels.isEmpty() && shimmers.isEmpty()) {
             return;
         }
 
-        final var camera = context.camera();
-        final var stack = context.matrixStack();
-        assert stack != null;
+        final var matrices = context.matrixStack();
+        assert matrices != null;
 
         RenderSystem.disableDepthTest();
         RenderSystem.enableBlend();
@@ -154,7 +167,7 @@ public class Pixel {
         final var buffer = tessellator.begin(VertexFormat.DrawMode.TRIANGLES, VertexFormats.POSITION_COLOR);
 
         for (final var pixel : visiblePixels) {
-            pixel.draw(buffer, stack, camera);
+            pixel.draw(buffer, matrices, camera);
         }
 
         final var end = buffer.endNullable();

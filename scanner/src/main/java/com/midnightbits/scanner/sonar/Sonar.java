@@ -106,8 +106,12 @@ public final class Sonar {
         return echoes;
     }
 
-    public void removeOldEchoes() {
-        echoes.removeOldEchoes();
+    public void remove(Predicate<BlockEcho> whichOnes) {
+        echoes.remove(whichOnes);
+    }
+
+    public Predicate<BlockEcho> oldEchoes(ClientCore client) {
+        return echoes.oldEchoes(client);
     }
 
     private static final class Reflections {

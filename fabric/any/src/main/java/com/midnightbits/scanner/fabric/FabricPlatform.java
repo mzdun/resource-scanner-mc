@@ -10,7 +10,6 @@ import com.midnightbits.scanner.platform.KeyBinder;
 import com.midnightbits.scanner.platform.PlatformInterface;
 import com.midnightbits.scanner.rt.core.Id;
 import com.midnightbits.scanner.sonar.graphics.AbstractAnimatorHost;
-import com.midnightbits.scanner.sonar.graphics.ColorDefaults;
 import com.midnightbits.scanner.utils.CacheableValue;
 import com.midnightbits.scanner.utils.Manifests;
 
@@ -63,7 +62,6 @@ public class FabricPlatform implements PlatformInterface {
     public void playSample(Sample id) {
         FabricSoundManager.playSample(id);
     }
-
 
     @Override
     public Map<Id, Integer> getBlockTagColors() {

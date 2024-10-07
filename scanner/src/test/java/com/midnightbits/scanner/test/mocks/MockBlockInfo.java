@@ -35,6 +35,10 @@ public final class MockBlockInfo implements BlockInfo {
         return new MockBlockInfo(false, Id.of(unparsedId));
     }
 
+    public static MockBlockInfo of(Id id) {
+        return new MockBlockInfo(false, id);
+    }
+
     @Override
     public String toString() {
         return String.valueOf(id);

@@ -6,8 +6,10 @@ package com.midnightbits.scanner.sonar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.TreeSet;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import com.midnightbits.scanner.rt.core.ClientCore;
 import com.midnightbits.scanner.rt.core.Id;
 import com.midnightbits.scanner.rt.math.V3i;
 import com.midnightbits.scanner.utils.Clock;
@@ -58,9 +60,21 @@ public final class BlockEchoes implements Iterable<BlockEcho> {
         return echo;
     }
 
-    public void removeOldEchoes() {
+    public void remove(Predicate<BlockEcho> whichOnes) {
+        evictBlocks(stream().filter(whichOnes));
+    }
+
+    public Predicate<BlockEcho> oldEchoes(ClientCore client) {
         final var now = Clock.currentTimeMillis();
-        evictBlocks(stream().filter(b -> (now - b.pingTime()) > lifetime));
+        return ((block) -> {
+            final var blockLifetime = now - block.pingTime();
+            if (blockLifetime > lifetime) {
+                return true;
+            }
+
+            final var info = client.getBlockInfo(block.position());
+            return !block.id().equals(info.getId());
+        });
     }
 
     private Stream<BlockEcho> stream() {
