@@ -16,12 +16,6 @@ import net.minecraft.util.math.MathHelper;
 import java.util.Set;
 import java.util.function.Consumer;
 
-// TODO: Remaining issues and missing features:
-//       - Picking up item stack from upper slots should leave the stack in the inventory
-//       - Shift-click should put item in / remove from the lower part
-//       - Dropping item stack _anywhere_ should merge with preexisting stack (count still 1)
-//       - _Nice to have_: Dropping item to on-hand inventory should re-sort that inventory
-
 @Environment(value = EnvType.CLIENT)
 public class InventoryWidget extends HandledWidget<InventoryHandler> {
     Identifier SCROLLER_TEXTURE = Identifier.ofVanilla("container/creative_inventory/scroller");
@@ -75,7 +69,7 @@ public class InventoryWidget extends HandledWidget<InventoryHandler> {
         final var scrollableSpace = SCROLLBAR_BOTTOM - SCROLLBAR_TOP - Constants.SCROLLBAR_HEIGHT - 1;
         context.drawGuiTexture(identifier,
                 SCROLLBAR_LEFT + 2,
-                SCROLLBAR_TOP + (int)((float)scrollableSpace * this.scrollPosition),
+                SCROLLBAR_TOP + (int) ((float) scrollableSpace * this.scrollPosition),
                 Constants.SCROLLBAR_WIDTH, Constants.SCROLLBAR_HEIGHT);
     }
 
@@ -98,9 +92,9 @@ public class InventoryWidget extends HandledWidget<InventoryHandler> {
             final int y = centerY();
             final int top = y + SCROLLBAR_TOP;
             final int bottom = y + SCROLLBAR_BOTTOM;
-            final float thumb = (float)Constants.SCROLLBAR_HEIGHT;
+            final float thumb = (float) Constants.SCROLLBAR_HEIGHT;
 
-            scrollPosition = ((float)mouseY - (float)top - thumb/2) / ((float)(bottom - top + 1) - thumb);
+            scrollPosition = ((float) mouseY - (float) top - thumb / 2) / ((float) (bottom - top + 1) - thumb);
             scrollPosition = MathHelper.clamp(scrollPosition, 0.0F, 1.0F);
             handler.scrollItems(scrollPosition);
 
@@ -127,7 +121,7 @@ public class InventoryWidget extends HandledWidget<InventoryHandler> {
         final int x = centerX();
         final int left = x + Constants.INVENTORY_WIDTH - Constants.DX;
         final int right = left - 14;
-        return mouseX >= (double)right && mouseY >= (double)top && mouseX < (double)left && mouseY < (double)bottom;
+        return mouseX >= (double) right && mouseY >= (double) top && mouseX < (double) left && mouseY < (double) bottom;
     }
 
     // Inventory widget
