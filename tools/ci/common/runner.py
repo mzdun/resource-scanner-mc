@@ -104,3 +104,7 @@ def checked_capture(
 
 def capture(*args: str, **kwargs):
     return run(*args, capture_output=True, **kwargs)
+
+
+def capture_str(*args: str, **kwargs):
+    return capture(*args, **kwargs).stdout.decode('UTF-8').strip()

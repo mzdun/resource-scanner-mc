@@ -10,7 +10,7 @@ from typing import Optional
 from ..common.changelog import FORCED_LEVEL, Level, format_commit_message, update_changelog
 from ..common.git import addFiles, annotatedTag, bumpVersion, commit, getLog, getTags
 from ..common.project import Project, getVersion, getVersionFilePath, setVersion
-from ..common.runner import Environment
+from ..common.runner import Environment, capture_str
 from ..common.utils import PROJECT_ROOT
 from ..github.api import API, format_release
 
@@ -61,6 +61,16 @@ def runReleaseCommand(args: argparse.Namespace):
     if args.use is not None and args.stability is not None:
         savedParser.error("--use and --force cannot be used together")
 
+    current_branch = capture_str("git", "branch", "--show-current")
+
+    if current_branch != "main" and not args.dry_run:
+        color = "\033[1;31m" if args.color == "always" else ""
+        reset = "\033[m" if args.color == "always" else ""
+        print(f"""
+{color}You are not on a main branch! Cowardly refusing to do any work.{reset}
+""")
+        exit(1)
+
     release(
         args.all,
         level,
@@ -68,6 +78,13 @@ def runReleaseCommand(args: argparse.Namespace):
         args.show_changelog,
         args.use,
     )
+
+    if current_branch != "main" and args.dry_run:
+        color = "\033[1;31m" if args.color == "always" else ""
+        reset = "\033[m" if args.color == "always" else ""
+        print(f"""
+{color}You are not on a main branch! On normal view this will not work.{reset}
+""")
 
 
 def _nextVersion(project: Project, forced_level: Optional[Level], stability: Optional[str], level: Level):
