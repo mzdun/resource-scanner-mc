@@ -73,7 +73,6 @@ body:
     label: Operating Systems
     description: Which operating systems have you used? You may select more than one.
     options:
-      - Unspecified
       - macOS
       - Windows
       - Linux
