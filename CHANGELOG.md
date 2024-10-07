@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) and [COMMITS.md](COMMITS.md) for commit guidelines.
 
+## [0.4.1](https://github.com/mzdun/resource-scanner-mc/compare/v0.4.0...v0.4.1) (2024-10-07)
+
+### Bug Fixes
+
+- crash during active scan with no more world ([39e3be0](https://github.com/mzdun/resource-scanner-mc/commit/39e3be0d032ce7bedc0595e3dcaf15998ad1a468)), fixes [#21](https://github.com/mzdun/resource-scanner-mc/issues/21)
+- only one setting at a time is saved ([24ac468](https://github.com/mzdun/resource-scanner-mc/commit/24ac468a0d78fdb21a77a5507eed52f2c16f60bd)), fixes [#20](https://github.com/mzdun/resource-scanner-mc/issues/20)
+
 ## [0.4.0](https://github.com/mzdun/resource-scanner-mc/compare/v0.3.2...v0.4.0) (2024-10-07)
 
 ### New Features
