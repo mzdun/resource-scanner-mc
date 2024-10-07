@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) and [COMMITS.md](COMMITS.md) for commit guidelines.
 
+## [0.4.0](https://github.com/mzdun/resource-scanner-mc/compare/v0.3.2...v0.4.0) (2024-10-07)
+
+### New Features
+
+- color echoes based on `c:ores` subclasses ([1688382](https://github.com/mzdun/resource-scanner-mc/commit/1688382752b35126e709cb1ce8ee1a931f10f7d4))
+- add ARGB32 color to each block ([1920f08](https://github.com/mzdun/resource-scanner-mc/commit/1920f08f004aca08a4523effca4884ff44b49e4e))
+- drop maximum in favor of lifetime of echoes ([50cda36](https://github.com/mzdun/resource-scanner-mc/commit/50cda3655441b9d3c583b6a7f85ee1b7d9b6130d))
+- add echoes lifetime ([2626d87](https://github.com/mzdun/resource-scanner-mc/commit/2626d879763f9e5121115790d77536ea6aa63a49))
+- attach sonar drawing to the mod ([ce72ea5](https://github.com/mzdun/resource-scanner-mc/commit/ce72ea5769c25d28a96c78280bbf49a7cac74284))
+- draw echoes even if no shimmers are present ([919de95](https://github.com/mzdun/resource-scanner-mc/commit/919de95143a1efd13c281a9e315e32aa97f9d7e9))
+- get the sound sample from Amane:OG ([4f9f0bc](https://github.com/mzdun/resource-scanner-mc/commit/4f9f0bc459095e5867eee676593289e21623c59e))
+- add activation sound event ([3cc1d91](https://github.com/mzdun/resource-scanner-mc/commit/3cc1d91696fad1d0d01e6e199a3abb1d6dbf8181))
+- attach sonar animation to the mod ([4ace428](https://github.com/mzdun/resource-scanner-mc/commit/4ace428b313a7ea03e8deee62e3280b633df7d03))
+- animate the shimmers and echoes ([37310e0](https://github.com/mzdun/resource-scanner-mc/commit/37310e0dc1d9d57ee625f7461629a0294f77420f))
+- introduce animation subsystem ([4ae3f26](https://github.com/mzdun/resource-scanner-mc/commit/4ae3f26f99e48ecffd3b4490527ab2d0b72e078e))
+
+### Bug Fixes
+
+- mined echoes remain on screen ([7e2611f](https://github.com/mzdun/resource-scanner-mc/commit/7e2611f7ad29069d94a6cadd302e512d93305218)), fixes [#18](https://github.com/mzdun/resource-scanner-mc/issues/18)
+- use better name for slice pacer ([ad1e442](https://github.com/mzdun/resource-scanner-mc/commit/ad1e44235849b78af33a231ebe7d7ab4395916b5))
+- **docs**: update the README.md with scan screenshots ([fa7dfe4](https://github.com/mzdun/resource-scanner-mc/commit/fa7dfe4477a90bca7b33220fc4326803ee1d5ee6))
+
 ## [0.3.2](https://github.com/mzdun/resource-scanner-mc/compare/v0.3.1...v0.3.2) (2024-10-01)
 
 ### Bug Fixes
