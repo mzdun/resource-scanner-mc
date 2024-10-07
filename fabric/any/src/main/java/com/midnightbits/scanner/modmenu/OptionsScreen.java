@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @Environment(value = EnvType.CLIENT)
@@ -107,8 +108,9 @@ public class OptionsScreen extends SingleColumnOptions {
             return;
 
         Consumer<Settings> assign = (s) -> settings = s;
+        Supplier<Settings> retrieve = () -> this.settings;
         for (final var option : OPTIONS) {
-            body.addOption(option.slider(settings, assign));
+            body.addOption(option.slider(retrieve, assign));
         }
 
         final var link = makeInventoryLink();
@@ -164,13 +166,13 @@ public class OptionsScreen extends SingleColumnOptions {
             SettingsModifier<Integer> changeCallback,
             Function<Integer, Text> labeler) {
 
-        public SimpleOption<Integer> slider(Settings settings, Consumer<Settings> setter) {
+        public SimpleOption<Integer> slider(Supplier<Settings> settings, Consumer<Settings> setter) {
             final var callbacks = new SimpleOption.ValidatingIntSliderCallbacks(inclMin, inclMax);
             Consumer<Integer> sliderChangeCallback = (value) -> {
-                final var changed = changeCallback.withValue(settings, value);
+                final var changed = changeCallback.withValue(settings.get(), value);
                 setter.accept(changed);
             };
-            final var defaultValue = defaultValueSupplier.get(settings);
+            final var defaultValue = defaultValueSupplier.get(settings.get());
             return new SimpleOption<Integer>(
                     optionKey(key),
                     SimpleOption.emptyTooltip(),

@@ -86,6 +86,13 @@ def runReleaseCommand(args: argparse.Namespace):
 {color}You are not on a main branch! On normal view this will not work.{reset}
 """)
 
+    if args.dry_run:
+        color = "\033[1;32m" if args.color == "always" else ""
+        reset = "\033[m" if args.color == "always" else ""
+        print(f"""
+{color}Have you updated docs/roadmap.md yet?{reset}
+""")
+
 
 def _nextVersion(project: Project, forced_level: Optional[Level], stability: Optional[str], level: Level):
     force_stability = False

@@ -2,9 +2,9 @@
 
 ## Next steps
 
-- only one setting at a time is saved (bug: #20, pr: ?)
-- `NullPointerException` when a scanner is active and world disappears (bug: #21, pr: ?)
-- clumps of blocks (bug for internal walls: ?, issue: ?, pr: ?)
+- [ ] only one setting at a time is saved (bug: #20, pr: #24)
+- [ ] `NullPointerException` when a scanner is active and world disappears (bug: #21, pr: ?)
+- [ ] clumps of blocks (bug for internal walls: #22, issue: #23, pr: ?)
   - [ ] bounds for frustum
   - [ ] walls no longer flicker
   - [ ] focused clump has an outline (at minimum, `DEBUG_LINES`) &mdash; so we have external vertices for camera distance calculation
@@ -23,13 +23,16 @@
 - [ ] Scanner
   - [ ] clumps of blocks
   - [ ] label the clumps
+    - [ ] _end of minimal viable code_
   - [ ] custom shader
+  - [ ] better sorting for triangles
   - [ ] remove moiré effect from shimmers
   - [ ] consider adding alpha modifier to far-away blocks
+    - [ ] _out of beta-quality_
   - [ ] consider removing directionality from sonar
-  - [ ] better sorting for triangles
   - [ ] game-play friendly nerfing approaches (iron and coal for free, other things &mdash; how?)
 - [ ] Scanned items
+  - [ ] _end of minimal viable code_
   - [ ] Investigate other blocks outside of `c:ores`
   - [ ] Investigate possibility of mob scanning
   - [ ] Investigate possibility of locating bigger structures (e.g. strongholds)
@@ -37,4 +40,5 @@
   - [ ] picking up item stack from upper slots should leave the stack in the inventory
   - [ ] shift-click should put item in / remove from the lower part
   - [ ] dropping item stack _anywhere_ should merge with preexisting stack (count still 1)
+    - [ ] _end of minimal viable code_
   - [ ] _nice to have_: dropping item to on-hand inventory should re-sort that inventory
