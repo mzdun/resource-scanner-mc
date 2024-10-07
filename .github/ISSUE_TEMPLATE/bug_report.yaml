@@ -67,7 +67,7 @@ body:
       - Older, than v0.4.0
   validations:
     required: true
-- type: checkboxes
+- type: dropdown
   id: os
   attributes:
     label: Operating Systems
