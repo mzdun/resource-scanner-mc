@@ -5,11 +5,12 @@ package com.midnightbits.scanner.rt.core;
 
 import com.midnightbits.scanner.rt.math.V3i;
 import com.midnightbits.scanner.rt.text.Text;
+import org.jetbrains.annotations.Nullable;
 
 public interface ClientCore {
-    BlockInfo getBlockInfo(V3i pos);
+    @Nullable BlockInfo getBlockInfo(V3i pos);
 
-    V3i getPlayerPos();
+    @Nullable V3i getPlayerPos();
 
     float getCameraPitch();
 

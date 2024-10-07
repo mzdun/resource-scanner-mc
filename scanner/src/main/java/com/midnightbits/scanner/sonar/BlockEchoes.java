@@ -73,6 +73,9 @@ public final class BlockEchoes implements Iterable<BlockEcho> {
             }
 
             final var info = client.getBlockInfo(block.position());
+            if (info == null) {
+                return true;
+            }
             return !block.id().equals(info.getId());
         });
     }

@@ -24,6 +24,9 @@ public class FabricAnimationHost extends AbstractAnimatorHost {
     public void initialize(Sonar source) {
         this.source = source;
         ClientTickEvents.END_CLIENT_TICK.register((client) -> {
+            if (client.world == null)
+                return;
+
             this.tick(Clock.currentTimeMillis());
             this.source.remove(this.source.oldEchoes(new MinecraftClientCore(client)));
         });
