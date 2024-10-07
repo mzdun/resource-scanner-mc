@@ -39,7 +39,6 @@ public class SonarTest {
 			Id.ofVanilla("netherite_block"),
 	};
 	private final MockedClock clock = new MockedClock();
-	private final static MockWorld TEST_WORLD = MockWorld.ofResource("test_world.txt");
 
 	private static class Setup {
 		Sonar sonar;
@@ -103,7 +102,7 @@ public class SonarTest {
 
 	@Test
 	void checkDownwardsDirectionFromMiddle_narrow() {
-		final var core = new MockClientCore(V3i.ZERO, -90, 0, TEST_WORLD);
+		final var core = new MockClientCore(V3i.ZERO, -90, 0, MockWorld.TEST_WORLD);
 		final var counter = new Counter();
 
 		clock.timeStamp = 0x123456;
@@ -115,7 +114,8 @@ public class SonarTest {
 		Iterables.assertEquals(new BlockEcho[] {
 				new BlockEcho(new V3i(0, 23, 0), Id.ofVanilla("deepslate_iron_ore"), Colors.ECHO_ALPHA | Colors.VANILLA,
 						offset + 23 * SlicePacer.DURATION),
-				new BlockEcho(new V3i(0, 25, 0), Id.ofVanilla("deepslate_diamond_ore"), Colors.ECHO_ALPHA | Colors.VANILLA,
+				new BlockEcho(new V3i(0, 25, 0), Id.ofVanilla("deepslate_diamond_ore"),
+						Colors.ECHO_ALPHA | Colors.VANILLA,
 						offset + 25 * SlicePacer.DURATION),
 				new BlockEcho(new V3i(0, 27, 0), Id.ofVanilla("diamond_ore"), Colors.ECHO_ALPHA | Colors.VANILLA,
 						offset + 27 * SlicePacer.DURATION),
@@ -133,7 +133,7 @@ public class SonarTest {
 		Assertions.assertEquals(5, counter.get());
 
 		clock.timeStamp = offset + 27 * SlicePacer.DURATION + TEST_ECHO_LIFETIME;
-		setup.sonar.removeOldEchoes();
+		setup.sonar.remove(setup.sonar.oldEchoes(core));
 		Iterables.assertEquals(new BlockEcho[] {
 				new BlockEcho(new V3i(0, 27, 0), Id.ofVanilla("diamond_ore"), Colors.ECHO_ALPHA | Colors.VANILLA,
 						offset + 27 * SlicePacer.DURATION),
@@ -146,7 +146,7 @@ public class SonarTest {
 
 	@Test
 	void checkDownwardsDirectionFromMiddleButOnlyDiamonds_narrow() {
-		final var core = new MockClientCore(V3i.ZERO, -90f, 0f, TEST_WORLD);
+		final var core = new MockClientCore(V3i.ZERO, -90f, 0f, MockWorld.TEST_WORLD);
 
 		clock.timeStamp = 0x123456;
 		final var setup = new Setup(narrowSonar(TEST_BLOCK_DISTANCE, Set.of(
@@ -156,7 +156,8 @@ public class SonarTest {
 
 		final var offset = 0x123456 + WaveAnimator.DURATION + SlicePacer.DURATION;
 		Iterables.assertEquals(new BlockEcho[] {
-				new BlockEcho(new V3i(0, 25, 0), Id.ofVanilla("deepslate_diamond_ore"), Colors.ECHO_ALPHA | Colors.VANILLA,
+				new BlockEcho(new V3i(0, 25, 0), Id.ofVanilla("deepslate_diamond_ore"),
+						Colors.ECHO_ALPHA | Colors.VANILLA,
 						offset + 25 * SlicePacer.DURATION),
 				new BlockEcho(new V3i(0, 27, 0), Id.ofVanilla("diamond_ore"), Colors.ECHO_ALPHA | Colors.VANILLA,
 						offset + 27 * SlicePacer.DURATION),
@@ -167,7 +168,7 @@ public class SonarTest {
 	void searchForGold() {
 		clock.timeStamp = 0x123456;
 
-		final var core = new MockClientCore(new V3i(-60, -60, -51), 0f, 0f, TEST_WORLD);
+		final var core = new MockClientCore(new V3i(-60, -60, -51), 0f, 0f, MockWorld.TEST_WORLD);
 		final var setup = new Setup(TEST_BLOCK_DISTANCE, TEST_BLOCK_RADIUS, TEST_ECHO_LIFETIME,
 				Set.of(Id.ofVanilla("gold_ore")));
 
@@ -257,7 +258,7 @@ public class SonarTest {
 
 	@Test
 	void searchForGold_narrow() {
-		final var core = new MockClientCore(new V3i(-60, -60, -51), 0f, 0f, TEST_WORLD);
+		final var core = new MockClientCore(new V3i(-60, -60, -51), 0f, 0f, MockWorld.TEST_WORLD);
 
 		clock.timeStamp = 0x123456;
 		final var setup = new Setup(narrowSonar(TEST_BLOCK_DISTANCE, Set.of(Id.ofVanilla("gold_ore"))));
@@ -278,7 +279,7 @@ public class SonarTest {
 
 	@Test
 	void checkAnotherDirectionFromMiddle_narrow() {
-		final var core = new MockClientCore(V3i.ZERO, -75f, 180f, TEST_WORLD);
+		final var core = new MockClientCore(V3i.ZERO, -75f, 180f, MockWorld.TEST_WORLD);
 
 		clock.timeStamp = 0x123456;
 		final var setup = new Setup(narrowSonar());

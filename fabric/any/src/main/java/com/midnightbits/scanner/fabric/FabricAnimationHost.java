@@ -3,6 +3,7 @@
 
 package com.midnightbits.scanner.fabric;
 
+import com.midnightbits.scanner.rt.core.fabric.MinecraftClientCore;
 import com.midnightbits.scanner.sonar.Sonar;
 import com.midnightbits.scanner.sonar.graphics.AbstractAnimatorHost;
 import com.midnightbits.scanner.sonar.graphics.GraphicContext;
@@ -24,14 +25,9 @@ public class FabricAnimationHost extends AbstractAnimatorHost {
         this.source = source;
         ClientTickEvents.END_CLIENT_TICK.register((client) -> {
             this.tick(Clock.currentTimeMillis());
+            this.source.remove(this.source.oldEchoes(new MinecraftClientCore(client)));
         });
         WorldRenderEvents.LAST.register(this::renderLevel);
-    }
-
-    @Override
-    public void tick(long now) {
-        super.tick(now);
-        this.source.removeOldEchoes();
     }
 
     private static final class GatherShimmers implements GraphicContext {

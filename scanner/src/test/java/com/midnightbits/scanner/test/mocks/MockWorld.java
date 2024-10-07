@@ -13,6 +13,7 @@ import com.midnightbits.scanner.rt.math.V3i;
 public final class MockWorld {
     public TreeMap<Integer, TreeMap<Integer, TreeMap<Integer, BlockInfo>>> layers = new TreeMap<>();
     private static final BlockInfo AIR = MockBlockInfo.ofAir();
+    public static final MockWorld TEST_WORLD = MockWorld.ofResource("test_world.txt");
 
     private record Block(V3i pos, BlockInfo info) {
         public static Block of(String encoded) {
