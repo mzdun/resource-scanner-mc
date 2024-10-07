@@ -2,8 +2,8 @@
 
 ## Next steps
 
-- [ ] only one setting at a time is saved (bug: #20, pr: #24)
-- [ ] `NullPointerException` when a scanner is active and world disappears (bug: #21, pr: ?)
+- [x] only one setting at a time is saved (bug: #20, pr: #24)
+- [x] `NullPointerException` when a scanner is active and world disappears (bug: #21, pr: #25)
 - [ ] clumps of blocks (bug for internal walls: #22, issue: #23, pr: ?)
   - [ ] bounds for frustum
   - [ ] walls no longer flicker

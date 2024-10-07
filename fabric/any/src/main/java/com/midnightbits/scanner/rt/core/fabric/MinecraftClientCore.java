@@ -12,6 +12,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.math.BlockPos;
+import org.jetbrains.annotations.Nullable;
 
 public class MinecraftClientCore implements ClientCore {
     private final MinecraftClient client;
@@ -21,16 +22,20 @@ public class MinecraftClientCore implements ClientCore {
     }
 
     @Override
-    public BlockInfo getBlockInfo(V3i pos) {
-        assert client.world != null;
+    public @Nullable BlockInfo getBlockInfo(V3i pos) {
+        if (client.world == null) {
+            return null;
+        }
         BlockState state = client.world.getBlockState(new BlockPos(Minecraft.vec3iOf(pos)));
         Block block = state == null ? null : state.getBlock();
         return new MinecraftBlockInfo(state, block);
     }
 
     @Override
-    public V3i getPlayerPos() {
-        assert client.player != null;
+    public @Nullable V3i getPlayerPos() {
+        if (client.player == null) {
+            return null;
+        }
         return Minecraft.v3iOf(client.player.getBlockPos());
     }
 

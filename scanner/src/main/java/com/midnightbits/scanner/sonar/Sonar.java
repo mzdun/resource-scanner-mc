@@ -82,6 +82,8 @@ public final class Sonar {
         if (reflections != null)
             return false;
         reflections = Reflections.fromPlayerPov(client, blockDistance, blockRadius);
+        if (reflections == null)
+            return false;
         pacer.registerCallback((now) -> {
             if (!reflections.hasNextSlice()) {
                 reflections = null;
@@ -137,6 +139,9 @@ public final class Sonar {
 
             for (final var pos : slice.items()) {
                 final var info = client.getBlockInfo(pos);
+                if (info == null) {
+                    break;
+                }
                 if (info.isAir()) {
                     LOGGER.debug("({}) is air", pos);
                     continue;
@@ -167,8 +172,12 @@ public final class Sonar {
             waveConsumer.advance(slice.items(), echoes.stream().toList());
         }
 
-        static Reflections fromPlayerPov(ClientCore client, int blockDistance, int blockRadius) {
-            return new Reflections(client, client.getPlayerPos(), blockDistance, blockRadius);
+        static @Nullable Reflections fromPlayerPov(ClientCore client, int blockDistance, int blockRadius) {
+            final var pos = client.getPlayerPos();
+            if (pos == null) {
+                return null;
+            }
+            return new Reflections(client, pos, blockDistance, blockRadius);
         }
 
         private ConeOfBlocks coneOfBlocksFromCamera(int blockDistance, int blockRadius) {
