@@ -5,6 +5,7 @@ package com.midnightbits.scanner.sonar.graphics;
 
 import com.midnightbits.scanner.rt.core.Id;
 import com.midnightbits.scanner.rt.core.Services;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
@@ -74,7 +75,39 @@ public interface Colors {
     int LICHEN_GREEN = 0x7FA796;
 
     int ECHO_ALPHA = 0x80000000;
+    int OPAQUE = 0xFF000000;
     int RGB_MASK = WHITE;
 
-    Map<Id, Integer> BLOCK_TAG_COLORS = Services.PLATFORM.getBlockTagColors();
+    Map<Id, Proxy> BLOCK_TAG_COLORS = Services.PLATFORM.getBlockTagColors();
+
+    interface Proxy extends Comparable<Proxy> {
+        int rgb24();
+        boolean equals(Proxy other);
+    };
+
+    class DirectValue implements Proxy {
+        final int color;
+
+        public DirectValue(int color) {
+            this.color = color;
+        }
+
+        @Override
+        public int rgb24() {
+            return color;
+        }
+
+        @Override
+        public boolean equals(Proxy other) {
+            return (other instanceof DirectValue direct) && direct.color == color;
+        }
+
+        @Override
+        public int compareTo(@NotNull Proxy other) {
+            if (!(other instanceof DirectValue direct)) {
+                throw new ClassCastException();
+            }
+            return color - direct.color;
+        }
+    }
 }

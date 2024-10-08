@@ -6,6 +6,7 @@ package com.midnightbits.scanner.platform;
 import com.midnightbits.scanner.rt.core.Id;
 import com.midnightbits.scanner.sonar.graphics.AbstractAnimatorHost;
 import com.midnightbits.scanner.sonar.graphics.ColorDefaults;
+import com.midnightbits.scanner.sonar.graphics.Colors;
 
 import java.nio.file.Path;
 import java.util.Map;
@@ -35,7 +36,7 @@ public interface PlatformInterface {
 
     void playSample(Sample id);
 
-    default Map<Id, Integer> getBlockTagColors() {
+    default Map<Id, Colors.Proxy> getBlockTagColors() {
         return ColorDefaults.BLOCK_TAG_COLORS;
     }
 }

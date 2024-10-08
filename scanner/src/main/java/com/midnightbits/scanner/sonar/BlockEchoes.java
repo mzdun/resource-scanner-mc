@@ -10,7 +10,6 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import com.midnightbits.scanner.rt.core.ClientCore;
-import com.midnightbits.scanner.rt.core.Id;
 import com.midnightbits.scanner.rt.math.V3i;
 import com.midnightbits.scanner.utils.Clock;
 
@@ -41,8 +40,8 @@ public final class BlockEchoes implements Iterable<BlockEcho> {
      * @param id       what did the echo bounced off of
      * @return resulting block
      */
-    public BlockEcho echoFrom(V3i position, Id id, int argb32) {
-        return echoFrom(new BlockEcho.Partial(position, id, argb32));
+    public BlockEcho echoFrom(int x, int y, int z, Echo echo) {
+        return echoFrom(new BlockEcho.Partial(new V3i(x, y, z), echo));
     }
 
     /**
@@ -57,11 +56,14 @@ public final class BlockEchoes implements Iterable<BlockEcho> {
 
         BlockEcho echo = BlockEcho.echoFrom(partial);
         echoes.add(echo);
+        splitToNuggets();
         return echo;
     }
 
     public void remove(Predicate<BlockEcho> whichOnes) {
-        evictBlocks(stream().filter(whichOnes));
+        if (evictBlocks(stream().filter(whichOnes))) {
+            splitToNuggets();
+        }
     }
 
     public Predicate<BlockEcho> oldEchoes(ClientCore client) {
@@ -84,11 +86,16 @@ public final class BlockEchoes implements Iterable<BlockEcho> {
         return echoes.stream();
     }
 
-    private void evictBlocks(Stream<BlockEcho> stream) {
+    private boolean evictBlocks(Stream<BlockEcho> stream) {
+        final var oldSize = echoes.size();
         List<BlockEcho> evictions = stream.toList();
         for (BlockEcho evicted : evictions) {
             echoes.remove(evicted);
         }
+        return oldSize != echoes.size();
+    }
+
+    private void splitToNuggets() {
     }
 
     @NotNull
