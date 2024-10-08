@@ -120,6 +120,8 @@ public final class Sonar {
         private final ClientCore client;
         private final V3i center;
         private final ConeOfBlocks.Slicer slices;
+        private final Colors.Proxy VANILLA = new Colors.DirectValue(Colors.VANILLA);
+        private final Map<Id, Echo> echoCache = new HashMap<>();
 
         Reflections(ClientCore client, V3i center, int blockDistance, int blockRadius) {
             this.client = client;
@@ -157,16 +159,19 @@ public final class Sonar {
                         .append(info.getName().formattedGold());
                 client.sendPlayerMessage(message, false);
 
-                var color = Colors.VANILLA;
-                for (final var entry : Colors.BLOCK_TAG_COLORS.entrySet()) {
-                    if (info.inTag(entry.getKey())) {
-                        color = entry.getValue();
-                        break;
+                echoCache.computeIfAbsent(id, (k) -> {
+                    var color = VANILLA;
+                    for (final var entry : Colors.BLOCK_TAG_COLORS.entrySet()) {
+                        if (info.inTag(entry.getKey())) {
+                            color = entry.getValue();
+                            break;
+                        }
                     }
-                }
-                color = Colors.ECHO_ALPHA | (color & Colors.RGB_MASK);
 
-                echoes.add(new BlockEcho.Partial(pos, id, color));
+                    return new Echo(k, color);
+                });
+
+                echoes.add(new BlockEcho.Partial(pos, echoCache.get(id)));
             }
 
             waveConsumer.advance(slice.items(), echoes.stream().toList());
