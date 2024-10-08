@@ -9,11 +9,11 @@ import com.midnightbits.scanner.rt.animation.TickSet;
 import java.util.function.Predicate;
 
 public class AbstractAnimatorHost {
-    private final TickSet<Predicate<GraphicContext>> renderers = new TickSet<>();
+    private final TickSet<Predicate<ShimmerConsumer>> renderers = new TickSet<>();
     private final TickSet<Predicate<Long>> animations = new TickSet<>();
     private final TickSet<AnimationContainer> containers = new TickSet<>();
 
-    public void addRenderer(Predicate<GraphicContext> renderer) {
+    public void addRenderer(Predicate<ShimmerConsumer> renderer) {
         renderers.add(renderer);
     }
 
@@ -34,7 +34,7 @@ public class AbstractAnimatorHost {
         containers.run(container -> container.tick(now));
     }
 
-    public void run(GraphicContext ctx) {
+    public void run(ShimmerConsumer ctx) {
         renderers.run(renderer -> renderer.test(ctx));
     }
 }

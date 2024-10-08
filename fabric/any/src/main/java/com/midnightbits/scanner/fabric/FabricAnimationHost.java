@@ -6,7 +6,7 @@ package com.midnightbits.scanner.fabric;
 import com.midnightbits.scanner.rt.core.fabric.MinecraftClientCore;
 import com.midnightbits.scanner.sonar.Sonar;
 import com.midnightbits.scanner.sonar.graphics.AbstractAnimatorHost;
-import com.midnightbits.scanner.sonar.graphics.GraphicContext;
+import com.midnightbits.scanner.sonar.graphics.ShimmerConsumer;
 import com.midnightbits.scanner.sonar.graphics.Shimmers;
 import com.midnightbits.scanner.utils.Clock;
 
@@ -33,11 +33,11 @@ public class FabricAnimationHost extends AbstractAnimatorHost {
         WorldRenderEvents.LAST.register(this::renderLevel);
     }
 
-    private static final class GatherShimmers implements GraphicContext {
+    private static final class GatherShimmers implements ShimmerConsumer {
         List<Shimmers> cloud = new ArrayList<>();
 
         @Override
-        public void drawScan(List<Shimmers> shimmers) {
+        public void apply(List<Shimmers> shimmers) {
             this.cloud.addAll(shimmers);
         }
     };

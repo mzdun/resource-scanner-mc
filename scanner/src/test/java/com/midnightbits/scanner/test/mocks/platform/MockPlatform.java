@@ -15,7 +15,7 @@ import com.midnightbits.scanner.platform.PlatformInterface;
 import com.midnightbits.scanner.rt.core.ClientCore;
 import com.midnightbits.scanner.sonar.BlockEcho;
 import com.midnightbits.scanner.sonar.graphics.AbstractAnimatorHost;
-import com.midnightbits.scanner.sonar.graphics.GraphicContext;
+import com.midnightbits.scanner.sonar.graphics.ShimmerConsumer;
 import com.midnightbits.scanner.sonar.graphics.Shimmers;
 
 public final class MockPlatform implements PlatformInterface, KeyBinder {
@@ -91,7 +91,7 @@ public final class MockPlatform implements PlatformInterface, KeyBinder {
         void drawScan(Iterable<BlockEcho> echoes, List<Shimmers> shimmers);
     }
 
-    public void setHostBackend(GraphicContext painter) {
+    public void setHostBackend(ShimmerConsumer painter) {
         host = new MockAnimatorHost(() -> painter);
     }
 

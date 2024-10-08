@@ -41,8 +41,8 @@ public class Scene {
         return shimmers.isEmpty();
     }
 
-    private boolean render(GraphicContext context) {
-        context.drawScan(List.copyOf(shimmers.copy()));
+    private boolean render(ShimmerConsumer context) {
+        context.apply(List.copyOf(shimmers.copy()));
         ++frames;
 
         final var done = isEmpty();
