@@ -4,13 +4,13 @@
 package com.midnightbits.scanner.test.mocks.platform;
 
 import com.midnightbits.scanner.sonar.graphics.AbstractAnimatorHost;
-import com.midnightbits.scanner.sonar.graphics.GraphicContext;
+import com.midnightbits.scanner.sonar.graphics.ShimmerConsumer;
 import com.midnightbits.scanner.test.mocks.MockedClock;
 import com.midnightbits.scanner.utils.Clock;
 
 public class MockAnimatorHost extends AbstractAnimatorHost {
     public interface GraphicContextFactory {
-        GraphicContext make();
+        ShimmerConsumer make();
     }
 
     GraphicContextFactory factory;

@@ -5,6 +5,6 @@ package com.midnightbits.scanner.sonar.graphics;
 
 import java.util.List;
 
-public interface GraphicContext {
-    void drawScan(List<Shimmers> shimmers);
+public interface ShimmerConsumer {
+    void apply(List<Shimmers> shimmers);
 }
