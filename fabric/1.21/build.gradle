@@ -1,1 +1,199 @@
-../any/build.gradle
+plugins {
+	id 'fabric-loom' version '1.7-SNAPSHOT'
+	id 'com.github.harbby.gradle.serviceloader' version '1.1.8'
+	id 'maven-publish'
+	id 'jacoco'
+}
+
+project.setProperty('mod_version', "${rootProject.mod_version}+${project.minecraft_version}-fabric")
+
+version = project.mod_version
+group = project.maven_group
+
+base {
+	archivesName = project.archives_base_name
+}
+
+repositories {
+	maven {
+		name = 'Fabric'
+		url = 'https://maven.fabricmc.net/'
+	}
+	maven {
+		name = "Terraformers"
+		url = "https://maven.terraformersmc.com/"
+	}
+	mavenCentral()
+	gradlePluginPortal()
+}
+
+loom {
+	mods {
+		"resource-scanner" {
+			sourceSet sourceSets.main
+		}
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.release = 21
+}
+
+java {
+	sourceCompatibility = JavaVersion.VERSION_21
+	targetCompatibility = JavaVersion.VERSION_21
+}
+
+jar {
+	manifest {
+		attributes(
+			'Scanner-Version': rootProject.mod_version,
+		)
+	}
+}
+
+serviceLoader {
+	serviceInterface \
+ 	   'com.midnightbits.scanner.platform.PlatformInterface',
+	   'com.midnightbits.scanner.rt.text.TextSupportInterface'
+}
+
+test {
+	useJUnitPlatform()
+	finalizedBy jacocoTestReport // report is always generated after tests run
+}
+
+jacocoTestReport {
+	dependsOn test // tests are required to run before generating the report
+
+	reports {
+		xml.required = true
+		html.required = true
+	}
+
+	afterEvaluate {
+		classDirectories = files(classDirectories.files.collect {
+			fileTree(
+				dir: it,
+				exclude: [
+					'**/fabric/**',
+					'com/midnightbits/scanner/*Fabric*',
+					'com/midnightbits/scanner/core/impl/**',
+					'com/midnightbits/scanner/platform/**',
+				])
+		})
+	}
+}
+
+dependencies {
+	implementation project(':scanner')
+
+	// To change the versions see the gradle.properties file
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}")
+
+	// Fabric API. This is technically optional, but you probably want it anyway.
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+	testImplementation "net.fabricmc:fabric-loader-junit:${project.loader_version}"
+
+	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+processResources {
+	inputs.property "version", project.version
+
+	filesMatching("fabric.mod.json") {
+		def minecraft_dependency = project.hasProperty('minecraft_dependency')
+			? project.minecraft_dependency
+			: "~${project.minecraft_version}"
+		expand \
+			"id": project.archives_base_name,
+			"title": project.mod_name,
+			"description": project.description,
+			"github": project.url,
+			"modrinth": project.modrinth,
+			"version": project.version,
+			"minecraft_dependency": minecraft_dependency
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.release = 21
+}
+
+java {
+	sourceCompatibility = JavaVersion.VERSION_21
+	targetCompatibility = JavaVersion.VERSION_21
+}
+
+jar {
+	from("../../LICENSE") {
+		rename { "${it}_${project.base.archivesName.get()}"}
+	}
+}
+
+def sep = File.separator
+
+tasks.register('repack', Exec) {
+	def scannerJar = project(':scanner').jar.outputs.files[0]
+	def pluginJar = project.remapJar.outputs.files[0]
+	def baseName = file(pluginJar).name
+	def outputJar = rootProject.base.libsDirectory.file(baseName).get()
+	def outDir = rootProject.base.libsDirectory.get()
+	def script = "${rootDir}${sep}tools${sep}repack.py"
+
+	dependsOn remapJar
+	dependsOn ':scanner:jar'
+	group 'Publishing'
+
+	inputs.file(scannerJar)
+	inputs.file(pluginJar)
+	outputs.file(outputJar)
+
+	executable 'python'
+	args = [script, outDir, scannerJar, pluginJar]
+}
+
+build {
+	dependsOn 'repack'
+}
+
+tasks.register('install', Exec) {
+	def HOME = System.getenv('HOME')
+	def AppData = System.getenv('AppData')
+	def installHome = HOME == null ? AppData : HOME;
+
+	def pluginJar = project.repack.outputs.files[0]
+	def baseName = file(pluginJar).name
+
+	def outDir = "${installHome}/.feather/user-mods/${project.minecraft_version}-fabric"
+
+	dependsOn 'repack'
+	group 'Publishing'
+
+	executable 'python'
+	args = ["${rootDir}/tools/install-feather.py", "${project.minecraft_version}-fabric", pluginJar]
+}
+
+// configure the maven publication
+publishing {
+	publications {
+		create("mavenJava", MavenPublication) {
+			artifactId = project.name
+			from components.java
+		}
+	}
+
+	// See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+	repositories {
+		// Add repositories to publish to here.
+		// Notice: This block does NOT have the same function as the block in the top level.
+		// The repositories here will be used for publishing your artifact, not for
+		// retrieving dependencies.
+	}
+}
