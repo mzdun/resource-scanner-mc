@@ -4,11 +4,11 @@
 
 - [x] only one setting at a time is saved (bug: #20, pr: #24)
 - [x] `NullPointerException` when a scanner is active and world disappears (bug: #21, pr: #25)
-- [ ] clumps of blocks (bug for internal walls: #22, issue: #23, pr: ?)
-  - [ ] bounds for frustum
+- [x] clumps of blocks (bug for internal walls: #22, issue: #23, pr: #26)
+  - [x] bounds for frustum
   - [x] walls no longer flicker
   - [x] focused clump has an outline (at minimum, `DEBUG_LINES`) &mdash; ...
-  - [ ] ... so we have external vertices for camera distance calculation
+  - [x] ... so we have external vertices for camera distance calculation
 
 ## Bugs
 
@@ -25,11 +25,11 @@
   - [ ] per-world saves on top of common defaults
     - [ ] _end of minimal viable code_
 - [ ] Scanner
-  - [ ] clumps of blocks
+  - [x] clumps of blocks
   - [ ] label the clumps
     - [ ] _end of minimal viable code_
   - [ ] custom shader
-  - [ ] better sorting for triangles
+  - [ ] better line algorithm
   - [ ] remove moiré effect from shimmers
   - [ ] consider adding alpha modifier to far-away blocks
     - [ ] _out of beta-quality_
