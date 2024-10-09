@@ -3,8 +3,8 @@
 
 package com.midnightbits.scanner.sonar.graphics;
 
-import com.midnightbits.scanner.sonar.BlockEcho;
 import com.midnightbits.scanner.sonar.EchoNugget;
+import com.midnightbits.scanner.sonar.EchoState;
 
 public interface FrustumFilter {
     default boolean contains(EchoNugget nugget) {

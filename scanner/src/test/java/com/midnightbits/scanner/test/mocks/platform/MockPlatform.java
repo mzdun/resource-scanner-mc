@@ -13,7 +13,7 @@ import java.util.Objects;
 import com.midnightbits.scanner.platform.KeyBinder;
 import com.midnightbits.scanner.platform.PlatformInterface;
 import com.midnightbits.scanner.rt.core.ClientCore;
-import com.midnightbits.scanner.sonar.BlockEcho;
+import com.midnightbits.scanner.sonar.EchoState;
 import com.midnightbits.scanner.sonar.graphics.AbstractAnimatorHost;
 import com.midnightbits.scanner.sonar.graphics.ShimmerConsumer;
 import com.midnightbits.scanner.sonar.graphics.Shimmers;
@@ -88,7 +88,7 @@ public final class MockPlatform implements PlatformInterface, KeyBinder {
     }
 
     public interface ScanDrawer {
-        void drawScan(Iterable<BlockEcho> echoes, List<Shimmers> shimmers);
+        void drawScan(Iterable<EchoState> echoes, List<Shimmers> shimmers);
     }
 
     public void setHostBackend(ShimmerConsumer painter) {

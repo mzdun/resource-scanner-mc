@@ -5,7 +5,7 @@ package com.midnightbits.scanner.sonar.graphics;
 
 import com.midnightbits.scanner.rt.animation.*;
 import com.midnightbits.scanner.rt.math.V3i;
-import com.midnightbits.scanner.sonar.BlockEcho;
+import com.midnightbits.scanner.sonar.EchoState;
 import com.midnightbits.scanner.sonar.ScanWaveConsumer;
 import com.midnightbits.scanner.sonar.Sonar;
 
@@ -31,11 +31,11 @@ public class WaveAnimator implements ScanWaveConsumer {
 
     public static class Slice {
         private final Shimmers shimmers;
-        private final List<BlockEcho.Partial> echoes;
+        private final List<EchoState.Partial> echoes;
         private final Sonar target;
         private final int sliceId;
 
-        public Slice(List<V3i> shimmers, List<BlockEcho.Partial> echoes, Sonar target, int sliceId) {
+        public Slice(List<V3i> shimmers, List<EchoState.Partial> echoes, Sonar target, int sliceId) {
             this.shimmers = new Shimmers(shimmers);
             this.echoes = echoes;
             this.target = target;
@@ -120,7 +120,7 @@ public class WaveAnimator implements ScanWaveConsumer {
     }
 
     @Override
-    public void advance(List<V3i> shimmers, List<BlockEcho.Partial> echoes) {
+    public void advance(List<V3i> shimmers, List<EchoState.Partial> echoes) {
         final var slice = new Slice(shimmers, echoes, target, sliceId);
         items.add(slice);
         scene.add(slice.shimmers());

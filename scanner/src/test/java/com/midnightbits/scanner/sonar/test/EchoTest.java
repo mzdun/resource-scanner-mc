@@ -4,8 +4,8 @@
 package com.midnightbits.scanner.sonar.test;
 
 import com.midnightbits.scanner.rt.core.Id;
-import com.midnightbits.scanner.sonar.BlockEcho;
 import com.midnightbits.scanner.sonar.Echo;
+import com.midnightbits.scanner.sonar.EchoState;
 import com.midnightbits.scanner.sonar.graphics.Colors;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -27,16 +27,16 @@ public class EchoTest {
         Assertions.assertEquals(echo1, new Echo(Id.ofVanilla("iron_ore"), VANILLA));
         Assertions.assertNotEquals(echo1, new Echo(Id.ofVanilla("iron_ore"), PURPLE));
         Assertions.assertNotEquals(echo1, new Echo(Id.ofVanilla("gold_ore"), VANILLA));
-        Assertions.assertThrows(ClassCastException.class, () -> echo1.equals(BlockEcho.Partial.of(0, 0, 0, echo1)));
+        Assertions.assertThrows(ClassCastException.class, () -> echo1.equals(EchoState.Partial.of(0, 0, 0, echo1)));
     }
 
     @Test
     void stringOf() {
-        Assertions.assertEquals("new Echo(Id.ofVanilla(\"iron_ore\"), new Color.DirectValue(Colors.VANILLA))",
+        Assertions.assertEquals("new Echo(Id.ofVanilla(\"iron_ore\"), new Colors.DirectValue(Colors.VANILLA))",
                 new Echo(Id.ofVanilla("iron_ore"), VANILLA).toString());
-        Assertions.assertEquals("new Echo(Id.ofVanilla(\"iron_ore\"), new Color.DirectValue(Colors.PURPLE))",
+        Assertions.assertEquals("new Echo(Id.ofVanilla(\"iron_ore\"), new Colors.DirectValue(Colors.PURPLE))",
                 new Echo(Id.ofVanilla("iron_ore"), PURPLE).toString());
-        Assertions.assertEquals("new Echo(Id.ofVanilla(\"iron_ore\"), new Color.DirectValue(0x000000))",
+        Assertions.assertEquals("new Echo(Id.ofVanilla(\"iron_ore\"), new Colors.DirectValue(0x000000))",
                 new Echo(Id.ofVanilla("iron_ore"), CLEAR).toString());
         Assertions.assertEquals(
                 "new Echo(Id.ofVanilla(\"iron_ore\"), Colors.BLOCK_TAG_COLORS.get(Id.ofVanilla(\"iron_ores\")))",

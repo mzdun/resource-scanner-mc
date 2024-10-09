@@ -30,11 +30,11 @@ public final class Sonar {
             Id.ofVanilla("deepslate_coal_ore"),
     };
 
-    private final BlockEchoes echoes;
+    private final Echoes echoes;
     @Nullable
     private Reflections reflections;
     @Nullable
-    private Consumer<BlockEcho> echoConsumer;
+    private Consumer<EchoState> echoConsumer;
     private int blockDistance;
     private int blockRadius;
     private Set<Id> blocks;
@@ -45,7 +45,7 @@ public final class Sonar {
         this.blockDistance = blockDistance;
         this.blockRadius = blockRadius;
         this.blocks = interestingIds;
-        this.echoes = new BlockEchoes(lifetime);
+        this.echoes = new Echoes(lifetime);
     }
 
     public Sonar(Settings settings) {
@@ -56,10 +56,10 @@ public final class Sonar {
     }
 
     public Sonar() {
-        this(BLOCK_DISTANCE, BLOCK_RADIUS, BlockEchoes.ECHO_LIFETIME, Set.of(INTERESTING_IDS));
+        this(BLOCK_DISTANCE, BLOCK_RADIUS, Echoes.ECHO_LIFETIME, Set.of(INTERESTING_IDS));
     }
 
-    public void setEchoConsumer(@Nullable Consumer<BlockEcho> echoConsumer) {
+    public void setEchoConsumer(@Nullable Consumer<EchoState> echoConsumer) {
         this.echoConsumer = echoConsumer;
     }
 
@@ -98,7 +98,7 @@ public final class Sonar {
         return true;
     }
 
-    public void echoFrom(BlockEcho.Partial partial) {
+    public void echoFrom(EchoState.Partial partial) {
         final var echo = echoes.echoFrom(partial);
         if (echoConsumer != null)
             echoConsumer.accept(echo);
@@ -108,7 +108,7 @@ public final class Sonar {
         echoes.splitToNuggets();
     }
 
-    public Iterable<BlockEcho> echoes() {
+    public Iterable<EchoState> echoes() {
         return echoes;
     }
 
@@ -116,11 +116,11 @@ public final class Sonar {
         return echoes.nuggets();
     }
 
-    public boolean remove(Predicate<BlockEcho> whichOnes) {
+    public boolean remove(Predicate<EchoState> whichOnes) {
         return echoes.remove(whichOnes);
     }
 
-    public Predicate<BlockEcho> oldEchoes(ClientCore client) {
+    public Predicate<EchoState> oldEchoes(ClientCore client) {
         return echoes.oldEchoes(client);
     }
 
@@ -144,7 +144,7 @@ public final class Sonar {
         public void processSlice(ScanWaveConsumer waveConsumer, Set<Id> blocks) {
             final var slice = slices.next();
             final var dist = (int) Math.round((double) slice.distance() / ConeOfBlocks.Slicer.PRECISION);
-            final Set<BlockEcho.Partial> echoes = new HashSet<>();
+            final Set<EchoState.Partial> echoes = new HashSet<>();
             final var blockIds = blocks.stream().map(String::valueOf).collect(Collectors.joining(","));
 
             for (final var pos : slice.items()) {
@@ -179,7 +179,7 @@ public final class Sonar {
                     return new Echo(k, color);
                 });
 
-                echoes.add(new BlockEcho.Partial(pos, echoCache.get(id)));
+                echoes.add(new EchoState.Partial(pos, echoCache.get(id)));
             }
 
             waveConsumer.advance(slice.items(), echoes.stream().toList());

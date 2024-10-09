@@ -3,6 +3,8 @@
 
 package com.midnightbits.scanner.sonar.graphics;
 
+import com.midnightbits.scanner.sonar.EchoState;
+
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -15,7 +17,7 @@ public record Pixel(EchoState echoState, double distanceSquared) {
     }
 
     public record Vertex(int x, int y, int z) {
-        void apply(GlProgramConsumer buffer, Matrix4f matrix, int argb32) {
+        public void apply(GlProgramConsumer buffer, Matrix4f matrix, int argb32) {
             buffer.vertexColor(matrix, x, y, z, argb32);
         }
 
@@ -60,7 +62,7 @@ public record Pixel(EchoState echoState, double distanceSquared) {
     };
 
     public record Edge(Vertex start, Vertex end, int sides, int opposite) {
-        void apply(GlProgramConsumer buffer, Matrix4f matrix, int argb) {
+        public void apply(GlProgramConsumer buffer, Matrix4f matrix, int argb) {
             start.apply(buffer, matrix, argb);
             end.apply(buffer, matrix, argb);
         }

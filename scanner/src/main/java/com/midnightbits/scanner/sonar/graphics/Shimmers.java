@@ -5,8 +5,8 @@ package com.midnightbits.scanner.sonar.graphics;
 
 import com.midnightbits.scanner.rt.core.Id;
 import com.midnightbits.scanner.rt.math.V3i;
-import com.midnightbits.scanner.sonar.BlockEcho;
 import com.midnightbits.scanner.sonar.Echo;
+import com.midnightbits.scanner.sonar.EchoState;
 
 import java.util.Collection;
 import java.util.List;
@@ -43,8 +43,7 @@ public class Shimmers {
         }
 
         return blocks.stream()
-                .map((pos) -> new BlockEcho(pos, shimmer, 0))
-                .map(EchoState::new)
+                .map((pos) -> new EchoState(pos, shimmer, 0))
                 .peek((state) -> state.alpha = alpha);
     }
 

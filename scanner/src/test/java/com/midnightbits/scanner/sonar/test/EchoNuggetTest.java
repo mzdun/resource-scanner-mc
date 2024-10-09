@@ -4,9 +4,9 @@
 package com.midnightbits.scanner.sonar.test;
 
 import com.midnightbits.scanner.rt.core.Id;
-import com.midnightbits.scanner.sonar.BlockEcho;
 import com.midnightbits.scanner.sonar.Echo;
 import com.midnightbits.scanner.sonar.EchoNugget;
+import com.midnightbits.scanner.sonar.EchoState;
 import com.midnightbits.scanner.sonar.graphics.Colors;
 import com.midnightbits.scanner.sonar.graphics.Pixel;
 import com.midnightbits.scanner.utils.test.gl.*;
@@ -62,9 +62,9 @@ public class EchoNuggetTest {
     @Test
     void disjointedEchoes() {
         final var nuggets = EchoNugget.group(Set.of(
-                BlockEcho.echoFrom(0, 0, 0, gold_ore),
-                BlockEcho.echoFrom(2, 0, 0, gold_ore),
-                BlockEcho.echoFrom(1, 1, 0, gold_ore)));
+                EchoState.echoFrom(0, 0, 0, gold_ore),
+                EchoState.echoFrom(2, 0, 0, gold_ore),
+                EchoState.echoFrom(1, 1, 0, gold_ore)));
 
         final var tape = VertexTape.record(nuggets);
 
@@ -87,8 +87,8 @@ public class EchoNuggetTest {
     @Test
     void semiDetachedEchos() {
         final var nuggets = EchoNugget.group(Set.of(
-                BlockEcho.echoFrom(0, 0, 0, gold_ore),
-                BlockEcho.echoFrom(1, 0, 0, iron_ore)));
+                EchoState.echoFrom(0, 0, 0, gold_ore),
+                EchoState.echoFrom(1, 0, 0, iron_ore)));
 
         final var tape = VertexTape.record(nuggets);
 
@@ -107,8 +107,8 @@ public class EchoNuggetTest {
     @Test
     void attachedEchosX() {
         final var nuggets = EchoNugget.group(Set.of(
-                BlockEcho.echoFrom(0, 0, 0, coal_ore),
-                BlockEcho.echoFrom(1, 0, 0, coal_ore)));
+                EchoState.echoFrom(0, 0, 0, coal_ore),
+                EchoState.echoFrom(1, 0, 0, coal_ore)));
 
         final var tape = VertexTape.record(nuggets);
 
@@ -125,8 +125,8 @@ public class EchoNuggetTest {
     @Test
     void attachedEchosY() {
         final var nuggets = EchoNugget.group(Set.of(
-                BlockEcho.echoFrom(0, 0, 0, coal_ore),
-                BlockEcho.echoFrom(0, 1, 0, coal_ore)));
+                EchoState.echoFrom(0, 0, 0, coal_ore),
+                EchoState.echoFrom(0, 1, 0, coal_ore)));
 
         final var tape = VertexTape.record(nuggets);
 
@@ -143,8 +143,8 @@ public class EchoNuggetTest {
     @Test
     void attachedEchosZ() {
         final var nuggets = EchoNugget.group(Set.of(
-                BlockEcho.echoFrom(0, 0, 0, coal_ore),
-                BlockEcho.echoFrom(0, 0, 1, coal_ore)));
+                EchoState.echoFrom(0, 0, 0, coal_ore),
+                EchoState.echoFrom(0, 0, 1, coal_ore)));
 
         final var tape = VertexTape.record(nuggets);
 
@@ -161,10 +161,10 @@ public class EchoNuggetTest {
     @Test
     void attachedEchosXY() {
         final var nuggets = EchoNugget.group(Set.of(
-                BlockEcho.echoFrom(0, 0, 0, coal_ore),
-                BlockEcho.echoFrom(1, 0, 0, coal_ore),
-                BlockEcho.echoFrom(0, 1, 0, coal_ore),
-                BlockEcho.echoFrom(1, 1, 0, coal_ore)));
+                EchoState.echoFrom(0, 0, 0, coal_ore),
+                EchoState.echoFrom(1, 0, 0, coal_ore),
+                EchoState.echoFrom(0, 1, 0, coal_ore),
+                EchoState.echoFrom(1, 1, 0, coal_ore)));
 
         final var tape = VertexTape.record(nuggets);
 
@@ -185,10 +185,10 @@ public class EchoNuggetTest {
     @Test
     void tetromino() {
         final var nuggets = EchoNugget.group(Set.of(
-                BlockEcho.echoFrom(0, 0, 0, coal_ore),
-                BlockEcho.echoFrom(1, 0, 0, coal_ore),
-                BlockEcho.echoFrom(1, 1, 0, coal_ore),
-                BlockEcho.echoFrom(2, 0, 0, coal_ore)));
+                EchoState.echoFrom(0, 0, 0, coal_ore),
+                EchoState.echoFrom(1, 0, 0, coal_ore),
+                EchoState.echoFrom(1, 1, 0, coal_ore),
+                EchoState.echoFrom(2, 0, 0, coal_ore)));
 
         final var tape = VertexTape.record(nuggets);
 
@@ -209,12 +209,12 @@ public class EchoNuggetTest {
     @Test
     void largeL() {
         final var nuggets = EchoNugget.group(Set.of(
-                BlockEcho.echoFrom(0, 0, 0, coal_ore),
-                BlockEcho.echoFrom(1, 0, 0, coal_ore),
-                BlockEcho.echoFrom(0, 1, 0, coal_ore),
-                BlockEcho.echoFrom(0, 0, 1, coal_ore),
-                BlockEcho.echoFrom(1, 0, 1, coal_ore),
-                BlockEcho.echoFrom(0, 1, 1, coal_ore)));
+                EchoState.echoFrom(0, 0, 0, coal_ore),
+                EchoState.echoFrom(1, 0, 0, coal_ore),
+                EchoState.echoFrom(0, 1, 0, coal_ore),
+                EchoState.echoFrom(0, 0, 1, coal_ore),
+                EchoState.echoFrom(1, 0, 1, coal_ore),
+                EchoState.echoFrom(0, 1, 1, coal_ore)));
 
         final var tape = VertexTape.record(nuggets);
 

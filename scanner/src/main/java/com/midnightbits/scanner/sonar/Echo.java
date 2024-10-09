@@ -55,12 +55,12 @@ public record Echo(Id id, Colors.Proxy color) implements Comparable<Echo> {
 
     private static String _rgbOf(int rgb24) {
         if (rgb24 == Colors.VANILLA) {
-            return "new Color.DirectValue(Colors.VANILLA)";
+            return "new Colors.DirectValue(Colors.VANILLA)";
         }
         if (rgb24 == Colors.PURPLE) {
-            return "new Color.DirectValue(Colors.PURPLE)";
+            return "new Colors.DirectValue(Colors.PURPLE)";
         }
-        return String.format("new Color.DirectValue(0x%06X)", rgb24);
+        return String.format("new Colors.DirectValue(0x%06X)", rgb24);
     }
 
     @Override

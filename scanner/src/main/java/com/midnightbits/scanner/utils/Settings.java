@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.midnightbits.scanner.rt.core.Id;
-import com.midnightbits.scanner.sonar.BlockEchoes;
+import com.midnightbits.scanner.sonar.Echoes;
 import org.jetbrains.annotations.Nullable;
 
 public record Settings(int blockDistance, int blockRadius, int lifetime, Set<Id> interestingIds) {
@@ -35,7 +35,7 @@ public record Settings(int blockDistance, int blockRadius, int lifetime, Set<Id>
                 return null;
             }
             var ids = Arrays.stream(settings.interestingIds).map(Id::of).collect(Collectors.toSet());
-            var lifetime = settings.lifetime == null ? BlockEchoes.ECHO_LIFETIME
+            var lifetime = settings.lifetime == null ? Echoes.ECHO_LIFETIME
                     : (int) (settings.lifetime * 1000 + .5);
             return new Settings(settings.blockDistance, settings.blockRadius, lifetime, ids);
         } catch (JsonSyntaxException e) {

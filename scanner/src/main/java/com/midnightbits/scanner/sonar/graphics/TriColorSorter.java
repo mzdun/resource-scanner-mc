@@ -5,7 +5,7 @@ package com.midnightbits.scanner.sonar.graphics;
 
 import com.midnightbits.scanner.rt.core.ScannerMod;
 import com.midnightbits.scanner.rt.math.V3i;
-import com.midnightbits.scanner.sonar.BlockEcho;
+import com.midnightbits.scanner.sonar.EchoState;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,12 +34,15 @@ public class TriColorSorter implements Iterator<Map<V3i, EchoState>>, Iterable<M
     private final Deque<V3i> white;
 
     public TriColorSorter(Stream<EchoState> echoes) {
-        echoes.forEach((echo) -> pool.put(echo.position(), echo));
+        echoes.forEach((echo) -> {
+            pool.put(echo.position(), echo);
+            echo.sides = Pixel.ALL_SIDES;
+        });
         white = pool.keySet().stream().sorted().collect(Collectors.toCollection(ArrayDeque::new));
     }
 
-    public TriColorSorter(Collection<BlockEcho> echoes) {
-        this(echoes.stream().map(EchoState::new));
+    public TriColorSorter(Collection<EchoState> echoes) {
+        this(echoes.stream());
     }
 
     public boolean hasNext() {
