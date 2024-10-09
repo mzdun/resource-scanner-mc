@@ -142,10 +142,10 @@ def __main__():
 minecraft_version={game['version']}{minecraft_dependency}
 yarn_mappings={yarn['version']}
 loader_version={loader['version']}
-modmenu_version={modmenu_version}
 
-# Fabric API
+# Dependencies
 fabric_version={fabricAPI}
+modmenu_version={modmenu_version}
 """
     print(template)
 
@@ -156,10 +156,10 @@ fabric_version={fabricAPI}
 
     os.makedirs(dirname, exist_ok=True)
     os.chdir(dirname)
-    os.symlink(os.path.join('..', 'any', 'src'),
+    os.symlink(os.path.join('..', '1.21', 'src'),
                'src', target_is_directory=True)
     os.symlink(os.path.join(
-        '..', 'any', 'build.gradle'), 'build.gradle')
+        '..', '1.21', 'build.gradle'), 'build.gradle')
     with open('gradle.properties', 'w', encoding='UTF-8') as properties:
         print(template, file=properties)
 
