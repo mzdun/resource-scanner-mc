@@ -96,8 +96,9 @@ public class Pixels {
                 nugget.sketch(glProgram, matrices, cameraPos);
             }
 
+            final var centralNugget = central == null ? null : central.nugget();
             for (final var nugget : visibleNuggets) {
-                if (nugget == central.nugget())
+                if (nugget == centralNugget)
                     continue;
                 nugget.sketch(glProgram, matrices, cameraPos);
             }
