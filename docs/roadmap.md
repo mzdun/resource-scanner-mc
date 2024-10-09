@@ -18,6 +18,7 @@
 - [x] Scanner
   - [x] internal walls tend to flicker in and out of existence _(v0.5.0)_
   - [x] closing app / disconnecting from server ends with a `NullPointerException` if the scanner is active _(v0.4.1)_
+  - [x] there is a null pointer exception with new `central.nugget()` _(v0.5.1)_
 
 ## Features
 

@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) and [COMMITS.md](COMMITS.md) for commit guidelines.
 
+## [0.5.1](https://github.com/mzdun/resource-scanner-mc/compare/v0.5.0...v0.5.1) (2024-10-09)
+
+### Bug Fixes
+
+- remove crash in `Pixels.renderLevel` ([951faba](https://github.com/mzdun/resource-scanner-mc/commit/951fabab4ab29023624a39be8946c3dd3db02c3c)), fixes [#27](https://github.com/mzdun/resource-scanner-mc/issues/27)
+
 ## [0.5.0](https://github.com/mzdun/resource-scanner-mc/compare/v0.4.1...v0.5.0) (2024-10-09)
 
 ### New Features
