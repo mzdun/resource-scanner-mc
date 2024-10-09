@@ -17,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 public final class BlockEchoes implements Iterable<BlockEcho> {
     private final TreeSet<BlockEcho> echoes = new TreeSet<>();
+    private List<EchoNugget> nuggets = List.of();
     public static final int ECHO_LIFETIME = 10000;
 
     private int lifetime;
@@ -36,8 +37,10 @@ public final class BlockEchoes implements Iterable<BlockEcho> {
     /**
      * Adds pinged block to list of all seen blocks.
      *
-     * @param position where the ping was registered
-     * @param id       what did the echo bounced off of
+     * @param x    axis of where the ping was registered
+     * @param y    axis of where the ping was registered
+     * @param z    axis of where the ping was registered
+     * @param echo what did the echo bounced off of
      * @return resulting block
      */
     public BlockEcho echoFrom(int x, int y, int z, Echo echo) {
@@ -56,14 +59,11 @@ public final class BlockEchoes implements Iterable<BlockEcho> {
 
         BlockEcho echo = BlockEcho.echoFrom(partial);
         echoes.add(echo);
-        splitToNuggets();
         return echo;
     }
 
-    public void remove(Predicate<BlockEcho> whichOnes) {
-        if (evictBlocks(stream().filter(whichOnes))) {
-            splitToNuggets();
-        }
+    public boolean remove(Predicate<BlockEcho> whichOnes) {
+        return evictBlocks(stream().filter(whichOnes));
     }
 
     public Predicate<BlockEcho> oldEchoes(ClientCore client) {
@@ -82,6 +82,14 @@ public final class BlockEchoes implements Iterable<BlockEcho> {
         });
     }
 
+    List<EchoNugget> nuggets() {
+        return nuggets;
+    }
+
+    public void splitToNuggets() {
+        nuggets = EchoNugget.group(echoes);
+    }
+
     private Stream<BlockEcho> stream() {
         return echoes.stream();
     }
@@ -93,9 +101,6 @@ public final class BlockEchoes implements Iterable<BlockEcho> {
             echoes.remove(evicted);
         }
         return oldSize != echoes.size();
-    }
-
-    private void splitToNuggets() {
     }
 
     @NotNull

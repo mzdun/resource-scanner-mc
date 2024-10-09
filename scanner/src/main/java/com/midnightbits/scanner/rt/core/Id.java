@@ -8,6 +8,7 @@ import java.util.function.UnaryOperator;
 public class Id {
    public static final char NAMESPACE_SEPARATOR = ':';
    public static final String DEFAULT_NAMESPACE = "minecraft";
+   public static final String MOD_NAMESPACE = "resource-scanner";
    public static final String REALMS_NAMESPACE = "realms";
    private final String namespace;
    private final String path;
@@ -33,6 +34,10 @@ public class Id {
 
    public static Id ofVanilla(String path) {
       return new Id(DEFAULT_NAMESPACE, validatePath(DEFAULT_NAMESPACE, path));
+   }
+
+   public static Id ofMod(String path) {
+      return new Id(MOD_NAMESPACE, validatePath(MOD_NAMESPACE, path));
    }
 
    public static Id tryParse(String id) {

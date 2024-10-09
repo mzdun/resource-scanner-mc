@@ -31,7 +31,7 @@ public final class MockClientCore implements ClientCore {
 
     @Override
     public BlockInfo getBlockInfo(V3i pos) {
-        return world.getOrAir(pos);
+        return world != null ? world.getOrAir(pos) : null;
     }
 
     @Override

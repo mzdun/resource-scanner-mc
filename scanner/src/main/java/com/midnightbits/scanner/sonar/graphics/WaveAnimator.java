@@ -66,6 +66,9 @@ public class WaveAnimator implements ScanWaveConsumer {
 
         public void addEchoes() {
             echoes.forEach(target::echoFrom);
+            if (!echoes.isEmpty()) {
+                target.splitToNuggets();
+            }
         }
 
         private static ActionAnimation report(StageReporter reporter, int id, AnimationStep step) {

@@ -10,15 +10,13 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 
 public record Echo(Id id, Colors.Proxy color) implements Comparable<Echo> {
+
     public static Echo of(Id id, Colors.Proxy color) {
         return new Echo(id, color);
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            throw new NullPointerException();
-        }
+    public boolean equals(@NotNull Object obj) {
         if (!(obj instanceof Echo other)) {
             throw new ClassCastException();
         }
@@ -30,7 +28,7 @@ public record Echo(Id id, Colors.Proxy color) implements Comparable<Echo> {
 
     @Override
     public String toString() {
-        return "new Echo("+ _idOf(id) + ", " + _colorOf(color) + ")";
+        return "new Echo(" + _idOf(id) + ", " + _colorOf(color) + ")";
     }
 
     private static String _idOf(Id id) {
@@ -46,7 +44,7 @@ public record Echo(Id id, Colors.Proxy color) implements Comparable<Echo> {
     }
 
     private static String _colorOf(Colors.Proxy color) {
-        for (final var entry: Colors.BLOCK_TAG_COLORS.entrySet()) {
+        for (final var entry : Colors.BLOCK_TAG_COLORS.entrySet()) {
             if (color.equals(entry.getValue())) {
                 return "Colors.BLOCK_TAG_COLORS.get(" + _idOf(entry.getKey()) + ")";
             }

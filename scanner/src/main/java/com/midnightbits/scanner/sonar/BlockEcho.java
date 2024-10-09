@@ -23,10 +23,6 @@ public record BlockEcho(V3i position, Echo echo, long pingTime) implements Compa
             return echo.id();
         }
 
-        public Colors.Proxy color() {
-            return echo.color();
-        }
-
         public boolean equals(@NotNull Object obj) {
             if (!(obj instanceof Partial other)) {
                 throw new ClassCastException();

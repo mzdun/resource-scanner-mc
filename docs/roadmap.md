@@ -6,20 +6,24 @@
 - [x] `NullPointerException` when a scanner is active and world disappears (bug: #21, pr: #25)
 - [ ] clumps of blocks (bug for internal walls: #22, issue: #23, pr: ?)
   - [ ] bounds for frustum
-  - [ ] walls no longer flicker
-  - [ ] focused clump has an outline (at minimum, `DEBUG_LINES`) &mdash; so we have external vertices for camera distance calculation
+  - [x] walls no longer flicker
+  - [x] focused clump has an outline (at minimum, `DEBUG_LINES`) &mdash; ...
+  - [ ] ... so we have external vertices for camera distance calculation
 
 ## Bugs
 
-- [ ] Settings
-  - [ ] only one setting at a time is saved
+- [x] Settings
+  - [x] only one setting at a time is saved
 
-- [ ] Scanner
-  - [ ] internal walls tend to flicker in and out of existence
-  - [ ] closing app / disconnecting from server ends with a `NullPointerException` if the scanner is active
+- [x] Scanner
+  - [x] internal walls tend to flicker in and out of existence
+  - [x] closing app / disconnecting from server ends with a `NullPointerException` if the scanner is active
 
 ## Features
 
+- [ ] Settings
+  - [ ] per-world saves on top of common defaults
+    - [ ] _end of minimal viable code_
 - [ ] Scanner
   - [ ] clumps of blocks
   - [ ] label the clumps
