@@ -100,7 +100,7 @@ public class EchoNugget {
                 .toList();
     }
 
-    public static List<EchoNugget> group(Collection<BlockEcho> echoes) {
+    public static List<EchoNugget> group(Collection<EchoState> echoes) {
         final var result = new ArrayList<EchoNugget>();
         final var sorter = new TriColorSorter(echoes);
 

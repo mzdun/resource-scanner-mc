@@ -74,7 +74,12 @@ def matches(matcher: re.Pattern[str], text: List[str]):
 def check_staged():
     proc = capture('git','diff','--name-status','--cached')
     lines = proc.stdout.decode("UTF-8").split("\n")
-    filenames = [line[1:].strip() for line in lines if line[:1] != 'D']
+    log = [(line[:1], line[1:].strip()) for line in lines if line[:1] != 'D']
+    for index in range(len(log)):
+        op, logline = log[index]
+        if op == 'R':
+            log[index] = ('R', logline.split('\t')[-1])
+    filenames = [line[1] for line in log]
     matcher, _ = build_regexp()
 
     files: Set[str] = set()

@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import com.midnightbits.scanner.sonar.BlockEchoes;
+import com.midnightbits.scanner.sonar.Echoes;
 import com.midnightbits.scanner.sonar.Sonar;
 import com.midnightbits.scanner.utils.Settings;
 import org.junit.jupiter.api.AfterEach;
@@ -106,7 +106,7 @@ public class OptionsTest {
         opts.setDirectory(configDir);
         opts.setAll(Sonar.BLOCK_DISTANCE,
                 Sonar.BLOCK_RADIUS,
-                BlockEchoes.ECHO_LIFETIME,
+                Echoes.ECHO_LIFETIME,
                 Set.of(Sonar.INTERESTING_IDS),
                 true);
         Options.resetInstance();

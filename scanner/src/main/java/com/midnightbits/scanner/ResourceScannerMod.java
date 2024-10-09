@@ -6,6 +6,7 @@ package com.midnightbits.scanner;
 import java.nio.file.Path;
 import java.util.Set;
 
+import com.midnightbits.scanner.sonar.EchoState;
 import com.midnightbits.scanner.sonar.graphics.SonarAnimation;
 
 import com.midnightbits.scanner.utils.Settings;
@@ -17,8 +18,7 @@ import com.midnightbits.scanner.platform.PlatformInterface;
 import com.midnightbits.scanner.rt.core.ClientCore;
 import com.midnightbits.scanner.rt.core.KeyBinding;
 import com.midnightbits.scanner.rt.core.ScannerMod;
-import com.midnightbits.scanner.sonar.BlockEcho;
-import com.midnightbits.scanner.sonar.BlockEchoes;
+import com.midnightbits.scanner.sonar.Echoes;
 import com.midnightbits.scanner.sonar.Sonar;
 import com.midnightbits.scanner.utils.Options;
 import com.midnightbits.scanner.utils.Manifests;
@@ -59,7 +59,7 @@ public class ResourceScannerMod implements ScannerMod {
             options.setAll(
                     Sonar.BLOCK_DISTANCE,
                     Sonar.BLOCK_RADIUS,
-                    BlockEchoes.ECHO_LIFETIME,
+                    Echoes.ECHO_LIFETIME,
                     Set.of(Sonar.INTERESTING_IDS),
                     false);
         }
@@ -82,7 +82,7 @@ public class ResourceScannerMod implements ScannerMod {
     }
 
     @Override
-    public Iterable<BlockEcho> echoes() {
+    public Iterable<EchoState> echoes() {
         return sonar.echoes();
     }
 
@@ -92,7 +92,7 @@ public class ResourceScannerMod implements ScannerMod {
     }
 
     private void listEchoes() {
-        for (BlockEcho echo : sonar.echoes()) {
+        for (final var echo : sonar.echoes()) {
             LOGGER.info("{} ({}) {}", echo.pingTime(), echo.position(), echo.id());
         }
         LOGGER.info("");

@@ -3,7 +3,7 @@
 
 package com.midnightbits.scanner.rt.core;
 
-import com.midnightbits.scanner.sonar.BlockEcho;
+import com.midnightbits.scanner.sonar.EchoState;
 import com.midnightbits.scanner.sonar.Sonar;
 
 public interface ScannerMod {
@@ -15,7 +15,7 @@ public interface ScannerMod {
 
     void onInitializeClient();
 
-    Iterable<BlockEcho> echoes();
+    Iterable<EchoState> echoes();
 
     Sonar getSonar();
 }

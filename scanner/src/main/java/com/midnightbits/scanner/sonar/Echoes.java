@@ -15,18 +15,18 @@ import com.midnightbits.scanner.utils.Clock;
 
 import org.jetbrains.annotations.NotNull;
 
-public final class BlockEchoes implements Iterable<BlockEcho> {
-    private final TreeSet<BlockEcho> echoes = new TreeSet<>();
+public final class Echoes implements Iterable<EchoState> {
+    private final TreeSet<EchoState> echoes = new TreeSet<>();
     private List<EchoNugget> nuggets = List.of();
     public static final int ECHO_LIFETIME = 10000;
 
     private int lifetime;
 
-    public BlockEchoes(int lifetime) {
+    public Echoes(int lifetime) {
         this.lifetime = lifetime;
     }
 
-    public BlockEchoes() {
+    public Echoes() {
         this(ECHO_LIFETIME);
     }
 
@@ -43,8 +43,8 @@ public final class BlockEchoes implements Iterable<BlockEcho> {
      * @param echo what did the echo bounced off of
      * @return resulting block
      */
-    public BlockEcho echoFrom(int x, int y, int z, Echo echo) {
-        return echoFrom(new BlockEcho.Partial(new V3i(x, y, z), echo));
+    public EchoState echoFrom(int x, int y, int z, Echo echo) {
+        return echoFrom(new EchoState.Partial(new V3i(x, y, z), echo));
     }
 
     /**
@@ -54,19 +54,19 @@ public final class BlockEchoes implements Iterable<BlockEcho> {
      *                off of
      * @return resulting block
      */
-    public BlockEcho echoFrom(BlockEcho.Partial partial) {
+    public EchoState echoFrom(EchoState.Partial partial) {
         evictBlocks(stream().filter(b -> b.position().equals(partial.position())));
 
-        BlockEcho echo = BlockEcho.echoFrom(partial);
+        EchoState echo = EchoState.echoFrom(partial);
         echoes.add(echo);
         return echo;
     }
 
-    public boolean remove(Predicate<BlockEcho> whichOnes) {
+    public boolean remove(Predicate<EchoState> whichOnes) {
         return evictBlocks(stream().filter(whichOnes));
     }
 
-    public Predicate<BlockEcho> oldEchoes(ClientCore client) {
+    public Predicate<EchoState> oldEchoes(ClientCore client) {
         final var now = Clock.currentTimeMillis();
         return ((block) -> {
             final var blockLifetime = now - block.pingTime();
@@ -90,14 +90,14 @@ public final class BlockEchoes implements Iterable<BlockEcho> {
         nuggets = EchoNugget.group(echoes);
     }
 
-    private Stream<BlockEcho> stream() {
+    private Stream<EchoState> stream() {
         return echoes.stream();
     }
 
-    private boolean evictBlocks(Stream<BlockEcho> stream) {
+    private boolean evictBlocks(Stream<EchoState> stream) {
         final var oldSize = echoes.size();
-        List<BlockEcho> evictions = stream.toList();
-        for (BlockEcho evicted : evictions) {
+        List<EchoState> evictions = stream.toList();
+        for (EchoState evicted : evictions) {
             echoes.remove(evicted);
         }
         return oldSize != echoes.size();
@@ -105,7 +105,7 @@ public final class BlockEchoes implements Iterable<BlockEcho> {
 
     @NotNull
     @Override
-    public Iterator<BlockEcho> iterator() {
+    public Iterator<EchoState> iterator() {
         return echoes.iterator();
     }
 }

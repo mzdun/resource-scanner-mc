@@ -6,6 +6,7 @@ package com.midnightbits.scanner.fabric;
 import java.util.List;
 
 import com.midnightbits.scanner.sonar.EchoNugget;
+import com.midnightbits.scanner.sonar.EchoState;
 import com.midnightbits.scanner.sonar.graphics.*;
 import net.minecraft.client.render.*;
 import net.minecraft.util.math.Box;
@@ -88,6 +89,10 @@ public class Pixels {
         {
             final var buffer = tessellator.begin(VertexFormat.DrawMode.DEBUG_LINES, VertexFormats.POSITION_COLOR);
             final var glProgram = new GlProgramVertexConsumer(buffer);
+
+            for (final var nugget : visibleShimmers) {
+                nugget.sketch(glProgram, matrices, cameraPos);
+            }
 
             for (final var nugget: visibleNuggets) {
                 nugget.sketch(glProgram, matrices, cameraPos);

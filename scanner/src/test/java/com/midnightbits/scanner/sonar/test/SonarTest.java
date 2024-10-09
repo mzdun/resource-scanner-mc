@@ -6,8 +6,8 @@ package com.midnightbits.scanner.sonar.test;
 import java.util.Set;
 
 import com.midnightbits.scanner.rt.core.Services;
-import com.midnightbits.scanner.sonar.BlockEcho;
 import com.midnightbits.scanner.sonar.Echo;
+import com.midnightbits.scanner.sonar.EchoState;
 import com.midnightbits.scanner.sonar.Sonar;
 import com.midnightbits.scanner.sonar.graphics.*;
 import com.midnightbits.scanner.test.mocks.platform.MockAnimatorHost;
@@ -41,14 +41,14 @@ public class SonarTest {
 	};
 	private final MockedClock clock = new MockedClock();
 
-	public static final Echo deepslate_iron_ore = Echo.of(Id.ofVanilla("deepslate_iron_ore"), BlockEchoTest.VANILLA);
+	public static final Echo deepslate_iron_ore = Echo.of(Id.ofVanilla("deepslate_iron_ore"), EchoStateTest.VANILLA);
 	public static final Echo deepslate_diamond_ore = Echo.of(Id.ofVanilla("deepslate_diamond_ore"),
-			BlockEchoTest.VANILLA);
-	public static final Echo diamond_ore = Echo.of(Id.ofVanilla("diamond_ore"), BlockEchoTest.VANILLA);
+			EchoStateTest.VANILLA);
+	public static final Echo diamond_ore = Echo.of(Id.ofVanilla("diamond_ore"), EchoStateTest.VANILLA);
 	public static final Echo iron_ore = Echo.of(Id.ofVanilla("iron_ore"),
 			Colors.BLOCK_TAG_COLORS.get(Id.ofVanilla("iron_ores")));
-	public static final Echo gold_ore = Echo.of(Id.ofVanilla("gold_ore"), BlockEchoTest.VANILLA);
-	public static final Echo coal_ore = Echo.of(Id.ofVanilla("coal_ore"), BlockEchoTest.VANILLA);
+	public static final Echo gold_ore = Echo.of(Id.ofVanilla("gold_ore"), EchoStateTest.VANILLA);
+	public static final Echo coal_ore = Echo.of(Id.ofVanilla("coal_ore"), EchoStateTest.VANILLA);
 
 	private static class Setup {
 		Sonar sonar;
@@ -107,7 +107,7 @@ public class SonarTest {
 	@Test
 	void checkNewSonarIsEmpty() {
 		final var empty = new Sonar();
-		Iterables.assertEquals(new BlockEcho[] {}, empty.echoes());
+		Iterables.assertEquals(new EchoState[] {}, empty.echoes());
 	}
 
 	@Test
@@ -121,12 +121,12 @@ public class SonarTest {
 		setup.sendPingBlocking(core, clock);
 
 		final var offset = 0x123456 + WaveAnimator.DURATION + SlicePacer.DURATION;
-		Iterables.assertEquals(new BlockEcho[] {
-				new BlockEcho(0, 23, 0, deepslate_iron_ore, offset + 23 * SlicePacer.DURATION),
-				new BlockEcho(0, 25, 0, deepslate_diamond_ore, offset + 25 * SlicePacer.DURATION),
-				new BlockEcho(0, 27, 0, diamond_ore, offset + 27 * SlicePacer.DURATION),
-				new BlockEcho(0, 28, 0, iron_ore, offset + 28 * SlicePacer.DURATION),
-				new BlockEcho(0, 30, 0, iron_ore, offset + 30 * SlicePacer.DURATION),
+		Iterables.assertEquals(new EchoState[] {
+				new EchoState(0, 23, 0, deepslate_iron_ore, offset + 23 * SlicePacer.DURATION, Pixel.ALL_SIDES, Pixel.ALL_EDGES, Colors.ECHO_ALPHA),
+				new EchoState(0, 25, 0, deepslate_diamond_ore, offset + 25 * SlicePacer.DURATION, Pixel.ALL_SIDES, Pixel.ALL_EDGES, Colors.ECHO_ALPHA),
+				new EchoState(0, 27, 0, diamond_ore, offset + 27 * SlicePacer.DURATION, Pixel.ALL_SIDES, Pixel.ALL_EDGES, Colors.ECHO_ALPHA),
+				new EchoState(0, 28, 0, iron_ore, offset + 28 * SlicePacer.DURATION, Pixel.ALL_SIDES, Pixel.ALL_EDGES, Colors.ECHO_ALPHA),
+				new EchoState(0, 30, 0, iron_ore, offset + 30 * SlicePacer.DURATION, Pixel.ALL_SIDES, Pixel.ALL_EDGES, Colors.ECHO_ALPHA),
 		}, setup.sonar.echoes());
 
 		Iterables.assertEquals(new String[] {
@@ -138,10 +138,10 @@ public class SonarTest {
 
 		clock.timeStamp = offset + 27 * SlicePacer.DURATION + TEST_ECHO_LIFETIME;
 		setup.sonar.remove(setup.sonar.oldEchoes(core));
-		Iterables.assertEquals(new BlockEcho[] {
-				new BlockEcho(0, 27, 0, diamond_ore, offset + 27 * SlicePacer.DURATION),
-				new BlockEcho(0, 28, 0, iron_ore, offset + 28 * SlicePacer.DURATION),
-				new BlockEcho(0, 30, 0, iron_ore, offset + 30 * SlicePacer.DURATION),
+		Iterables.assertEquals(new EchoState[] {
+				new EchoState(0, 27, 0, diamond_ore, offset + 27 * SlicePacer.DURATION, Pixel.ALL_SIDES, Pixel.ALL_EDGES, Colors.ECHO_ALPHA),
+				new EchoState(0, 28, 0, iron_ore, offset + 28 * SlicePacer.DURATION, Pixel.ALL_SIDES, Pixel.ALL_EDGES, Colors.ECHO_ALPHA),
+				new EchoState(0, 30, 0, iron_ore, offset + 30 * SlicePacer.DURATION, Pixel.ALL_SIDES, Pixel.ALL_EDGES, Colors.ECHO_ALPHA),
 		}, setup.sonar.echoes());
 	}
 
@@ -156,9 +156,9 @@ public class SonarTest {
 		setup.sendPingBlocking(core, clock, null);
 
 		final var offset = 0x123456 + WaveAnimator.DURATION + SlicePacer.DURATION;
-		Iterables.assertEquals(new BlockEcho[] {
-				new BlockEcho(0, 25, 0, deepslate_diamond_ore, offset + 25 * SlicePacer.DURATION),
-				new BlockEcho(0, 27, 0, diamond_ore, offset + 27 * SlicePacer.DURATION),
+		Iterables.assertEquals(new EchoState[] {
+				new EchoState(0, 25, 0, deepslate_diamond_ore, offset + 25 * SlicePacer.DURATION, Pixel.ALL_SIDES, Pixel.ALL_EDGES, Colors.ECHO_ALPHA),
+				new EchoState(0, 27, 0, diamond_ore, offset + 27 * SlicePacer.DURATION, Pixel.ALL_SIDES, Pixel.ALL_EDGES, Colors.ECHO_ALPHA),
 		}, setup.sonar.echoes());
 	}
 
@@ -177,38 +177,38 @@ public class SonarTest {
 		((MockAnimatorHost) Services.PLATFORM.getAnimatorHost()).runAll(clock);
 
 		final var offset = 0x123456 + WaveAnimator.DURATION + SlicePacer.DURATION;
-		Iterables.assertEquals(new BlockEcho[] {
-				new BlockEcho(-60, -60, -50, gold_ore, offset + SlicePacer.DURATION),
-				new BlockEcho(-60, -59, -39, gold_ore, offset + 14 * SlicePacer.DURATION),
-				new BlockEcho(-58, -59, -39, gold_ore, offset + 15 * SlicePacer.DURATION),
-				new BlockEcho(-60, -59, -37, gold_ore, offset + 18 * SlicePacer.DURATION),
-				new BlockEcho(-59, -59, -35, gold_ore, offset + 22 * SlicePacer.DURATION),
-				new BlockEcho(-59, -59, -34, gold_ore, offset + 24 * SlicePacer.DURATION),
-				new BlockEcho(-60, -58, -34, gold_ore, offset + 24 * SlicePacer.DURATION),
-				new BlockEcho(-60, -60, -33, gold_ore, offset + 26 * SlicePacer.DURATION),
-				new BlockEcho(-57, -59, -30, gold_ore, offset + 33 * SlicePacer.DURATION),
-				new BlockEcho(-59, -60, -29, gold_ore, offset + 34 * SlicePacer.DURATION),
-				new BlockEcho(-57, -60, -28, gold_ore, offset + 37 * SlicePacer.DURATION),
-				new BlockEcho(-57, -60, -27, gold_ore, offset + 39 * SlicePacer.DURATION),
-				new BlockEcho(-60, -57, -27, gold_ore, offset + 39 * SlicePacer.DURATION),
-				new BlockEcho(-58, -59, -26, gold_ore, offset + 40 * SlicePacer.DURATION),
-				new BlockEcho(-57, -60, -26, gold_ore, offset + 41 * SlicePacer.DURATION),
-				new BlockEcho(-59, -57, -26, gold_ore, offset + 41 * SlicePacer.DURATION),
-				new BlockEcho(-58, -60, -25, gold_ore, offset + 42 * SlicePacer.DURATION),
-				new BlockEcho(-59, -58, -25, gold_ore, offset + 42 * SlicePacer.DURATION),
-				new BlockEcho(-59, -57, -25, gold_ore, offset + 43 * SlicePacer.DURATION),
-				new BlockEcho(-58, -60, -24, gold_ore, offset + 44 * SlicePacer.DURATION),
-				new BlockEcho(-60, -59, -23, gold_ore, offset + 46 * SlicePacer.DURATION),
-				new BlockEcho(-60, -58, -23, gold_ore, offset + 46 * SlicePacer.DURATION),
-				new BlockEcho(-56, -58, -23, gold_ore, offset + 47 * SlicePacer.DURATION),
-				new BlockEcho(-59, -60, -22, gold_ore, offset + 48 * SlicePacer.DURATION),
-				new BlockEcho(-58, -58, -22, gold_ore, offset + 49 * SlicePacer.DURATION),
-				new BlockEcho(-59, -57, -22, gold_ore, offset + 49 * SlicePacer.DURATION),
-				new BlockEcho(-59, -58, -21, gold_ore, offset + 50 * SlicePacer.DURATION),
-				new BlockEcho(-57, -58, -21, gold_ore, offset + 51 * SlicePacer.DURATION),
-				new BlockEcho(-56, -59, -20, gold_ore, offset + 53 * SlicePacer.DURATION),
-				new BlockEcho(-56, -59, -19, gold_ore, offset + 55 * SlicePacer.DURATION),
-				new BlockEcho(-59, -56, -19, gold_ore, offset + 55 * SlicePacer.DURATION),
+		Iterables.assertEquals(new EchoState[] {
+				new EchoState(-60, -60, -50, gold_ore, offset + SlicePacer.DURATION).withAllEdges(),
+				new EchoState(-60, -59, -39, gold_ore, offset + 14 * SlicePacer.DURATION).withAllEdges(),
+				new EchoState(-58, -59, -39, gold_ore, offset + 15 * SlicePacer.DURATION).withAllEdges(),
+				new EchoState(-60, -59, -37, gold_ore, offset + 18 * SlicePacer.DURATION).withAllEdges(),
+				new EchoState(-59, -59, -35, gold_ore, offset + 22 * SlicePacer.DURATION, 0x3b, 0xf99, Colors.ECHO_ALPHA),
+				new EchoState(-59, -59, -34, gold_ore, offset + 24 * SlicePacer.DURATION, 0x3e, 0xf66, Colors.ECHO_ALPHA),
+				new EchoState(-60, -58, -34, gold_ore, offset + 24 * SlicePacer.DURATION).withAllEdges(),
+				new EchoState(-60, -60, -33, gold_ore, offset + 26 * SlicePacer.DURATION).withAllEdges(),
+				new EchoState(-57, -59, -30, gold_ore, offset + 33 * SlicePacer.DURATION).withAllEdges(),
+				new EchoState(-59, -60, -29, gold_ore, offset + 34 * SlicePacer.DURATION).withAllEdges(),
+				new EchoState(-57, -60, -28, gold_ore, offset + 37 * SlicePacer.DURATION, 0x3b, 0xf99, Colors.ECHO_ALPHA),
+				new EchoState(-57, -60, -27, gold_ore, offset + 39 * SlicePacer.DURATION, 0x3a, 0xf00, Colors.ECHO_ALPHA),
+				new EchoState(-60, -57, -27, gold_ore, offset + 39 * SlicePacer.DURATION).withAllEdges(),
+				new EchoState(-58, -59, -26, gold_ore, offset + 40 * SlicePacer.DURATION).withAllEdges(),
+				new EchoState(-57, -60, -26, gold_ore, offset + 41 * SlicePacer.DURATION, 0x3e, 0xf66, Colors.ECHO_ALPHA),
+				new EchoState(-59, -57, -26, gold_ore, offset + 41 * SlicePacer.DURATION, 0x3b, 0xf9b, Colors.ECHO_ALPHA),
+				new EchoState(-58, -60, -25, gold_ore, offset + 42 * SlicePacer.DURATION, 0x3b, 0xf99, Colors.ECHO_ALPHA),
+				new EchoState(-59, -58, -25, gold_ore, offset + 42 * SlicePacer.DURATION, 0x37, 0x9f3, Colors.ECHO_ALPHA),
+				new EchoState(-59, -57, -25, gold_ore, offset + 43 * SlicePacer.DURATION, 0x3c, 0x664, Colors.ECHO_ALPHA),
+				new EchoState(-58, -60, -24, gold_ore, offset + 44 * SlicePacer.DURATION, 0x3e, 0xf66, Colors.ECHO_ALPHA),
+				new EchoState(-60, -59, -23, gold_ore, offset + 46 * SlicePacer.DURATION, 0x37, 0x9f3, Colors.ECHO_ALPHA),
+				new EchoState(-60, -58, -23, gold_ore, offset + 46 * SlicePacer.DURATION, 0x3d, 0x6fc, Colors.ECHO_ALPHA),
+				new EchoState(-56, -58, -23, gold_ore, offset + 47 * SlicePacer.DURATION).withAllEdges(),
+				new EchoState(-59, -60, -22, gold_ore, offset + 48 * SlicePacer.DURATION).withAllEdges(),
+				new EchoState(-58, -58, -22, gold_ore, offset + 49 * SlicePacer.DURATION).withAllEdges(),
+				new EchoState(-59, -57, -22, gold_ore, offset + 49 * SlicePacer.DURATION).withAllEdges(),
+				new EchoState(-59, -58, -21, gold_ore, offset + 50 * SlicePacer.DURATION).withAllEdges(),
+				new EchoState(-57, -58, -21, gold_ore, offset + 51 * SlicePacer.DURATION).withAllEdges(),
+				new EchoState(-56, -59, -20, gold_ore, offset + 53 * SlicePacer.DURATION, 0x3b, 0xf99, Colors.ECHO_ALPHA),
+				new EchoState(-56, -59, -19, gold_ore, offset + 55 * SlicePacer.DURATION, 0x3e, 0xf66, Colors.ECHO_ALPHA),
+				new EchoState(-59, -56, -19, gold_ore, offset + 55 * SlicePacer.DURATION).withAllEdges()
 		}, setup.sonar.echoes());
 
 		Iterables.assertEquals(new String[] {
@@ -237,7 +237,7 @@ public class SonarTest {
 
 		((MockAnimatorHost) Services.PLATFORM.getAnimatorHost()).runAll(clock);
 
-		Iterables.assertEquals(new BlockEcho[] {
+		Iterables.assertEquals(new EchoState[] {
 		}, setup.sonar.echoes());
 
 		Iterables.assertEquals(new String[] {
@@ -256,7 +256,7 @@ public class SonarTest {
 
 		((MockAnimatorHost) Services.PLATFORM.getAnimatorHost()).runAll(clock);
 
-		Iterables.assertEquals(new BlockEcho[] {
+		Iterables.assertEquals(new EchoState[] {
 		}, setup.sonar.echoes());
 
 		Iterables.assertEquals(new String[] {
@@ -279,7 +279,7 @@ public class SonarTest {
 		clock.timeStamp = 0x123456;
 		Assertions.assertTrue(setup.sonar.remove(setup.sonar.oldEchoes(core2)));
 
-		Iterables.assertEquals(new BlockEcho[] {
+		Iterables.assertEquals(new EchoState[] {
 		}, setup.sonar.echoes());
 
 		Iterables.assertEquals(new String[] {
@@ -303,9 +303,9 @@ public class SonarTest {
 		setup.sendPingBlocking(core, clock);
 
 		final var offset = 0x123456 + WaveAnimator.DURATION + SlicePacer.DURATION;
-		Iterables.assertEquals(new BlockEcho[] {
-				new BlockEcho(-60, -60, -50, gold_ore, offset + SlicePacer.DURATION),
-				new BlockEcho(-60, -60, -33, gold_ore, offset + 18 * SlicePacer.DURATION),
+		Iterables.assertEquals(new EchoState[] {
+				new EchoState(-60, -60, -50, gold_ore, offset + SlicePacer.DURATION, Pixel.ALL_SIDES, Pixel.ALL_EDGES, Colors.ECHO_ALPHA),
+				new EchoState(-60, -60, -33, gold_ore, offset + 18 * SlicePacer.DURATION, Pixel.ALL_SIDES, Pixel.ALL_EDGES, Colors.ECHO_ALPHA),
 		}, setup.sonar.echoes());
 
 		Iterables.assertEquals(new String[] {
@@ -322,9 +322,9 @@ public class SonarTest {
 		setup.sendPingBlocking(core, clock);
 
 		final var offset = 0x123456 + WaveAnimator.DURATION + SlicePacer.DURATION;
-		Iterables.assertEquals(new BlockEcho[] {
-				new BlockEcho(0, 30, -8, coal_ore, offset + 30 * SlicePacer.DURATION),
-				new BlockEcho(0, 31, -8, iron_ore, offset + 31 * SlicePacer.DURATION),
+		Iterables.assertEquals(new EchoState[] {
+				new EchoState(0, 30, -8, coal_ore, offset + 30 * SlicePacer.DURATION, Pixel.ALL_SIDES, Pixel.ALL_EDGES, Colors.ECHO_ALPHA),
+				new EchoState(0, 31, -8, iron_ore, offset + 31 * SlicePacer.DURATION, Pixel.ALL_SIDES, Pixel.ALL_EDGES, Colors.ECHO_ALPHA),
 		}, setup.sonar.echoes());
 
 		Iterables.assertEquals(new String[] {
