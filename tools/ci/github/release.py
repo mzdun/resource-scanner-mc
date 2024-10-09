@@ -10,7 +10,7 @@ from typing import Optional
 from ..common.changelog import FORCED_LEVEL, Level, format_commit_message, update_changelog
 from ..common.git import addFiles, annotatedTag, bumpVersion, commit, getLog, getTags
 from ..common.project import Project, getVersion, getVersionFilePath, setVersion
-from ..common.runner import Environment, capture_str
+from ..common.runner import Environment, capture, capture_str
 from ..common.utils import PROJECT_ROOT
 from ..github.api import API, format_release
 
@@ -62,12 +62,17 @@ def runReleaseCommand(args: argparse.Namespace):
         savedParser.error("--use and --force cannot be used together")
 
     current_branch = capture_str("git", "branch", "--show-current")
+    error_msg = None
+    warning_msg = None
+    if current_branch != "main":
+        error_msg = "You are not on a main branch! Cowardly refusing to do any work."
+        warning_msg = "You are not on a main branch! On normal view this will not work."
 
-    if current_branch != "main" and not args.dry_run:
+    if error_msg is not None and not args.dry_run:
         color = "\033[1;31m" if args.color == "always" else ""
         reset = "\033[m" if args.color == "always" else ""
         print(f"""
-{color}You are not on a main branch! Cowardly refusing to do any work.{reset}
+{color}{error_msg}{reset}
 """)
         exit(1)
 
@@ -79,11 +84,11 @@ def runReleaseCommand(args: argparse.Namespace):
         args.use,
     )
 
-    if current_branch != "main" and args.dry_run:
+    if warning_msg is not None and args.dry_run:
         color = "\033[1;31m" if args.color == "always" else ""
         reset = "\033[m" if args.color == "always" else ""
         print(f"""
-{color}You are not on a main branch! On normal view this will not work.{reset}
+{color}{warning_msg}{reset}
 """)
 
     if args.dry_run:

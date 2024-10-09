@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) and [COMMITS.md](COMMITS.md) for commit guidelines.
 
+## [0.5.0](https://github.com/mzdun/resource-scanner-mc/compare/v0.4.1...v0.5.0) (2024-10-09)
+
+### New Features
+
+- locate the thing I'm looking at ([e6d0658](https://github.com/mzdun/resource-scanner-mc/commit/e6d0658f69e933c0dfa15b8df371fdaa4b22c5f7))
+- clumping echoes in nuggets ([1dfd23d](https://github.com/mzdun/resource-scanner-mc/commit/1dfd23d2415298e70c576081ab541a3fcb823bf7)), closes [#23](https://github.com/mzdun/resource-scanner-mc/issues/23), fixes [#22](https://github.com/mzdun/resource-scanner-mc/issues/22)
+- adding new level of indirection ([1a8b096](https://github.com/mzdun/resource-scanner-mc/commit/1a8b096883388ec7a44ec65d36defb7baf1aafa9))
+
+### Chores
+
+- use :fabric:1.21 as base for other versions ([666e979](https://github.com/mzdun/resource-scanner-mc/commit/666e97992627fe15aaba36e49fefafd9c1ff63fc))
+
+### Code Refactoring
+
+- merging `BlockEcho` and `EchoState` ([5b6f2fd](https://github.com/mzdun/resource-scanner-mc/commit/5b6f2fd4a6c84de7b75d64eb0d70902aebcc48ac))
+- s/GraphicContext/ShimmerConsumer/ ([fa0b40a](https://github.com/mzdun/resource-scanner-mc/commit/fa0b40a770236f6f443a8d7cbc5f0c1ad3eec4ad))
+
 ## [0.4.1](https://github.com/mzdun/resource-scanner-mc/compare/v0.4.0...v0.4.1) (2024-10-07)
 
 ### Bug Fixes

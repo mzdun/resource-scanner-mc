@@ -2,9 +2,9 @@
 
 ## Next steps
 
-- [x] only one setting at a time is saved (bug: #20, pr: #24)
-- [x] `NullPointerException` when a scanner is active and world disappears (bug: #21, pr: #25)
-- [x] clumps of blocks (bug for internal walls: #22, issue: #23, pr: #26)
+- [x] only one setting at a time is saved (bug: #20, pr: #24) _(v0.4.1)_
+- [x] `NullPointerException` when a scanner is active and world disappears (bug: #21, pr: #25) _(v0.4.1)_
+- [x] clumps of blocks (bug for internal walls: #22, issue: #23, pr: #26) _(v0.5.0)_
   - [x] bounds for frustum
   - [x] walls no longer flicker
   - [x] focused clump has an outline (at minimum, `DEBUG_LINES`) &mdash; ...
@@ -13,11 +13,11 @@
 ## Bugs
 
 - [x] Settings
-  - [x] only one setting at a time is saved
+  - [x] only one setting at a time is saved _(v0.4.1)_
 
 - [x] Scanner
-  - [x] internal walls tend to flicker in and out of existence
-  - [x] closing app / disconnecting from server ends with a `NullPointerException` if the scanner is active
+  - [x] internal walls tend to flicker in and out of existence _(v0.5.0)_
+  - [x] closing app / disconnecting from server ends with a `NullPointerException` if the scanner is active _(v0.4.1)_
 
 ## Features
 
@@ -25,7 +25,7 @@
   - [ ] per-world saves on top of common defaults
     - [ ] _end of minimal viable code_
 - [ ] Scanner
-  - [x] clumps of blocks
+  - [x] clumps of blocks _(v0.5.0)_
   - [ ] label the clumps
     - [ ] _end of minimal viable code_
   - [ ] custom shader
