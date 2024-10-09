@@ -157,6 +157,21 @@ public class EchoState implements Comparable<EchoState> {
         matrices.pop();
     }
 
+    public void sketch(GlProgramConsumer buffer, MatrixStack matrices, Vector3f camera, int argb32) {
+        final var m = pushAndAlignWithCamera(matrices, camera);
+
+        for (var index = 0; index < Pixel.edges.length; ++index) {
+            final var flag = 1 << index;
+            if ((edges & flag) == 0) {
+                continue;
+            }
+
+            Pixel.edges[index].apply(buffer, m, argb32);
+        }
+
+        matrices.pop();
+    }
+
     private Matrix4f pushAndAlignWithCamera(MatrixStack matrices, Vector3f camera) {
         final var x = position().getX() - camera.x;
         final var y = position().getY() - camera.y;

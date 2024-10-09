@@ -55,6 +55,8 @@ public class Pixels {
 
         final var visibleNuggets = EchoNugget.filterVisible(nuggets, frustumFilter);
         final var visibleShimmers = EchoNugget.filterVisible(allShimmers, frustumFilter);
+        final var central = EchoNugget.theThingImLookingAt(
+                visibleNuggets, cameraPos, camera.getPitch(), camera.getYaw());
 
         if (visibleNuggets.isEmpty() && visibleShimmers.isEmpty()) {
             return;
@@ -74,10 +76,10 @@ public class Pixels {
             final var glProgram = new GlProgramVertexConsumer(buffer);
 
             for (final var nugget : visibleShimmers) {
-                 nugget.draw(glProgram, matrices, cameraPos);
+                nugget.draw(glProgram, matrices, cameraPos);
             }
 
-            for (final var nugget: visibleNuggets) {
+            for (final var nugget : visibleNuggets) {
                 nugget.draw(glProgram, matrices, cameraPos);
             }
 
@@ -94,8 +96,14 @@ public class Pixels {
                 nugget.sketch(glProgram, matrices, cameraPos);
             }
 
-            for (final var nugget: visibleNuggets) {
+            for (final var nugget : visibleNuggets) {
+                if (nugget == central.nugget())
+                    continue;
                 nugget.sketch(glProgram, matrices, cameraPos);
+            }
+
+            if (central != null) {
+                central.nugget().sketch(glProgram, matrices, cameraPos, Colors.OPAQUE | Colors.BLACK);
             }
 
             final var builtBuffer = buffer.endNullable();

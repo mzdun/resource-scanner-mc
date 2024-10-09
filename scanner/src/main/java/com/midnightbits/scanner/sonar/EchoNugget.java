@@ -6,7 +6,9 @@ package com.midnightbits.scanner.sonar;
 import com.midnightbits.scanner.rt.core.Id;
 import com.midnightbits.scanner.rt.math.V3i;
 import com.midnightbits.scanner.sonar.graphics.*;
+import com.midnightbits.scanner.utils.LineOfBlocks;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
 import java.util.*;
@@ -60,8 +62,9 @@ public class EchoNugget {
         furthestToClosest(echoStates.values().stream(), buffer, matrices, camera, fn);
     }
 
-    private static void furthestToClosest(Stream<EchoState> echoes, GlProgramConsumer buffer, MatrixStack matrices, Vector3f camera,
-                                          DrawingFunction fn) {
+    private static void furthestToClosest(Stream<EchoState> echoes, GlProgramConsumer buffer, MatrixStack matrices,
+            Vector3f camera,
+            DrawingFunction fn) {
         final Consumer<Pixel> paint = (pixel) -> fn.apply(pixel.echoState(), buffer, matrices, camera);
 
         echoes
@@ -134,6 +137,27 @@ public class EchoNugget {
                 .toList();
     }
 
+    public record TheThingImLookingAt(View nugget, EchoState echo) {
+    }
+
+    public static @Nullable TheThingImLookingAt theThingImLookingAt(List<View> views, Vector3f camera,
+            float cameraPitch, float cameraYaw) {
+        final var line = LineOfBlocks.fromCamera(new V3i((int) camera.x, (int) camera.y, (int) camera.z), cameraPitch,
+                cameraYaw, 1000);
+        for (final var pos : line.iterate()) {
+            for (final var view : views) {
+                for (final var echo : view.echoes) {
+                    if (echo.position.equals(pos)) {
+                        return new TheThingImLookingAt(view, echo);
+                    }
+
+                }
+            }
+        }
+
+        return null;
+    }
+
     public class View {
         private final List<EchoState> echoes;
 
@@ -151,6 +175,11 @@ public class EchoNugget {
 
         public void sketch(GlProgramConsumer buffer, MatrixStack matrices, Vector3f camera) {
             furthestToClosest(echoes.stream(), buffer, matrices, camera, EchoState::sketch);
+        }
+
+        public void sketch(GlProgramConsumer buffer, MatrixStack matrices, Vector3f camera, int argb32) {
+            furthestToClosest(echoes.stream(), buffer, matrices, camera,
+                    (echo, b, m, c) -> echo.sketch(b, m, c, argb32));
         }
     }
 }
