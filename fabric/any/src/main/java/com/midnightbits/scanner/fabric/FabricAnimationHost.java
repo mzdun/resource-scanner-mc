@@ -28,7 +28,8 @@ public class FabricAnimationHost extends AbstractAnimatorHost {
                 return;
 
             this.tick(Clock.currentTimeMillis());
-            this.source.remove(this.source.oldEchoes(new MinecraftClientCore(client)));
+            if (this.source.remove(this.source.oldEchoes(new MinecraftClientCore(client))))
+                this.source.splitToNuggets();
         });
         WorldRenderEvents.LAST.register(this::renderLevel);
     }
@@ -45,6 +46,6 @@ public class FabricAnimationHost extends AbstractAnimatorHost {
     private void renderLevel(WorldRenderContext context) {
         final var shimmers = new GatherShimmers();
         this.run(shimmers);
-        Pixel.renderLevel(context, source.echoes(), shimmers.cloud);
+        Pixels.renderLevel(context, source.nuggets(), shimmers.cloud);
     }
 }

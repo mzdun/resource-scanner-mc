@@ -104,12 +104,20 @@ public final class Sonar {
             echoConsumer.accept(echo);
     }
 
+    public void splitToNuggets() {
+        echoes.splitToNuggets();
+    }
+
     public Iterable<BlockEcho> echoes() {
         return echoes;
     }
 
-    public void remove(Predicate<BlockEcho> whichOnes) {
-        echoes.remove(whichOnes);
+    public List<EchoNugget> nuggets() {
+        return echoes.nuggets();
+    }
+
+    public boolean remove(Predicate<BlockEcho> whichOnes) {
+        return echoes.remove(whichOnes);
     }
 
     public Predicate<BlockEcho> oldEchoes(ClientCore client) {

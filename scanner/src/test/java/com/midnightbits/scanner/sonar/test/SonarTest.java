@@ -42,9 +42,11 @@ public class SonarTest {
 	private final MockedClock clock = new MockedClock();
 
 	public static final Echo deepslate_iron_ore = Echo.of(Id.ofVanilla("deepslate_iron_ore"), BlockEchoTest.VANILLA);
-	public static final Echo deepslate_diamond_ore = Echo.of(Id.ofVanilla("deepslate_diamond_ore"), BlockEchoTest.VANILLA);
+	public static final Echo deepslate_diamond_ore = Echo.of(Id.ofVanilla("deepslate_diamond_ore"),
+			BlockEchoTest.VANILLA);
 	public static final Echo diamond_ore = Echo.of(Id.ofVanilla("diamond_ore"), BlockEchoTest.VANILLA);
-	public static final Echo iron_ore = Echo.of(Id.ofVanilla("iron_ore"), Colors.BLOCK_TAG_COLORS.get(Id.ofVanilla("iron_ores")));
+	public static final Echo iron_ore = Echo.of(Id.ofVanilla("iron_ore"),
+			Colors.BLOCK_TAG_COLORS.get(Id.ofVanilla("iron_ores")));
 	public static final Echo gold_ore = Echo.of(Id.ofVanilla("gold_ore"), BlockEchoTest.VANILLA);
 	public static final Echo coal_ore = Echo.of(Id.ofVanilla("coal_ore"), BlockEchoTest.VANILLA);
 
@@ -219,6 +221,77 @@ public class SonarTest {
 				"> 29m gold_ore", "> 30m gold_ore", "> 30m gold_ore", "> 31m gold_ore",
 				"> 32m gold_ore", "> 32m gold_ore",
 		}, core.getPlayerMessages());
+
+		Assertions.assertEquals(23, setup.sonar.nuggets().size());
+	}
+
+	@Test
+	void searchForGold_afterDark() {
+		clock.timeStamp = 0x123456;
+
+		final var core = new MockClientCore(null, 0f, 0f, MockWorld.TEST_WORLD);
+		final var setup = new Setup(TEST_BLOCK_DISTANCE, TEST_BLOCK_RADIUS, TEST_ECHO_LIFETIME,
+				Set.of(Id.ofVanilla("gold_ore")));
+
+		Assertions.assertFalse(setup.sendPing(core));
+
+		((MockAnimatorHost) Services.PLATFORM.getAnimatorHost()).runAll(clock);
+
+		Iterables.assertEquals(new BlockEcho[] {
+		}, setup.sonar.echoes());
+
+		Iterables.assertEquals(new String[] {
+		}, core.getPlayerMessages());
+	}
+
+	@Test
+	void searchForGold_afterDark2() {
+		clock.timeStamp = 0x123456;
+
+		final var core = new MockClientCore(new V3i(-60, -60, -51), 0f, 0f, null);
+		final var setup = new Setup(TEST_BLOCK_DISTANCE, TEST_BLOCK_RADIUS, TEST_ECHO_LIFETIME,
+				Set.of(Id.ofVanilla("gold_ore")));
+
+		Assertions.assertTrue(setup.sendPing(core));
+
+		((MockAnimatorHost) Services.PLATFORM.getAnimatorHost()).runAll(clock);
+
+		Iterables.assertEquals(new BlockEcho[] {
+		}, setup.sonar.echoes());
+
+		Iterables.assertEquals(new String[] {
+		}, core.getPlayerMessages());
+	}
+
+	@Test
+	void removeOldEchoes_afterDark() {
+		clock.timeStamp = 0x123456;
+
+		final var core1 = new MockClientCore(new V3i(-60, -60, -51), 0f, 0f, MockWorld.TEST_WORLD);
+		final var core2 = new MockClientCore(new V3i(-60, -60, -51), 0f, 0f, null);
+		final var setup = new Setup(TEST_BLOCK_DISTANCE, TEST_BLOCK_RADIUS, TEST_ECHO_LIFETIME,
+				Set.of(Id.ofVanilla("gold_ore")));
+
+		Assertions.assertTrue(setup.sendPing(core1));
+
+		((MockAnimatorHost) Services.PLATFORM.getAnimatorHost()).runAll(clock);
+
+		clock.timeStamp = 0x123456;
+		Assertions.assertTrue(setup.sonar.remove(setup.sonar.oldEchoes(core2)));
+
+		Iterables.assertEquals(new BlockEcho[] {
+		}, setup.sonar.echoes());
+
+		Iterables.assertEquals(new String[] {
+				"> 1m gold_ore", "> 12m gold_ore", "> 12m gold_ore", "> 14m gold_ore", "> 16m gold_ore",
+				"> 17m gold_ore", "> 17m gold_ore", "> 18m gold_ore", "> 21m gold_ore",
+				"> 22m gold_ore", "> 23m gold_ore", "> 24m gold_ore", "> 24m gold_ore",
+				"> 25m gold_ore", "> 25m gold_ore", "> 25m gold_ore", "> 26m gold_ore",
+				"> 26m gold_ore", "> 26m gold_ore", "> 27m gold_ore", "> 28m gold_ore",
+				"> 28m gold_ore", "> 28m gold_ore", "> 29m gold_ore", "> 29m gold_ore",
+				"> 29m gold_ore", "> 30m gold_ore", "> 30m gold_ore", "> 31m gold_ore",
+				"> 32m gold_ore", "> 32m gold_ore",
+		}, core1.getPlayerMessages());
 	}
 
 	@Test
