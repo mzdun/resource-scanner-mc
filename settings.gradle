@@ -16,3 +16,4 @@ pluginManagement {
 include "scanner"
 include "fabric:1.21"
 include "fabric:1.21.1"
+include "fabric:1.21.2"

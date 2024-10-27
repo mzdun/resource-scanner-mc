@@ -3,6 +3,7 @@
 
 package com.midnightbits.scanner.modmenu.gui;
 
+import api.compat.DrawContextCompat;
 import com.midnightbits.scanner.modmenu.InventoryHandler;
 import com.midnightbits.scanner.modmenu.ScannerInventory;
 import com.midnightbits.scanner.rt.core.Id;
@@ -43,16 +44,16 @@ public class InventoryWidget extends HandledWidget<InventoryHandler> {
 
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
-        drawMouseoverTooltip(context, mouseX, mouseY);
+        drawMouseoverTooltip(new DrawContextCompat(context), mouseX, mouseY);
     }
 
     @Override
-    protected void drawForeground(DrawContext context, int mouseX, int mouseY) {
+    protected void drawForeground(DrawContextCompat context, int mouseX, int mouseY) {
         context.drawText(client.textRenderer, inventory.getName(), 8, 6, 0x404040, false);
     }
 
     @Override
-    protected void drawBackground(DrawContext context) {
+    protected void drawBackground(DrawContextCompat context) {
         final var mid_bottom_cut = 2;
         final var top_section_y = 0;
         final var top_section_h = Constants.TEXTURE_HEIGHT - Constants.BUTTON_SIZE - Constants.BOTTOM;
@@ -73,8 +74,8 @@ public class InventoryWidget extends HandledWidget<InventoryHandler> {
                 Constants.SCROLLBAR_WIDTH, Constants.SCROLLBAR_HEIGHT);
     }
 
-    private void drawBackgroundSection(DrawContext context, int y, int u, int height) {
-        context.drawTexture(Constants.ITEMS_BG, 0, y, 0, u, Constants.INVENTORY_WIDTH, height);
+    private void drawBackgroundSection(DrawContextCompat context, int y, int v, int height) {
+        context.drawTexture(Constants.ITEMS_BG, 0, y, 0, v, Constants.INVENTORY_WIDTH, height);
     }
 
     @Override

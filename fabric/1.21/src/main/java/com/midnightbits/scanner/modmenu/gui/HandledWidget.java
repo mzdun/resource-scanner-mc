@@ -3,6 +3,7 @@
 
 package com.midnightbits.scanner.modmenu.gui;
 
+import api.compat.DrawContextCompat;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.mojang.datafixers.util.Pair;
@@ -402,20 +403,21 @@ public abstract class HandledWidget<T extends ScreenHandler> extends CenteredWid
 
     @Override
     protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
-        drawBackground(context);
-        drawSlots(context, mouseX, mouseY);
-        drawForeground(context, mouseX, mouseY);
-        drawDragAndDrop(context, mouseX, mouseY, delta);
+        final var compat = new DrawContextCompat(context);
+        drawBackground(compat);
+        drawSlots(compat, mouseX, mouseY);
+        drawForeground(compat, mouseX, mouseY);
+        drawDragAndDrop(compat, mouseX, mouseY, delta);
     }
 
-    protected void drawBackground(DrawContext context) {
+    protected void drawBackground(DrawContextCompat context) {
         final var x = 0;
         final var y = 0;
 
         context.drawTexture(Constants.ITEMS_BG, x, y, 0, 0, contentWidth, contentHeight);
     }
 
-    protected void drawSlots(DrawContext context, int mouseX, int mouseY) {
+    protected void drawSlots(DrawContextCompat context, int mouseX, int mouseY) {
         focusedSlot = null;
         for (final Slot slot : handler.slots) {
             if (!slot.isEnabled()) {
@@ -434,11 +436,11 @@ public abstract class HandledWidget<T extends ScreenHandler> extends CenteredWid
         }
     }
 
-    protected void drawForeground(DrawContext context, int mouseX, int mouseY) {
+    protected void drawForeground(DrawContextCompat context, int mouseX, int mouseY) {
 
     }
 
-    protected void drawDragAndDrop(DrawContext context, int mouseX, int mouseY, float delta) {
+    protected void drawDragAndDrop(DrawContextCompat context, int mouseX, int mouseY, float delta) {
         ItemStack itemStack = touchDragStack.isEmpty() ? handler.getCursorStack() : touchDragStack;
         if (!itemStack.isEmpty()) {
             itemStack = itemStack.copyWithCount(1);
@@ -465,7 +467,7 @@ public abstract class HandledWidget<T extends ScreenHandler> extends CenteredWid
         }
     }
 
-    protected void drawSlot(DrawContext context, Slot slot) {
+    protected void drawSlot(DrawContextCompat context, Slot slot) {
         var itemStack = slot.getStack();
         var bl = false;
         var alreadyDrawn = slot == touchDragSlotStart && !touchDragStack.isEmpty() && !touchIsRightClickDrag;
@@ -491,9 +493,9 @@ public abstract class HandledWidget<T extends ScreenHandler> extends CenteredWid
         if (itemStack.isEmpty() && slot.isEnabled()) {
             Pair<Identifier, Identifier> pair = slot.getBackgroundSprite();
             if (pair != null && client != null) {
-                Sprite sprite = client.getSpriteAtlas((Identifier) pair.getFirst())
-                        .apply((Identifier) pair.getSecond());
-                context.drawSprite(slot.x, slot.y, 0, Constants.ICON_SIZE, Constants.ICON_SIZE, sprite);
+                Sprite sprite = client.getSpriteAtlas(pair.getFirst())
+                        .apply(pair.getSecond());
+                context.drawSprite(sprite, slot.x, slot.y, Constants.ICON_SIZE, Constants.ICON_SIZE);
                 alreadyDrawn = true;
             }
         }
@@ -514,19 +516,19 @@ public abstract class HandledWidget<T extends ScreenHandler> extends CenteredWid
         context.getMatrices().pop();
     }
 
-    public static void drawSlotHighlight(DrawContext context, int x, int y, int z) {
+    public static void drawSlotHighlight(DrawContextCompat context, int x, int y, int z) {
         context.fillGradient(RenderLayer.getGuiOverlay(), x, y, x + Constants.ICON_SIZE, y + Constants.ICON_SIZE,
                 HIGHLIGHT, HIGHLIGHT, z);
     }
 
-    private void drawItem(DrawContext context, ItemStack stack, int x, int y) {
+    private void drawItem(DrawContextCompat context, ItemStack stack, int x, int y) {
         context.getMatrices().push();
         context.getMatrices().translate(0.0F, 0.0F, 232.0F);
         context.drawItem(stack, x, y);
         context.getMatrices().pop();
     }
 
-    protected void drawMouseoverTooltip(DrawContext context, int x, int y) {
+    protected void drawMouseoverTooltip(DrawContextCompat context, int x, int y) {
         if (handler.getCursorStack().isEmpty() && focusedSlot != null && focusedSlot.hasStack() && client != null) {
             ItemStack itemStack = focusedSlot.getStack();
             context.drawTooltip(client.textRenderer, getTooltipFromItem(client, itemStack), itemStack.getTooltipData(),

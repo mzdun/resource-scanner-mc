@@ -6,6 +6,7 @@ package com.midnightbits.scanner.fabric;
 import java.util.HashMap;
 import java.util.Map;
 
+import api.compat.SoundEventCompat;
 import com.midnightbits.scanner.ResourceScannerMod;
 import com.midnightbits.scanner.platform.PlatformInterface;
 import com.midnightbits.scanner.rt.core.ScannerMod;
@@ -43,7 +44,7 @@ public class FabricSoundManager {
     }
 
     private static void registerEvent(SoundEvent event) {
-        Registry.register(Registries.SOUND_EVENT, event.getId(), event);
+        Registry.register(Registries.SOUND_EVENT, SoundEventCompat.idOf(event), event);
     }
 
     public static void initialize() {

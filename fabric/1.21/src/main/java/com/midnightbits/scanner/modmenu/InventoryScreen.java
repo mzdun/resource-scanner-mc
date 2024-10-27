@@ -3,6 +3,7 @@
 
 package com.midnightbits.scanner.modmenu;
 
+import api.compat.ScreenCompat;
 import com.midnightbits.scanner.modmenu.gui.InventoryWidget;
 import com.midnightbits.scanner.rt.core.Id;
 import com.midnightbits.scanner.rt.core.ScannerMod;
@@ -23,7 +24,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 @Environment(value = EnvType.CLIENT)
-public class InventoryScreen extends Screen {
+public class InventoryScreen extends ScreenCompat {
     private final Screen parent;
     private final Set<Id> oreIds;
     private final Consumer<Set<Id>> inventoryChangeCallback;
@@ -46,7 +47,7 @@ public class InventoryScreen extends Screen {
         this.layout.forEachChild(this::addDrawableChild);
         if (inventory != null)
             addDrawableChild(inventory);
-        this.initTabNavigation();
+        this.refreshWidgetPositions();
     }
 
     @Override
@@ -91,7 +92,7 @@ public class InventoryScreen extends Screen {
     }
 
     @Override
-    protected void initTabNavigation() {
+    protected void refreshWidgetPositions() {
         layout.refreshPositions();
         if (inventory != null) {
             inventory.setDimensions(width, layout.getContentHeight());
