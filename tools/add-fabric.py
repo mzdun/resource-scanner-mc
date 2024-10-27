@@ -95,9 +95,14 @@ def __main__():
     
     modmenu_versions = modrinth('/project/mOgUt4GM/version')
     matching = list(filter(lambda ver: version in ver['game_versions'], modmenu_versions))
+    modmenu_rt = "true"
     if len(matching) == 0:
         stableGameVersion = stableGame['version']
         matching = list(filter(lambda ver: stableGameVersion in ver['game_versions'], modmenu_versions))
+        modmenu_rt = "false"
+    if len(matching) == 0:
+        matching = modmenu_versions
+        modmenu_rt = "false"
     matching.sort(key=lambda v: v['date_published'], reverse=True)
     modmenu_version = matching[0]['version_number']
 
@@ -146,6 +151,7 @@ loader_version={loader['version']}
 # Dependencies
 fabric_version={fabricAPI}
 modmenu_version={modmenu_version}
+modmenu_rt={modmenu_rt}
 """
     print(template)
 
@@ -153,15 +159,27 @@ modmenu_version={modmenu_version}
     if os.path.isdir(dirname):
         print(f'Directory {dirname} already exists')
         return
+    
+    def symlink(*subdirs: str):
+        link = subdirs[-1]
+        subdirs = subdirs[:-1]
+        localDirname = os.path.join(dirname, *subdirs)
+        target = os.path.join(*([".."] * len(subdirs)), '..', '1.21', *subdirs, link)
+        os.makedirs(localDirname, exist_ok=True)
+        os.chdir(localDirname)
+        os.symlink(target, link, target_is_directory=True)
 
-    os.makedirs(dirname, exist_ok=True)
+    symlink('src', 'main', 'java', 'com')
+    symlink('src', 'main', 'java', 'api', 'compat', 'common')
+    symlink('src', 'main', 'resources')
+    symlink('src', 'test')
+
     os.chdir(dirname)
-    os.symlink(os.path.join('..', '1.21', 'src'),
-               'src', target_is_directory=True)
     os.symlink(os.path.join(
         '..', '1.21', 'build.gradle'), 'build.gradle')
+
     with open('gradle.properties', 'w', encoding='UTF-8') as properties:
-        print(template, file=properties)
+        properties.write(template)
 
     with open(os.path.join(__root__, 'settings.gradle'), 'a', encoding='UTF-8') as settings:
         print(f'include "fabric:{version}"', file=settings)

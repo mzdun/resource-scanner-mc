@@ -5,6 +5,7 @@ package com.midnightbits.scanner.fabric;
 
 import java.util.List;
 
+import api.compat.ShaderCompat;
 import com.midnightbits.scanner.sonar.EchoNugget;
 import com.midnightbits.scanner.sonar.EchoState;
 import com.midnightbits.scanner.sonar.graphics.*;
@@ -67,7 +68,7 @@ public class Pixels {
         RenderSystem.blendFunc(
                 GlStateManager.SrcFactor.SRC_ALPHA,
                 GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA);
-        RenderSystem.setShader(GameRenderer::getPositionColorProgram);
+        ShaderCompat.setShader();
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
         final var tessellator = Tessellator.getInstance();
