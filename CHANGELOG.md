@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) and [COMMITS.md](COMMITS.md) for commit guidelines.
 
+## [0.5.2](https://github.com/mzdun/resource-scanner-mc/compare/v0.5.1...v0.5.2) (2024-10-27)
+
+### Bug Fixes
+
+- add 1.21.3 support ([f73702f](https://github.com/mzdun/resource-scanner-mc/commit/f73702fb8e8ffa60016eafe0a703603b94482271))
+- add 1.21.2 support ([f39bdd0](https://github.com/mzdun/resource-scanner-mc/commit/f39bdd09ee8352dbef8c789b3bea8481623cdcfd))
+- move actions to mouse buttons ([47fb9cd](https://github.com/mzdun/resource-scanner-mc/commit/47fb9cda7df65c2410ca4d4af26f38ab2df2dc53))
+
 ## [0.5.1](https://github.com/mzdun/resource-scanner-mc/compare/v0.5.0...v0.5.1) (2024-10-09)
 
 ### Bug Fixes
