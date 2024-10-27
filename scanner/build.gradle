@@ -15,6 +15,7 @@ repositories {
 
 dependencies {
 	compileOnly 'org.jetbrains:annotations:16.0.2'
+	compileOnly 'org.lwjgl:lwjgl-glfw:3.3.4'
 	implementation 'com.google.code.gson:gson:2.11.0'
 	implementation 'org.joml:joml:1.10.8'
 	implementation 'org.slf4j:slf4j-api:2.0.+'

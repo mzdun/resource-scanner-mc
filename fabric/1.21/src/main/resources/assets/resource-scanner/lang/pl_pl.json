@@ -2,9 +2,10 @@
   "modmenu.nameTranslation.resource-scanner": "Skaner Zasobów",
   "modmenu.descriptionTranslation.resource-scanner": "Lokalizuje węgiel, żelazo, diamenty, netheryt, itd.",
 
-  "key.resource-scanner.scan": "Skanuj",
+  "key.resource-scanner.scan": "Skanuj okolicę",
+  "key.resource-scanner.options": "Ustawienia Skanera Zasobów",
 
-  "screens.resource-scanner.options": "Opcje Skanera Zasobów",
+  "screens.resource-scanner.options": "Ustawienia Skanera Zasobów",
   "option.resource-scanner.message_narrate": "wiadomość %s",
   "option.resource-scanner.inventory_needs_world": "Musisz być w grze, żeby zmienić rodzaje skanowanej rudy",
   "option.resource-scanner.distance": "Największa odległość",

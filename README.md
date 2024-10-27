@@ -24,11 +24,16 @@ It helps players to find resources more easily. At start, it only looks for coal
 
 ## Usage
 
-![Press M](docs/img/m_keycap.png)
+![Press Mouse Button 5](docs/img/mouse_buttons.png)
 
-Pressing the scanner button will reveal the resouces, if any, in player's vicinity. It starts easy, with coal and deepslate coal ores, but later can be set up to look for anything you want (as long as you want to locate an ore). Just press `M` and enjoy.
+|Mouse button|Action|
+|---|---|
+|Button 4|Open Resource Scanner settings screen|
+|Button 5|Scan nearby resources|
 
-The configuration is done through `config/resource-scanner.json` file. It will be created after first run. Alternatively, if you have a Mod Menu plugin installed, you can go into its screen from Minecraft menu and change the options there.
+Pressing the scanner button will reveal the resouces, if any, in player's vicinity. It starts easy, with coal and deepslate coal ores, but later can be set up to look for anything you want (as long as you want to locate an ore). Just press **mouse button 5** and enjoy.
+
+The configuration is done through `config/resource-scanner.json` file. It will be created after first run. Alternatively, if you have a Mod Menu plugin installed, you can go into its screen from Minecraft menu and change the options there. Since version 0.5.2, you can also use **mouse button 4** to get to the settings, even without Mod Menu plugin.
 
 You can tweak the distance the scanner will try to reach, as well as width of the scaner cone and who long echoes are kept on screen. Finally, you can select the kinds of ore the scanner should look for.
 
