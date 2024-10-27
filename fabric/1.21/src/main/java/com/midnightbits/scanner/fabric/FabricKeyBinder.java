@@ -8,10 +8,12 @@ import java.util.ArrayList;
 import com.midnightbits.scanner.platform.KeyBinder;
 
 import com.midnightbits.scanner.rt.core.ClientCore;
+import com.midnightbits.scanner.rt.core.KeyBindings;
 import com.midnightbits.scanner.rt.core.fabric.MinecraftClientCore;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.util.InputUtil;
 
 public class FabricKeyBinder implements KeyBinder {
     private record BoundKey(KeyBinding binding, KeyBinder.KeyPressHandler handler) {
@@ -49,6 +51,13 @@ public class FabricKeyBinder implements KeyBinder {
     @Override
     public void bind(String translationKey, int code, String category, KeyPressHandler handler) {
         KeyBinding key = KeyBindingHelper.registerKeyBinding(new KeyBinding(translationKey, code, category));
+        attach(key, handler);
+    }
+
+    @Override
+    public void bind(String translationKey, KeyBindings.MOUSE code, String category, KeyPressHandler handler) {
+        KeyBinding key = KeyBindingHelper.registerKeyBinding(
+                new KeyBinding(translationKey, InputUtil.Type.MOUSE, code.button(), category));
         attach(key, handler);
     }
 }

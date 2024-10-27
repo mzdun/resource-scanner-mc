@@ -20,7 +20,7 @@ import com.midnightbits.scanner.ResourceScannerMod;
 import com.midnightbits.scanner.rt.core.Services;
 import com.midnightbits.scanner.rt.core.ClientCore;
 import com.midnightbits.scanner.rt.core.Id;
-import com.midnightbits.scanner.rt.core.KeyBinding;
+import com.midnightbits.scanner.rt.core.KeyBindings;
 import com.midnightbits.scanner.rt.math.V3i;
 import com.midnightbits.scanner.test.mocks.MockClientCore;
 import com.midnightbits.scanner.test.mocks.MockWorld;
@@ -39,7 +39,7 @@ public class ResourceScannerModTest {
         final var mod = new ResourceScannerMod();
         mod.onInitializeClient();
 
-        Assertions.assertNotNull(mockPlatform.getHandler(KeyBinding.KEY_M, KeyBinding.MOVEMENT_CATEGORY));
+        Assertions.assertNotNull(mockPlatform.getHandler(KeyBindings.MOUSE.BTN_5));
     }
 
     @Test
@@ -93,11 +93,11 @@ public class ResourceScannerModTest {
             Assertions.assertSame(prevSonar, mod.getSonar());
         }
 
-        mockPlatform.press(KeyBinding.KEY_M, KeyBinding.MOVEMENT_CATEGORY, core);
+        mockPlatform.press(KeyBindings.SCAN_BUTTON, core);
         mockAnimatorHost.tickWith(clock);
         mockAnimatorHost.tickWith(clock);
         mockAnimatorHost.tickWith(clock);
-        mockPlatform.press(KeyBinding.KEY_M, KeyBinding.MOVEMENT_CATEGORY, core);
+        mockPlatform.press(KeyBindings.SCAN_BUTTON, core);
         mockAnimatorHost.runAll(clock);
         Iterables.assertEquals(expected, mod.echoes());
     }

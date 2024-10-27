@@ -13,6 +13,7 @@ import java.util.Objects;
 import com.midnightbits.scanner.platform.KeyBinder;
 import com.midnightbits.scanner.platform.PlatformInterface;
 import com.midnightbits.scanner.rt.core.ClientCore;
+import com.midnightbits.scanner.rt.core.KeyBindings;
 import com.midnightbits.scanner.sonar.EchoState;
 import com.midnightbits.scanner.sonar.graphics.AbstractAnimatorHost;
 import com.midnightbits.scanner.sonar.graphics.ShimmerConsumer;
@@ -25,8 +26,13 @@ public final class MockPlatform implements PlatformInterface, KeyBinder {
         }
     }
 
+    public enum KeyType {
+        KEYSYM,
+        MOUSE
+    };
+
     public static boolean developmentEnvironment = true;
-    public Map<String, Map<Integer, KeyPressHandler>> boundKeys = new HashMap<>();
+    public Map<KeyType, Map<Integer, KeyPressHandler>> boundKeys = new HashMap<>();
     private String scannerVersion = null;
     private String minecraftVersion = null;
     private MockAnimatorHost host = null;
@@ -71,8 +77,14 @@ public final class MockPlatform implements PlatformInterface, KeyBinder {
 
     @Override
     public void bind(String translationKey, int code, String category, KeyBinder.KeyPressHandler handler) {
-        boundKeys.computeIfAbsent(category, (key) -> new HashMap<>());
-        boundKeys.get(category).put(code, new KeyPressHandler(translationKey, handler));
+        boundKeys.computeIfAbsent(KeyType.KEYSYM, (key) -> new HashMap<>());
+        boundKeys.get(KeyType.KEYSYM).put(code, new KeyPressHandler(translationKey, handler));
+    }
+
+    @Override
+    public void bind(String translationKey, KeyBindings.MOUSE code, String category, KeyBinder.KeyPressHandler handler) {
+        boundKeys.computeIfAbsent(KeyType.MOUSE, (key) -> new HashMap<>());
+        boundKeys.get(KeyType.MOUSE).put(code.button(), new KeyPressHandler(translationKey, handler));
     }
 
     @Override
@@ -105,18 +117,26 @@ public final class MockPlatform implements PlatformInterface, KeyBinder {
         this.minecraftVersion = minecraftVersion;
     }
 
-    public MockPlatform.KeyPressHandler getHandler(int code, String category) {
-        Map<Integer, KeyPressHandler> catKeys = boundKeys.get(category);
+    public MockPlatform.KeyPressHandler getHandler(int code, KeyType type) {
+        Map<Integer, KeyPressHandler> catKeys = boundKeys.get(type);
         if (catKeys == null)
             return null;
         return catKeys.get(code);
     }
 
-    public void press(int code, String category, ClientCore client) {
-        MockPlatform.KeyPressHandler handler = getHandler(code, category);
+    public MockPlatform.KeyPressHandler getHandler(KeyBindings.MOUSE code) {
+        return getHandler(code.button(), KeyType.MOUSE);
+    }
+
+    public void press(int code, KeyType type, ClientCore client) {
+        MockPlatform.KeyPressHandler handler = getHandler(code, type);
         if (handler == null)
             return;
 
         handler.handle(client);
+    }
+
+    public void press(KeyBindings.MOUSE code, ClientCore client) {
+        press(code.button(), KeyType.MOUSE, client);
     }
 }

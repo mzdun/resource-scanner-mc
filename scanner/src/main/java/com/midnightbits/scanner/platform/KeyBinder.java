@@ -4,6 +4,7 @@
 package com.midnightbits.scanner.platform;
 
 import com.midnightbits.scanner.rt.core.ClientCore;
+import com.midnightbits.scanner.rt.core.KeyBindings;
 
 public interface KeyBinder {
     @FunctionalInterface
@@ -11,5 +12,6 @@ public interface KeyBinder {
         void handle(ClientCore client);
     }
 
-    void bind(String translationKey, int code, String category, KeyPressHandler handler);
+    void bind(String translationKey, int glfwCode, String category, KeyPressHandler handler);
+    void bind(String translationKey, KeyBindings.MOUSE code, String category, KeyPressHandler handler);
 }

@@ -2,7 +2,8 @@
     "modmenu.nameTranslation.resource-scanner": "Resource Scanner",
     "modmenu.descriptionTranslation.resource-scanner": "Locates coal, iron, diamonds, netherite, etc.",
 
-    "key.resource-scanner.scan": "Scan",
+    "key.resource-scanner.scan": "Scan surroundings",
+    "key.resource-scanner.options": "Resource Scanner Options",
 
     "screens.resource-scanner.options": "Resource Scanner Options",
     "option.resource-scanner.message_narrate": "%s message",

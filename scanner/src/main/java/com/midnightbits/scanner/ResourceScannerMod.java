@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 import com.midnightbits.scanner.rt.core.Services;
 import com.midnightbits.scanner.platform.PlatformInterface;
 import com.midnightbits.scanner.rt.core.ClientCore;
-import com.midnightbits.scanner.rt.core.KeyBinding;
+import com.midnightbits.scanner.rt.core.KeyBindings;
 import com.midnightbits.scanner.rt.core.ScannerMod;
 import com.midnightbits.scanner.sonar.Echoes;
 import com.midnightbits.scanner.sonar.Sonar;
@@ -66,8 +66,8 @@ public class ResourceScannerMod implements ScannerMod {
 
         Services.PLATFORM.getKeyBinder().bind(
                 ScannerMod.translationKey("key", "scan"),
-                KeyBinding.KEY_M,
-                KeyBinding.MOVEMENT_CATEGORY,
+                KeyBindings.SCAN_BUTTON,
+                KeyBindings.GAMEPLAY_CATEGORY,
                 this::onScanPressed);
     }
 
