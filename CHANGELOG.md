@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) and [COMMITS.md](COMMITS.md) for commit guidelines.
 
+## [0.5.3](https://github.com/mzdun/resource-scanner-mc/compare/v0.5.2...v0.5.3) (2025-01-16)
+
+### Bug Fixes
+
+- add 1.21.4 support ([8ddb946](https://github.com/mzdun/resource-scanner-mc/commit/8ddb9463a897648aacfed36d548eb7b09047339c))
+
 ## [0.5.2](https://github.com/mzdun/resource-scanner-mc/compare/v0.5.1...v0.5.2) (2024-10-27)
 
 ### Bug Fixes
