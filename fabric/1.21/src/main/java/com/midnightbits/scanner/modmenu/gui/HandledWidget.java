@@ -491,13 +491,7 @@ public abstract class HandledWidget<T extends ScreenHandler> extends CenteredWid
         context.getMatrices().push();
         context.getMatrices().translate(0.0F, 0.0F, 100.0F);
         if (itemStack.isEmpty() && slot.isEnabled()) {
-            Pair<Identifier, Identifier> pair = slot.getBackgroundSprite();
-            if (pair != null && client != null) {
-                Sprite sprite = client.getSpriteAtlas(pair.getFirst())
-                        .apply(pair.getSecond());
-                context.drawSprite(sprite, slot.x, slot.y, Constants.ICON_SIZE, Constants.ICON_SIZE);
-                alreadyDrawn = true;
-            }
+            alreadyDrawn = context.drawSlotSprite(slot, client);
         }
 
         if (!alreadyDrawn) {

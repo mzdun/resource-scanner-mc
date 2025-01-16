@@ -110,7 +110,7 @@ public class InventoryScreen extends ScreenCompat {
             client.setScreen(parent);
         }
 
-        if (inventory!=null) {
+        if (inventory != null) {
             inventory.applyPendingValue();
         }
     }
