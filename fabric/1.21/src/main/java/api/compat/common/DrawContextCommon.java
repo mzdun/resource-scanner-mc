@@ -16,10 +16,10 @@ import java.util.Optional;
 
 public class DrawContextCommon {
     protected final DrawContext context;
+
     protected DrawContextCommon(final DrawContext context) {
         this.context = context;
     }
-
 
     public MatrixStack getMatrices() {
         return context.getMatrices();
@@ -49,7 +49,8 @@ public class DrawContextCommon {
         context.drawText(textRenderer, text, x, y, color, shadow);
     }
 
-    public void fillGradient(RenderLayer layer, int startX, int startY, int endX, int endY, int colorStart, int colorEnd, int z) {
+    public void fillGradient(RenderLayer layer, int startX, int startY, int endX, int endY, int colorStart,
+            int colorEnd, int z) {
         context.fillGradient(layer, startX, startY, endX, endY, colorStart, colorEnd, z);
     }
 }

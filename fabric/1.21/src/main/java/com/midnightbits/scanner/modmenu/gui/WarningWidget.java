@@ -3,6 +3,7 @@
 
 package com.midnightbits.scanner.modmenu.gui;
 
+import api.compat.DrawContextCompat;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -26,7 +27,8 @@ public class WarningWidget extends ClickableWidget implements MoveableWidget {
     @Override
     public void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
         final var color = isFocused() ? 0xFFFFFF : 0x80FFFFFF;
-        context.drawTextWrapped(client.textRenderer, getMessage(), getX(), getY(), getWidth(), color);
+        final var compat = new DrawContextCompat(context);
+        compat.drawTextWrapped(client.textRenderer, getMessage(), getX(), getY(), getWidth(), color);
     }
 
     @Override
