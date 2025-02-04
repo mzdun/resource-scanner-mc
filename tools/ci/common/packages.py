@@ -4,12 +4,13 @@
 import os
 import re
 import zipfile
+
 from .project import Project
 
 
 def safeRegex(value: str) -> str:
     for esc in "\\.+*?()[]":
-        value = value.replace(esc, f'\\{esc}')
+        value = value.replace(esc, f"\\{esc}")
     return value
 
 

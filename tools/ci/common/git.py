@@ -6,26 +6,16 @@ import re
 import secrets
 import string
 from typing import Dict, List, Tuple
+
+from .changelog import (BREAKING_CHANGE, ISSUE_LINKS, KNOWN_TYPES, TYPE_FIX,
+                        ChangeLog, Commit, CommitLink, Level)
+from .project import Project
 from .runner import capture, checked
 
-from .changelog import (
-    BREAKING_CHANGE,
-    ISSUE_LINKS,
-    KNOWN_TYPES,
-    Level,
-    TYPE_FIX,
-    ChangeLog,
-    Commit,
-    CommitLink,
-)
-from .project import Project
-
-ROOT = os.path.dirname(os.path.dirname(
-    os.path.dirname(os.path.abspath(__file__))))
+ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 COMMIT_SEP = "--{}".format(
-    "".join(secrets.choice(string.ascii_letters + string.digits)
-            for i in range(20))
+    "".join(secrets.choice(string.ascii_letters + string.digits) for i in range(20))
 )
 
 
@@ -56,7 +46,8 @@ def _levelFromCommit(commit: Commit) -> Tuple[Level, str]:
         currentType = commit.type
         currentScope = commit.scope
     currentLevel = {"feat": Level.FEATURE, "fix": Level.PATCH}.get(
-        currentType, Level.BENIGN)
+        currentType, Level.BENIGN
+    )
     return (currentLevel, currentScope)
 
 
@@ -102,9 +93,10 @@ def _getCommit(hash: str, shortHash: str, message: str) -> Commit:
     breakingChange = None
     body = "\n".join(lines).strip().split("BREAKING CHANGE", 1)
     if len(body) > 1:
-        body = body[1].lstrip(':').strip()
-        breakingChange = [re.sub(r"\s+", " ", para.strip())
-                          for para in body.split("\n\n")]
+        body = body[1].lstrip(":").strip()
+        breakingChange = [
+            re.sub(r"\s+", " ", para.strip()) for para in body.split("\n\n")
+        ]
 
     return Commit(
         typeScope[0].strip(),
@@ -129,7 +121,8 @@ def getTags(project: Project) -> List[str]:
             value[3] = "z"
         versions.append(((*value,), tag))
     versions: List[Tuple[Tuple[int, int, int, str], str]] = list(
-        reversed(sorted(versions)))
+        reversed(sorted(versions))
+    )
 
     curr = [*_semVer(str(project.version))]
     if curr[3] == "":
@@ -158,15 +151,16 @@ def getLog(
     return parseLog(proc.stdout.decode("UTF-8"), COMMIT_SEP, scopeFix, takeAll)
 
 
-def parseLog(gitLogOutput: str, separator: str, scopeFix: Dict[str, str], takeAll: bool):
+def parseLog(
+    gitLogOutput: str, separator: str, scopeFix: Dict[str, str], takeAll: bool
+):
     commitLog = []
     amassed = []
     for line in gitLogOutput.split("\n"):
         if line == separator:
             if len(amassed):
                 shortHash, hash = amassed[0].split(" ")
-                commit = _getCommit(
-                    hash, shortHash, "\n".join(amassed[1:]).strip())
+                commit = _getCommit(hash, shortHash, "\n".join(amassed[1:]).strip())
                 amassed = []
 
                 if commit is None:

@@ -7,9 +7,12 @@ import argparse
 import os
 from typing import Optional
 
-from ..common.changelog import FORCED_LEVEL, Level, format_commit_message, update_changelog
-from ..common.git import addFiles, annotatedTag, bumpVersion, commit, getLog, getTags
-from ..common.project import Project, getVersion, getVersionFilePath, setVersion
+from ..common.changelog import (FORCED_LEVEL, Level, format_commit_message,
+                                update_changelog)
+from ..common.git import (addFiles, annotatedTag, bumpVersion, commit, getLog,
+                          getTags)
+from ..common.project import (Project, getVersion, getVersionFilePath,
+                              setVersion)
 from ..common.runner import Environment, capture, capture_str
 from ..common.utils import PROJECT_ROOT
 from ..github.api import API, format_release
@@ -71,9 +74,11 @@ def runReleaseCommand(args: argparse.Namespace):
     if error_msg is not None and not args.dry_run:
         color = "\033[1;31m" if args.color == "always" else ""
         reset = "\033[m" if args.color == "always" else ""
-        print(f"""
+        print(
+            f"""
 {color}{error_msg}{reset}
-""")
+"""
+        )
         exit(1)
 
     release(
@@ -87,19 +92,28 @@ def runReleaseCommand(args: argparse.Namespace):
     if warning_msg is not None and args.dry_run:
         color = "\033[1;31m" if args.color == "always" else ""
         reset = "\033[m" if args.color == "always" else ""
-        print(f"""
+        print(
+            f"""
 {color}{warning_msg}{reset}
-""")
+"""
+        )
 
     if args.dry_run:
         color = "\033[1;32m" if args.color == "always" else ""
         reset = "\033[m" if args.color == "always" else ""
-        print(f"""
+        print(
+            f"""
 {color}Have you updated docs/roadmap.md yet?{reset}
-""")
+"""
+        )
 
 
-def _nextVersion(project: Project, forced_level: Optional[Level], stability: Optional[str], level: Level):
+def _nextVersion(
+    project: Project,
+    forced_level: Optional[Level],
+    stability: Optional[str],
+    level: Level,
+):
     force_stability = False
     if forced_level is not None:
         force_stability = forced_level == Level.STABILITY
@@ -113,19 +127,19 @@ def _nextVersion(project: Project, forced_level: Optional[Level], stability: Opt
         next_stability = stability
     if force_stability:
         if next_stability:
-            stability_parts = next_stability.split('.')
+            stability_parts = next_stability.split(".")
             if len(stability_parts) == 1:
                 next_stability = f"{next_stability}.2"
             else:
                 iteration = int(stability_parts[1]) + 1
                 stability_parts[1] = str(iteration)
-                next_stability = '.'.join(stability_parts)
+                next_stability = ".".join(stability_parts)
             level = Level.BENIGN
         else:
             next_stability = "-rc.1"
     else:
-        if next_stability[:4] == '-rc.':
-            next_stability = ''
+        if next_stability[:4] == "-rc.":
+            next_stability = ""
             level = Level.BENIGN
 
     return f"v{bumpVersion(str(project.version), level)}{next_stability}"
@@ -144,8 +158,8 @@ def release(
     log, level = getLog(tags, SCOPE_FIX, take_all)
     if use_version is not None:
         next_tag = use_version
-        if next_tag[:1] != 'v':
-            next_tag = f'v{next_tag}'
+        if next_tag[:1] != "v":
+            next_tag = f"v{next_tag}"
     else:
         next_tag = _nextVersion(project, forced_level, stability, level)
 
@@ -156,16 +170,14 @@ def release(
     commit_message = f"release {next_tag[1:]}"
     changelog = format_commit_message(log)
 
-    addFiles(getVersionFilePath(),
-             os.path.join(PROJECT_ROOT, "CHANGELOG.md"))
+    addFiles(getVersionFilePath(), os.path.join(PROJECT_ROOT, "CHANGELOG.md"))
     commit(f"chore: {commit_message}{changelog}")
     annotatedTag(next_tag, commit_message)
 
     api = API.fromProject(project)
 
     if api.remote is not None:
-        ghRelease = format_release(
-            log, next_tag, project.tagName, api.url)
+        ghRelease = format_release(log, next_tag, project.tagName, api.url)
         htmlUrl = api.release(ghRelease).get("html_url")
         if htmlUrl is not None:
             print(f"Visit draft at {htmlUrl}")

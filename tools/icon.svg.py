@@ -40,16 +40,20 @@ def slope(deg: int):
 
 def coaxial(start: int, stop: int, deg: int):
     [dx, dy] = slope(deg)
-    line(center + start * dx, center + start * dy,
-         center + stop * dx, center + stop * dy)
+    line(
+        center + start * dx, center + start * dy, center + stop * dx, center + stop * dy
+    )
 
 
 [slopeX, slopeY] = slope(scanner_slope)
 [dragX, dragY] = slope(scanner_slope - scanner_slope_drag)
 
-print(f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {size} {
-      size}" width="{size}px" height="{size}px" fill="none" stroke="none">')
-print('''  <style>
+print(
+    f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {size} {
+      size}" width="{size}px" height="{size}px" fill="none" stroke="none">'
+)
+print(
+    """  <style>
     .pen, .heavy-pen {
       stroke: var(--color, #daff99);
       stroke-width: 1;
@@ -71,29 +75,34 @@ print('''  <style>
       <stop offset="100%" style="stop-color:rgb(14,18,7);stop-opacity:1.00" />
     </linearGradient>
   </defs>
-  <rect width="128" height="128" fill="url(#bg)" />''')
+  <rect width="128" height="128" fill="url(#bg)" />"""
+)
 
-print(f'  <path fill="url(#scan)" d="M{center},{center} l{
-      R*slopeX},{R*slopeY} A{R},{R} 0 0 0 {center + R*dragX},{center + R*dragY} z" />')
+print(
+    f'  <path fill="url(#scan)" d="M{center},{center} l{
+      R*slopeX},{R*slopeY} A{R},{R} 0 0 0 {center + R*dragX},{center + R*dragY} z" />'
+)
 
 print('  <g class="pen">')
 for radius in range(R - step, 0, -step):
     circle(radius)
-h(edge + step * 3 / 2, center, R*2 - step * 3)
-v(center, edge + step * 3 / 2, R*2 - step * 3)
+h(edge + step * 3 / 2, center, R * 2 - step * 3)
+v(center, edge + step * 3 / 2, R * 2 - step * 3)
 
 for index in range(math.floor(R / step)):
-    v(edge + step/2 + index * step, center - crossline / 2, crossline)
+    v(edge + step / 2 + index * step, center - crossline / 2, crossline)
     v(edge + 2 * R - step / 2 - index * step, center - crossline / 2, crossline)
-    h(center - crossline / 2, edge + step/2 + index * step, crossline)
+    h(center - crossline / 2, edge + step / 2 + index * step, crossline)
     h(center - crossline / 2, edge + 2 * R - step / 2 - index * step, crossline)
 
 for arc in range(0, 360, 4):
     len = step * 2 / 3 if arc % 20 == 0 else step / 3
     coaxial(R - len, R, arc)
 
-print('''  </g>
-  <g class="heavy-pen">''')
+print(
+    """  </g>
+  <g class="heavy-pen">"""
+)
 
 circle(R)
 h(edge, center, step * 3 / 2)
@@ -102,5 +111,5 @@ h(size - edge, center, -step * 3 / 2)
 v(center, size - edge, -step * 3 / 2)
 coaxial(0, R, scanner_slope)
 
-print('  </g>')
-print('</svg>')
+print("  </g>")
+print("</svg>")

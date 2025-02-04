@@ -4,11 +4,10 @@
 
 import contextlib
 import json
-
-from abc import ABC, abstractmethod
 import shlex
 import subprocess
 import sys
+from abc import ABC, abstractmethod
 from typing import List, NamedTuple, Optional, Union, override
 from unittest.mock import MagicMock, patch
 
@@ -21,7 +20,7 @@ class asProc(NamedTuple):
 
 
 def asJsonBytes(data):
-    return json.dumps(data, ensure_ascii=False).encode('UTF-8')
+    return json.dumps(data, ensure_ascii=False).encode("UTF-8")
 
 
 def asJsonProc(data):
@@ -34,10 +33,12 @@ class AnyArg:
 
 class Repeating(ABC):
     @abstractmethod
-    def use(self, parent): pass
+    def use(self, parent):
+        pass
 
     @abstractmethod
-    def active(self): pass
+    def active(self):
+        pass
 
 
 class Always(Repeating):
@@ -81,14 +82,22 @@ class Once(Times):
 
 class SubprocessMock:
     class _Matcher:
-        def __init__(self, args: List[Union[str, AnyArg]], proc: asProc, repeating: Repeating):
+        def __init__(
+            self, args: List[Union[str, AnyArg]], proc: asProc, repeating: Repeating
+        ):
             self.repeating = repeating
             self.args = args
             self.proc = proc
 
         def __str__(self):
-            return ' '.join(shlex.quote(arg) if isinstance(
-                arg, str) else '*' if isinstance(arg, AnyArg) else '?' for arg in self.args)
+            return " ".join(
+                (
+                    shlex.quote(arg)
+                    if isinstance(arg, str)
+                    else "*" if isinstance(arg, AnyArg) else "?"
+                )
+                for arg in self.args
+            )
 
         def matches(self, args: List[str]):
             if not self.repeating.active():
@@ -127,21 +136,30 @@ class SubprocessMock:
             self.owner = owner
             self.repo = repo
 
-        def matching(self,
-                     resource: str,
-                     mime: Optional[str] = None,
-                     method: Optional[str] = None,
-                     stdout: Optional[bytes] = None,
-                     returncode: int = 0,
-                     times: Repeating = Once()):
-            acceptArg = f'Accept: {mime}' if mime else AnyArg()
+        def matching(
+            self,
+            resource: str,
+            mime: Optional[str] = None,
+            method: Optional[str] = None,
+            stdout: Optional[bytes] = None,
+            returncode: int = 0,
+            times: Repeating = Once(),
+        ):
+            acceptArg = f"Accept: {mime}" if mime else AnyArg()
             args: List[Union[str, AnyArg]] = [
-                'gh', 'api', '-H', acceptArg, '-H', AnyArg()]
+                "gh",
+                "api",
+                "-H",
+                acceptArg,
+                "-H",
+                AnyArg(),
+            ]
             if method:
-                args.extend(['--method', method])
-            args.append(f'/repos/{self.owner}/{self.repo}{resource}')
-            self.parent.matching(*args, stdout=stdout,
-                                 returncode=returncode, times=times)
+                args.extend(["--method", method])
+            args.append(f"/repos/{self.owner}/{self.repo}{resource}")
+            self.parent.matching(
+                *args, stdout=stdout, returncode=returncode, times=times
+            )
             return self
 
     def __init__(self):
@@ -154,17 +172,18 @@ class SubprocessMock:
     def gh(self, owner: str, repo: str):
         return SubprocessMock._GhMatcher(self, owner, repo)
 
-    def matching(self,
-                 *args: Union[str, AnyArg],
-                 stdout: Optional[bytes] = None,
-                 returncode: int = 0,
-                 times: Repeating = Once()):
+    def matching(
+        self,
+        *args: Union[str, AnyArg],
+        stdout: Optional[bytes] = None,
+        returncode: int = 0,
+        times: Repeating = Once(),
+    ):
         self.matchers.append(
             SubprocessMock._Matcher(
-                args,
-                asProc(stdout=stdout, returncode=returncode),
-                times
-            ))
+                args, asProc(stdout=stdout, returncode=returncode), times
+            )
+        )
         if DEBUG or self.debug:
             print(f"+++ [{self.matchers[-1]}] {self.matchers[-1].repeating}")
         return self
@@ -186,13 +205,13 @@ class SubprocessMock:
 
     @contextlib.contextmanager
     def patch(self):
-        with patch('subprocess.run', self.runMagic):
-            with patch('subprocess.check_call', self.checkCallMagic):
+        with patch("subprocess.run", self.runMagic):
+            with patch("subprocess.check_call", self.checkCallMagic):
                 yield self
 
     def run(self, *args, **kwargs):
-        check = kwargs.get('check', False)
-        capture_output = kwargs.get('capture_output', False)
+        check = kwargs.get("check", False)
+        capture_output = kwargs.get("capture_output", False)
         proc = self._match(args[0])
         if proc is None:
             proc = asProc(returncode=1)

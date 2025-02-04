@@ -3,10 +3,10 @@
 
 
 import os
-from pprint import pprint
 import re
 import time
 from enum import Enum
+from pprint import pprint
 from typing import Dict, List, NamedTuple
 
 from .runner import capture
@@ -14,21 +14,23 @@ from .utils import PROJECT_ROOT
 
 
 def release_changelog(version: str):
-    h2_prefix = '## ['
-    h2_current_prefix = f'## [{version}]'
+    h2_prefix = "## ["
+    h2_current_prefix = f"## [{version}]"
     collecting = False
     lines = []
-    with open(os.path.join(PROJECT_ROOT, "CHANGELOG.md"), encoding="UTF-8") as changelog_file:
+    with open(
+        os.path.join(PROJECT_ROOT, "CHANGELOG.md"), encoding="UTF-8"
+    ) as changelog_file:
         for line in changelog_file.readlines():
             line = line.rstrip()
-            is_h2 = line[:len(h2_prefix)] == h2_prefix
+            is_h2 = line[: len(h2_prefix)] == h2_prefix
             if not is_h2 and collecting:
-                if line[:1] == '#':
-                    line = line.lstrip('# \t').strip()
-                    line = f'**{line}**'
+                if line[:1] == "#":
+                    line = line.lstrip("# \t").strip()
+                    line = f"**{line}**"
                 lines.append(line)
                 continue
-            collecting = line[:len(h2_current_prefix)] == h2_current_prefix
+            collecting = line[: len(h2_current_prefix)] == h2_current_prefix
 
     text = "\n".join(lines).strip()
     if text == "":
@@ -151,7 +153,9 @@ class ChangelogMessage:
         refs = ""
         for refs_name in link.references:
             refs_links = [
-                self.issue_link(issue) for issue in link.references[refs_name] if issue != ""
+                self.issue_link(issue)
+                for issue in link.references[refs_name]
+                if issue != ""
             ]
             if len(refs_links) > 0:
                 refs += f", {refs_name} "
@@ -162,7 +166,9 @@ class ChangelogMessage:
                     listed = ", ".join(refs_links[:-1])
                     refs += f"{listed} and {last}"
 
-        return self.list_item(f"{scope}{link.summary} ({self.short_hash_link(link)}){refs}")
+        return self.list_item(
+            f"{scope}{link.summary} ({self.short_hash_link(link)}){refs}"
+        )
 
     def show_links(self, links: List[CommitLink], show_breaking: bool) -> List[str]:
         issues: Dict[str, List[str]] = {}
@@ -275,19 +281,20 @@ class ReleaseCommitMessage(ChangelogMessage):
     def post_process(self, lines: List[str]):
         paras = "\n".join(lines).strip().split("\n\n")
 
-        text = "\n\n".join(ReleaseCommitMessage._wrapAt78(para)
-                           for para in paras)
+        text = "\n\n".join(ReleaseCommitMessage._wrapAt78(para) for para in paras)
         if len(text):
             text = f"\n\n{text}"
         return text
 
     @staticmethod
     def _wrapAt78(para: str):
-        if para[:3] == ' - ':
-            lines = para.split('\n')
-            lines = [ReleaseCommitMessage._wrapAt(
-                75, line[3:], " - ", "   ") for line in lines]
-            return '\n'.join(lines)
+        if para[:3] == " - ":
+            lines = para.split("\n")
+            lines = [
+                ReleaseCommitMessage._wrapAt(75, line[3:], " - ", "   ")
+                for line in lines
+            ]
+            return "\n".join(lines)
         return ReleaseCommitMessage._wrapAt(78, para, "", "")
 
     @staticmethod
@@ -295,7 +302,7 @@ class ReleaseCommitMessage(ChangelogMessage):
         result = ""
         line = firstLine
         lineIsDirty = False
-        words = para.strip().split(' ')
+        words = para.strip().split(" ")
         for word in words:
             wordLen = len(word)
             if wordLen == 0:
@@ -303,16 +310,16 @@ class ReleaseCommitMessage(ChangelogMessage):
 
             lineIsDirty = True
             lineLen = len(line)
-            space = ' ' if lineLen > 0 and line[-1] != ' ' else ''
+            space = " " if lineLen > 0 and line[-1] != " " else ""
             resultingLen = lineLen + len(space) + wordLen
             if resultingLen <= length:
-                line = f'{line}{space}{word}'
+                line = f"{line}{space}{word}"
                 continue
-            result = f'{result}{line}\n'
-            line = f'{nextLines}{word}'
+            result = f"{result}{line}\n"
+            line = f"{nextLines}{word}"
 
         if lineIsDirty:
-            result = f'{result}{line}'
+            result = f"{result}{line}"
         return result
 
 
@@ -336,13 +343,11 @@ def read_tag_date(tag: str):
 
 
 def update_changelog(log: ChangeLog, cur_tag: str, prev_tag: str, github_link: str):
-    update = ChangelogFileUpdate(
-        github_link, cur_tag, prev_tag, read_tag_date(cur_tag))
+    update = ChangelogFileUpdate(github_link, cur_tag, prev_tag, read_tag_date(cur_tag))
 
     with open(os.path.join(PROJECT_ROOT, "CHANGELOG.md")) as f:
         current = f.read().split("\n## ", 1)
-    new_text = current[0] + "\n" + \
-        update.format_changelog(log)
+    new_text = current[0] + "\n" + update.format_changelog(log)
     if len(current) > 1:
         new_text += "\n## " + current[1]
     with open(os.path.join(PROJECT_ROOT, "CHANGELOG.md"), "wb") as f:

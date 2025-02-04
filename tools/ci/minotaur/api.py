@@ -3,13 +3,16 @@
 
 from typing import Dict, Optional
 from urllib.parse import ParseResult
+
 from ..common.requests import Request, RestAPI
 
 
 class MinotaurAPI(RestAPI):
     apiKey: Optional[str]
 
-    def __init__(self, baseUrl: str = "https://api.modrinth.com/v2", apiKey: Optional[str] = None):
+    def __init__(
+        self, baseUrl: str = "https://api.modrinth.com/v2", apiKey: Optional[str] = None
+    ):
         super().__init__(baseUrl)
         self.apiKey = apiKey
 
@@ -17,6 +20,6 @@ class MinotaurAPI(RestAPI):
         headers: Dict[str, str] = {}
 
         if self.apiKey is not None:
-            headers['Authorization'] = self.apiKey
+            headers["Authorization"] = self.apiKey
 
         return headers

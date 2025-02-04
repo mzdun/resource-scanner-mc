@@ -3,13 +3,13 @@
 
 import os
 
-
-PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(
-    os.path.dirname(os.path.abspath(__file__)))))
+PROJECT_ROOT = os.path.dirname(
+    os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+)
 
 
 def get_prog(name: str):
-    no_main = name.split('.')[:-1]
+    no_main = name.split(".")[:-1]
     if len(no_main) == 0:
         return name
     if len(no_main) == 1:

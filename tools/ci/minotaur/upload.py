@@ -4,8 +4,8 @@
 from typing import Dict, List, NamedTuple, Optional, Set, cast
 
 from ..common.gradle import GradleProject
-from ..common.project import Project
 from ..common.packages import buildRegex, getPackages
+from ..common.project import Project
 from .endpoints import CreateVersion
 
 
@@ -23,10 +23,7 @@ class Dep(NamedTuple):
     type: str
 
     def json(self) -> dict:
-        return {
-            "project_id": self.id,
-            "dependency_type": self.type
-        }
+        return {"project_id": self.id, "dependency_type": self.type}
 
 
 class Loader(NamedTuple):
@@ -51,10 +48,10 @@ class Archive(NamedTuple):
         return cast(GradleProject, self.project).properties
 
     def endpoint(self, project_id: str, changelog: Optional[str]):
-        suffixes = ''.join([f'-{loader.suffix}' for loader in self.loaders])
-        meta_suffixes = ''.join([f'-{loader.name}' for loader in self.loaders])
-        mc = f'{self.minecraftVersion}{suffixes}'
-        meta = f'{self.minecraftVersion}{meta_suffixes}'
+        suffixes = "".join([f"-{loader.suffix}" for loader in self.loaders])
+        meta_suffixes = "".join([f"-{loader.name}" for loader in self.loaders])
+        mc = f"{self.minecraftVersion}{suffixes}"
+        meta = f"{self.minecraftVersion}{meta_suffixes}"
         mod_name = self.properties.mod_name
         name = f"{mod_name} {self.project.version} for {mc}"
         return CreateVersion(
@@ -99,17 +96,18 @@ def _loadersFromIds(loaderIds: List[str], knownLoaders: Dict[str, Loader]):
     return loaders
 
 
-def enumArchives(src: str, project: Project, knownLoaders: Dict[str, Loader], *otherDeps: Dep):
+def enumArchives(
+    src: str, project: Project, knownLoaders: Dict[str, Loader], *otherDeps: Dep
+):
     matcher = buildRegex(project)
     src, names = getPackages(src, matcher)
 
     uploads: List[Archive] = []
     for name in names:
-        mcVersion, *loaderIds = matcher.match(name).group(1).split('-')
+        mcVersion, *loaderIds = matcher.match(name).group(1).split("-")
         loaders = _loadersFromIds(loaderIds, knownLoaders)
         if len(loaders) == 0:
             continue
-        uploads.append(Archive(src, name, mcVersion,
-                       loaders, project, otherDeps))
+        uploads.append(Archive(src, name, mcVersion, loaders, project, otherDeps))
 
     return uploads

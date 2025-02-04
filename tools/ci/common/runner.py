@@ -93,9 +93,7 @@ def checked(*args: str, **kwargs) -> Optional[subprocess.CompletedProcess]:
     return subprocess.check_call(args, shell=False, **kwargs)
 
 
-def checked_capture(
-    *args: str, **kwargs
-) -> Optional[subprocess.CompletedProcess]:
+def checked_capture(*args: str, **kwargs) -> Optional[subprocess.CompletedProcess]:
     print_args(args)
     if Environment.DRY_RUN:
         return None
@@ -107,4 +105,4 @@ def capture(*args: str, **kwargs):
 
 
 def capture_str(*args: str, **kwargs):
-    return capture(*args, **kwargs).stdout.decode('UTF-8').strip()
+    return capture(*args, **kwargs).stdout.decode("UTF-8").strip()

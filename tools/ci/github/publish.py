@@ -7,16 +7,16 @@ import argparse
 import hashlib
 import io
 import os
-from pprint import pprint, pformat
 import sys
 import time
+from pprint import pformat, pprint
 from typing import List
 
-from .api import API
 from ..common.packages import buildRegex, getPackages
 from ..common.project import getVersion
 from ..common.runner import Environment, print_args
 from ..common.utils import PROJECT_ROOT
+from .api import API
 
 
 def addPublishArgumentsTo(parser: argparse.ArgumentParser):
@@ -25,7 +25,8 @@ def addPublishArgumentsTo(parser: argparse.ArgumentParser):
         metavar="<dir>",
         nargs=1,
         type=str,
-        help="location of the JAR files to upload")
+        help="location of the JAR files to upload",
+    )
 
 
 def runPublishCommand(args: argparse.Namespace):

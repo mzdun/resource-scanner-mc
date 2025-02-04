@@ -70,7 +70,7 @@ class VersionSuite(ABC):
 
     def setVersion(self, version: str):
         core = version.split("-", 1)[0]
-        stability = version[len(core):]
+        stability = version[len(core) :]
 
         self.patchProject(self.getVersion().version.core, core)
 
@@ -90,8 +90,7 @@ class VersionSuite(ABC):
         with open(path, "r", encoding="UTF-8") as input:
             text = input.read()
 
-        patched = text[: pos.offset] + newValue + \
-            text[pos.offset + len(pos.value):]
+        patched = text[: pos.offset] + newValue + text[pos.offset + len(pos.value) :]
 
         with open(path, "w", encoding="UTF-8") as input:
             input.write(patched)

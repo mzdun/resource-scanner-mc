@@ -4,15 +4,15 @@
 import argparse
 import os
 import sys
-
 from importlib.machinery import SourceFileLoader
 from types import ModuleType
 
 __main__py = "__main__.py"
 
 parser = argparse.ArgumentParser(
-    usage="Runs some automated CI scripts", prog=__package__)
-modules = parser.add_subparsers(required=True, dest='module')
+    usage="Runs some automated CI scripts", prog=__package__
+)
+modules = parser.add_subparsers(required=True, dest="module")
 
 for here, dirs, files in os.walk(os.path.dirname(__file__)):
     for dirName in dirs:
@@ -23,7 +23,7 @@ for here, dirs, files in os.walk(os.path.dirname(__file__)):
 
 args = parser.parse_args(sys.argv[1:2])
 
-if '/' in args.module or '\\' in args.module:
+if "/" in args.module or "\\" in args.module:
     print(f"{args.module} is not a valid module name", file=sys.stderr)
     sys.exit(1)
 
@@ -34,8 +34,7 @@ if not os.path.isfile(main):
 
 sys.argv = [main, *sys.argv[2:]]
 
-loader = SourceFileLoader(
-    f"{__package__}.{args.module}.__main__", main)
+loader = SourceFileLoader(f"{__package__}.{args.module}.__main__", main)
 mod = ModuleType(loader.name)
 mod.__loader__ = loader
 mod.__file__ = loader.get_filename()

@@ -1,18 +1,17 @@
 # Copyright (c) 2024 Marcin Zdun
 # This code is licensed under MIT license (see LICENSE for details)
 
-from abc import ABC, abstractmethod
 import http.client
 import json
 import os
+import uuid
+from abc import ABC, abstractmethod
 from typing import Any, BinaryIO, Dict, List, NamedTuple, Optional
 from urllib.parse import ParseResult, urlparse
-import uuid
 
-
-DASHDASH = b'--'
-CRLF = b'\r\n'
-COLONSPACE = b': '
+DASHDASH = b"--"
+CRLF = b"\r\n"
+COLONSPACE = b": "
 
 
 class Sink(ABC):
@@ -21,10 +20,10 @@ class Sink(ABC):
         return self
 
     def writeUtf8(self, s: str) -> "Sink":
-        return self.write(s.encode('UTF-8'))
+        return self.write(s.encode("UTF-8"))
 
     def writeInt(self, i: str) -> "Sink":
-        return self.write(str(i).encode('UTF-8'))
+        return self.write(str(i).encode("UTF-8"))
 
 
 class CountingSink(Sink):
@@ -62,12 +61,16 @@ class ProxySink(Sink):
 
 class RequestBody(ABC):
     @abstractmethod
-    def contentType(self) -> Optional[str]: pass
-    @abstractmethod
-    def contentLength(self) -> int: pass
+    def contentType(self) -> Optional[str]:
+        pass
 
     @abstractmethod
-    def writeTo(self, sink: Sink) -> None: pass
+    def contentLength(self) -> int:
+        pass
+
+    @abstractmethod
+    def writeTo(self, sink: Sink) -> None:
+        pass
 
 
 class BytesRequest(RequestBody):
@@ -91,18 +94,18 @@ class Part(NamedTuple):
 
 
 def _quotedString(value: str):
-    value = value.replace('\n', '%0A')
-    value = value.replace('\r', '%0D')
-    value = value.replace('"', '%22')
+    value = value.replace("\n", "%0A")
+    value = value.replace("\r", "%0D")
+    value = value.replace('"', "%22")
     return f'"{value}"'
 
 
 def _strToRequest(payload: str, contentType: Optional[str] = None):
-    charset = 'UTF-8'
+    charset = "UTF-8"
     data = payload.encode(charset)
 
     if contentType is not None:
-        contentType = f'{contentType}; charset={charset}'
+        contentType = f"{contentType}; charset={charset}"
 
     return BytesRequest(contentType, data)
 
@@ -115,11 +118,11 @@ def _pathToRequest(path: str, contentType: Optional[str] = None):
 
 
 def _createFormData(name: str, filename: Optional[str], body: RequestBody):
-    disposition = f'form-data; name={_quotedString(name)}'
+    disposition = f"form-data; name={_quotedString(name)}"
     if filename is not None:
-        disposition = f'{disposition}; filename={_quotedString(filename)}'
+        disposition = f"{disposition}; filename={_quotedString(filename)}"
 
-    return Part({'Content-Disposition': disposition}, body)
+    return Part({"Content-Disposition": disposition}, body)
 
 
 class DynRequestBody(RequestBody):
@@ -152,7 +155,7 @@ class Multipart(DynRequestBody):
 
     def __init__(self, type: str = "multipart/mixed"):
         super().__init__()
-        self.boundary = str(uuid.uuid4()).encode('UTF-8')
+        self.boundary = str(uuid.uuid4()).encode("UTF-8")
         self.type = type
         self.parts = []
 
@@ -164,19 +167,16 @@ class Multipart(DynRequestBody):
             sink.write(DASHDASH).write(self.boundary).write(CRLF)
 
             for header, value in part.headers.items():
-                sink.writeUtf8(header).write(
-                    COLONSPACE).writeUtf8(value).write(CRLF)
+                sink.writeUtf8(header).write(COLONSPACE).writeUtf8(value).write(CRLF)
 
             contentType = part.body.contentType()
             contentLength = part.body.contentLength()
 
             if contentType is not None:
-                sink.writeUtf8(
-                    'Content-Type: ').writeUtf8(contentType).write(CRLF)
+                sink.writeUtf8("Content-Type: ").writeUtf8(contentType).write(CRLF)
 
             if contentLength >= 0:
-                sink.writeUtf8(
-                    'Content-Length: ').writeInt(contentLength).write(CRLF)
+                sink.writeUtf8("Content-Length: ").writeInt(contentLength).write(CRLF)
             elif counting:
                 sink.count = -1
                 return
@@ -191,12 +191,16 @@ class Multipart(DynRequestBody):
         sink.write(DASHDASH).write(self.boundary).write(DASHDASH).write(CRLF)
 
     def addString(self, name: str, contents: str, mimeType: Optional[str] = None):
-        self.parts.append(_createFormData(
-            name, None, _strToRequest(contents, mimeType)))
+        self.parts.append(
+            _createFormData(name, None, _strToRequest(contents, mimeType))
+        )
 
     def addFile(self, name: str, filename: str, mimeType: Optional[str] = None):
-        self.parts.append(_createFormData(
-            name, os.path.basename(filename), _pathToRequest(filename, mimeType)))
+        self.parts.append(
+            _createFormData(
+                name, os.path.basename(filename), _pathToRequest(filename, mimeType)
+            )
+        )
 
 
 class Request(ABC):
@@ -204,7 +208,7 @@ class Request(ABC):
         return "GET"
 
     def getEndpoint() -> str:
-        return '/'
+        return "/"
 
     def getBody() -> Optional[RequestBody]:
         return None
@@ -253,8 +257,8 @@ class RestAPI:
     def request(self, req: Request):
         url = urlparse(self.baseUrl + req.endpoint)
         resource = url.path
-        if url.query != '':
-            resource = f'{resource}?{url.query}'
+        if url.query != "":
+            resource = f"{resource}?{url.query}"
 
         if self.conn is None or url.netloc != self.netloc:
             self.conn = http.client.HTTPSConnection(url.netloc)
@@ -268,16 +272,15 @@ class RestAPI:
             contentLength = body.contentLength()
 
             if contentType is not None:
-                headers['Content-Type'] = contentType
+                headers["Content-Type"] = contentType
 
             if contentLength >= 0:
-                headers['Content-Length'] = contentLength
+                headers["Content-Length"] = contentLength
 
             sink = BufferSink()
             body.writeTo(sink)
 
-            self.conn.request(req.method, resource,
-                              body=sink.chunks, headers=headers)
+            self.conn.request(req.method, resource, body=sink.chunks, headers=headers)
         else:
             self.conn.request(req.method, resource, headers=headers)
 
@@ -286,32 +289,32 @@ class RestAPI:
         mediaType = response.headers.get_content_type()
         charset = response.headers.get_charset()
         if charset is None:
-            contentType = response.headers.get(
-                'Content-Type', '').split(';')[1:]
-            contentType = [chunk.strip().split('=', 1)
-                           for chunk in contentType]
-            contentType = {key.strip().lower(): value.strip()
-                           for key, value in contentType}
-            charset = contentType.get('charset')
+            contentType = response.headers.get("Content-Type", "").split(";")[1:]
+            contentType = [chunk.strip().split("=", 1) for chunk in contentType]
+            contentType = {
+                key.strip().lower(): value.strip() for key, value in contentType
+            }
+            charset = contentType.get("charset")
 
         if charset is None:
             if mediaType == "application/json":
-                charset = 'UTF-8'
+                charset = "UTF-8"
             else:
                 charset = req.defaultCharset
 
         data = response.read()
         text = data.decode(charset)
-        jsonData = json.loads(
-            text) if mediaType == "application/json" else None
+        jsonData = json.loads(text) if mediaType == "application/json" else None
 
-        return RestResponse(status=response.status,
-                            reason=response.reason,
-                            mediaType=mediaType,
-                            charset=charset,
-                            data=data,
-                            text=text,
-                            json=jsonData)
+        return RestResponse(
+            status=response.status,
+            reason=response.reason,
+            mediaType=mediaType,
+            charset=charset,
+            data=data,
+            text=text,
+            json=jsonData,
+        )
 
     def getHeaders(self, req: Request, url: ParseResult) -> Dict[str, str]:
         return {}

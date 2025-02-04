@@ -8,8 +8,7 @@ from typing import Dict, List, NamedTuple
 from .git import parseLog
 
 COMMIT_SEP = "--{}".format(
-    "".join(secrets.choice(string.ascii_letters + string.digits)
-            for i in range(40))
+    "".join(secrets.choice(string.ascii_letters + string.digits) for i in range(40))
 )
 
 
@@ -21,26 +20,30 @@ class TestCommit(NamedTuple):
         return f"{self.hash[:9]} {self.hash}\n{self.message.strip()}\n{COMMIT_SEP}\n"
 
     @staticmethod
-    def parse(commits: List["TestCommit"], scopeFix: Dict[str, str] = {}, takeAll: bool = False):
+    def parse(
+        commits: List["TestCommit"],
+        scopeFix: Dict[str, str] = {},
+        takeAll: bool = False,
+    ):
         stdout = "".join(commit.toStdout() for commit in commits)
         return parseLog(stdout, COMMIT_SEP, scopeFix, takeAll)
 
 
-lorem1 = '''Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nisi nisl,
+lorem1 = """Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nisi nisl,
 convallis vel convallis sed, faucibus ut eros. Praesent sit amet nunc vitae
 lectus maximus sodales ultrices nec felis. Phasellus lacinia tortor in erat
-posuere suscipit. Proin viverra nisl ac ligula faucibus commodo.'''
+posuere suscipit. Proin viverra nisl ac ligula faucibus commodo."""
 
-lorem2 = '''Phasellus nec mauris in mauris tincidunt gravida auctor sit amet felis. Nam
+lorem2 = """Phasellus nec mauris in mauris tincidunt gravida auctor sit amet felis. Nam
 eu dapibus neque. Vivamus eget odio erat. Mauris id accumsan felis. Nulla
 euismod feugiat nisi ac sodales. Suspendisse lacus purus, condimentum eu arcu
-quis, ultrices rhoncus ipsum. Curabitur ac tempus lectus.'''
+quis, ultrices rhoncus ipsum. Curabitur ac tempus lectus."""
 
-lorem3 = '''In dapibus lacinia dictum. Class aptent taciti sociosqu ad litora torquent
+lorem3 = """In dapibus lacinia dictum. Class aptent taciti sociosqu ad litora torquent
 per conubia nostra, per inceptos himenaeos. Curabitur ultrices lacus et dolor
-pretium, vitae facilisis risus cursus.'''
+pretium, vitae facilisis risus cursus."""
 
-'''
+"""
 69988295cd0999b6b028901645dd06199fb65b6c
 b9b1c858e2c109ec12e845935018f4f080b9cb9f
 2fadf6c4f3daa65804f4fec2caac1d874c5daa23
@@ -133,4 +136,4 @@ a579c086164165e8c004cfbba1ca1fa679b64824
 1763ef2f93dd11980f9eef34ca472b8954e81c29
 e5f2ef1546a670cbfcb357b6a705f18a285f6ab9
 a83402f04d6c93559bf6750789d43a5274b8b4af
-'''
+"""

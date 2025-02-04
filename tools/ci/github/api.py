@@ -2,13 +2,14 @@
 # This code is licensed under MIT license (see LICENSE for details)
 
 import json
-from pprint import pprint
 import sys
+from pprint import pprint
 from typing import Any, List, Optional, Union
 
 from ..common.changelog import ChangeLog, GithubReleaseChangelog
 from ..common.project import Project
-from ..common.runner import Environment, capture, checked, checked_capture, print_args
+from ..common.runner import (Environment, capture, checked, checked_capture,
+                             print_args)
 
 
 def locate_remote(owner: str, repo: str) -> Optional[str]:
@@ -33,8 +34,7 @@ def locate_remote(owner: str, repo: str) -> Optional[str]:
 
 
 def format_release(log: ChangeLog, cur_tag: str, prev_tag: str, github_link: str):
-    body = GithubReleaseChangelog(
-        github_link, cur_tag, prev_tag).format_changelog(log)
+    body = GithubReleaseChangelog(github_link, cur_tag, prev_tag).format_changelog(log)
 
     return {
         "tag_name": cur_tag,

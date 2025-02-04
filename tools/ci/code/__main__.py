@@ -18,24 +18,21 @@ from ..common.utils import PROJECT_ROOT, get_prog
 PACKAGE = "com.midnightbits.scanner"
 SRC_SETS = ["main", "test"]
 
-EXT = '.java'
+EXT = ".java"
 
-MASK = '''
+MASK = """
 // Copyright (c) {YEAR} Marcin Zdun
 // This code is licensed under MIT license (see LICENSE for details)
-'''.strip()
+""".strip()
 
 exit_code = 0
 
-license_doc = 'Adds missing license references'
+license_doc = "Adds missing license references"
 
-parser = argparse.ArgumentParser(
-    description=__doc__,
-    prog=get_prog(__name__))
+parser = argparse.ArgumentParser(description=__doc__, prog=get_prog(__name__))
 
-commands = parser.add_subparsers(required=True, dest='command')
-license = commands.add_parser(
-    'license', help=license_doc, description=license_doc)
+commands = parser.add_subparsers(required=True, dest="command")
+license = commands.add_parser("license", help=license_doc, description=license_doc)
 
 Environment.addArgumentsTo(license)
 
@@ -53,12 +50,14 @@ license.add_argument(
     help="verifies, if all staged Java files have the notification",
 )
 
+
 def build_regexp():
-    maskChunks = MASK.split('{YEAR}')
-    reMaskContentsLines = r'\d+'.join([safeRegex(chunk)
-                                      for chunk in maskChunks]).split('\n')
-    reMaskContents = r'[\r\n]+'.join(reMaskContentsLines)
-    matcher = re.compile(f'^{reMaskContents}$')
+    maskChunks = MASK.split("{YEAR}")
+    reMaskContentsLines = r"\d+".join([safeRegex(chunk) for chunk in maskChunks]).split(
+        "\n"
+    )
+    reMaskContents = r"[\r\n]+".join(reMaskContentsLines)
+    matcher = re.compile(f"^{reMaskContents}$")
 
     year = str(datetime.date.today().year)
     newHeading = year.join(maskChunks) + "\n\n"
@@ -67,36 +66,42 @@ def build_regexp():
 
 
 def matches(matcher: re.Pattern[str], text: List[str]):
-    head = '\n'.join([line.rstrip() for line in text[:2]])
+    head = "\n".join([line.rstrip() for line in text[:2]])
     return matcher.match(head) is not None
 
 
 def check_staged():
-    proc = capture('git','diff','--name-status','--cached')
+    proc = capture("git", "diff", "--name-status", "--cached")
     lines = proc.stdout.decode("UTF-8").split("\n")
-    log = [(line[:1], line[1:].strip()) for line in lines if line[:1] != 'D']
+    log = [(line[:1], line[1:].strip()) for line in lines if line[:1] != "D"]
     for index in range(len(log)):
         op, logline = log[index]
-        if op == 'R':
-            log[index] = ('R', logline.split('\t')[-1])
+        if op == "R":
+            log[index] = ("R", logline.split("\t")[-1])
     filenames = [line[1] for line in log]
     matcher, _ = build_regexp()
 
     files: Set[str] = set()
     for path in filenames:
-        if path[-len(EXT):] != EXT:
+        if path[-len(EXT) :] != EXT:
             continue
-        
-        proc = capture('git', 'show', f':{path}')
+
+        proc = capture("git", "show", f":{path}")
         if not matches(matcher, proc.stdout.decode("UTF-8").split("\n")):
             files.add(path)
 
     if len(files) > 0:
-        print(f'Found {len(files)} file{"s" if len(files) != 1 else ""} without license notification:\n', file=sys.stderr)
+        print(
+            f'Found {len(files)} file{"s" if len(files) != 1 else ""} without license notification:\n',
+            file=sys.stderr,
+        )
         for file in sorted(files):
-            print('-', file, file=sys.stderr)
+            print("-", file, file=sys.stderr)
 
-        print(f'\nTo fix {"them" if len(files) != 1 else "it"}, run\n\n    python -m tools.ci code license\n\nand stage them again.', file=sys.stderr)
+        print(
+            f'\nTo fix {"them" if len(files) != 1 else "it"}, run\n\n    python -m tools.ci code license\n\nand stage them again.',
+            file=sys.stderr,
+        )
         exit(1)
 
 
@@ -104,44 +109,56 @@ def licenses(check: bool):
     ROOT = os.path.join(PROJECT_ROOT, "")
     PKG = os.path.join(*PACKAGE.split("."))
 
-    FILENAME_REPLACEMENT = [(os.path.join("src", srcSet, "java", PKG),
-                             os.path.join(f"${srcSet.upper()}", "$PKG")) for srcSet in SRC_SETS]
+    FILENAME_REPLACEMENT = [
+        (
+            os.path.join("src", srcSet, "java", PKG),
+            os.path.join(f"${srcSet.upper()}", "$PKG"),
+        )
+        for srcSet in SRC_SETS
+    ]
 
     matcher, newHeading = build_regexp()
 
     files: Set[str] = set()
     for root, _, filenames in os.walk(PROJECT_ROOT):
         for filename in filenames:
-            if filename[-len(EXT):] != EXT:
+            if filename[-len(EXT) :] != EXT:
                 continue
             path = os.path.join(root, filename)
 
             with open(path, encoding="UTF-8") as inFile:
                 text = inFile.readlines()
-                
+
             if matches(matcher, text):
                 continue
-            
+
             if check:
-                files.add(path[len(ROOT):])
+                files.add(path[len(ROOT) :])
                 continue
 
-            printPath = path[len(ROOT):]
+            printPath = path[len(ROOT) :]
             for replacement in FILENAME_REPLACEMENT:
                 printPath = printPath.replace(*replacement)
             print(printPath)
 
             newText = newHeading + "".join(text)
             with open(path, "wb") as outFile:
-                outFile.write(newText.encode('UTF-8'))
+                outFile.write(newText.encode("UTF-8"))
 
     if check and len(files) > 0:
-        print(f'Found {len(files)} file{"s" if len(files) != 1 else ""} without license notification:\n', file=sys.stderr)
+        print(
+            f'Found {len(files)} file{"s" if len(files) != 1 else ""} without license notification:\n',
+            file=sys.stderr,
+        )
         for file in sorted(files):
-            print('-', file, file=sys.stderr)
+            print("-", file, file=sys.stderr)
 
-        print(f'\nTo fix {"them" if len(files) != 1 else "it"}, run\n\n    python -m tools.ci code license\n', file=sys.stderr)
+        print(
+            f'\nTo fix {"them" if len(files) != 1 else "it"}, run\n\n    python -m tools.ci code license\n',
+            file=sys.stderr,
+        )
         exit(1)
+
 
 def __main__():
     args = parser.parse_args()

@@ -5,7 +5,6 @@
 import os
 import sys
 import zipfile as z
-
 from typing import List
 
 
@@ -24,9 +23,9 @@ def copyMember(input: z.ZipFile, output: z.ZipFile, member: z.ZipInfo):
 
 
 def mergeZips(outputFileName: str, *jarFileNames: List[str]):
-    with z.ZipFile(outputFileName, 'w', compression=z.ZIP_DEFLATED) as output:
+    with z.ZipFile(outputFileName, "w", compression=z.ZIP_DEFLATED) as output:
         for inputName in jarFileNames:
-            with z.ZipFile(inputName, 'r') as input:
+            with z.ZipFile(inputName, "r") as input:
                 for member in input.infolist():
                     copyMember(input, output, member)
 
@@ -40,7 +39,7 @@ def __main__():
     for pluginFileName in sys.argv[3:]:
         basename = os.path.basename(pluginFileName)
         outputName = os.path.join(libsDirName, basename)
-        print(f'Repacking {basename}')
+        print(f"Repacking {basename}")
         mergeZips(outputName, pluginFileName, scannerFileName)
 
 
