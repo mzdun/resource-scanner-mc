@@ -15,30 +15,30 @@ center = int(size / 2)
 R = center - edge
 
 
-def circle(radius: int):
+def circle(radius: float):
     print(f'    <circle r="{radius}" cx="{center}" cy="{center}"/>')
 
 
-def line(x1: int, y1: int, x2: int, y2: int):
+def line(x1: float, y1: float, x2: float, y2: float):
     print(f'    <line x1="{x1}" y1="{y1}" x2="{x2}" y2="{y2}"/>')
 
 
-def h(x: int, y: int, len: int):
+def h(x: float, y: float, len: float):
     line(x, y, x + len, y)
 
 
-def v(x: int, y: int, len: int):
+def v(x: float, y: float, len: float):
     line(x, y, x, y + len)
 
 
-def slope(deg: int):
+def slope(deg: float):
     rad = deg * math.pi / 180
     dx = math.cos(rad)
     dy = math.sin(rad)
     return [dx, dy]
 
 
-def coaxial(start: int, stop: int, deg: int):
+def coaxial(start: float, stop: float, deg: float):
     [dx, dy] = slope(deg)
     line(
         center + start * dx, center + start * dy, center + stop * dx, center + stop * dy
