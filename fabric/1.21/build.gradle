@@ -1,18 +1,39 @@
 plugins {
-	id 'fabric-loom' version '1.7-SNAPSHOT'
+	id 'fabric-loom' version '1.10-SNAPSHOT'
 	id 'com.github.harbby.gradle.serviceloader' version '1.1.8'
 	id 'maven-publish'
 	id 'jacoco'
 }
 
-project.setProperty('mod_version', "${rootProject.mod_version}+${project.minecraft_version}-fabric")
-
-version = project.mod_version
-group = project.maven_group
-
 base {
 	archivesName = project.archives_base_name
 }
+
+def modMenuRT = !project.hasProperty('modmenu_rt') || project.modmenu_rt == "true"
+
+def projectId = project.archives_base_name
+def projectTitle = project.mod_name
+def projectDescription = project.description
+def projectGitHub = project.url
+def projectModrinth = project.modrinth
+def projectVersion = project.version
+
+def minecraftVersion = project.minecraft_version
+def yarnMappings = project.yarn_mappings
+def loaderVersion = project.loader_version
+def modMenuVersion = project.modmenu_version
+def fabricVersion = project.fabric_version
+
+def licenseSuffix = project.base.archivesName.get()
+
+def minecraftDependency = project.hasProperty('minecraft_dependency')
+	? project.minecraft_dependency
+	: "~${minecraftVersion}"
+
+project.setProperty('mod_version', "${rootProject.mod_version}+${minecraftVersion}-fabric")
+
+version = project.mod_version
+group = project.maven_group
 
 repositories {
 	maven {
@@ -85,46 +106,41 @@ jacocoTestReport {
 	}
 }
 
-def modmenu_rt = !project.hasProperty('modmenu_rt') || project.modmenu_rt == "true"
-
 dependencies {
 	implementation project(':scanner')
 
 	// To change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-	if (modmenu_rt) {
-		modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}")
+	mappings "net.fabricmc:yarn:${yarnMappings}:v2"
+	modImplementation "net.fabricmc:fabric-loader:${loaderVersion}"
+	if (modMenuRT) {
+		modImplementation("com.terraformersmc:modmenu:${modMenuVersion}")
 	} else {
-		modCompileOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
+		modCompileOnly "com.terraformersmc:modmenu:${modMenuVersion}"
 	}
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${fabricVersion}"
 
 	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-	testImplementation "net.fabricmc:fabric-loader-junit:${project.loader_version}"
+	testImplementation "net.fabricmc:fabric-loader-junit:${loaderVersion}"
 
 	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 processResources {
-	inputs.property "version", project.version
+	inputs.property "version", projectVersion
 
 	filesMatching("fabric.mod.json") {
-		def minecraft_dependency = project.hasProperty('minecraft_dependency')
-			? project.minecraft_dependency
-			: "~${project.minecraft_version}"
 		expand \
-			"id": project.archives_base_name,
-			"title": project.mod_name,
-			"description": project.description,
-			"github": project.url,
-			"modrinth": project.modrinth,
-			"version": project.version,
-			"minecraft_dependency": minecraft_dependency
+			"id": projectId,
+			"title": projectTitle,
+			"description": projectDescription,
+			"github": projectGitHub,
+			"modrinth": projectModrinth,
+			"version": projectVersion,
+			"minecraft_dependency": minecraftDependency
 	}
 }
 
@@ -139,7 +155,7 @@ java {
 
 jar {
 	from("../../LICENSE") {
-		rename { "${it}_${project.base.archivesName.get()}"}
+		rename { "${it}_${licenseSuffix}"}
 	}
 }
 
@@ -155,7 +171,7 @@ tasks.register('repack', Exec) {
 
 	dependsOn remapJar
 	dependsOn ':scanner:jar'
-	group 'Publishing'
+	group = 'Publishing'
 
 	inputs.file(scannerJar)
 	inputs.file(pluginJar)
@@ -177,13 +193,13 @@ tasks.register('install', Exec) {
 	def pluginJar = project.repack.outputs.files[0]
 	def baseName = file(pluginJar).name
 
-	def outDir = "${installHome}/.feather/user-mods/${project.minecraft_version}-fabric"
+	def outDir = "${installHome}/.feather/user-mods/${minecraftVersion}-fabric"
 
 	dependsOn 'repack'
 	group 'Publishing'
 
 	executable 'python'
-	args = ["${rootDir}/tools/install-feather.py", "${project.minecraft_version}-fabric", pluginJar]
+	args = ["${rootDir}/tools/install-feather.py", "${minecraftVersion}-fabric", pluginJar]
 }
 
 // configure the maven publication

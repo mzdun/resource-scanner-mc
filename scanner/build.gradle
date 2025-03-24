@@ -35,10 +35,12 @@ java {
 	}
 }
 
+def modVersion = project.mod_version
+
 jar {
 	manifest {
 		attributes(
-			'Scanner-Version': project.mod_version,
+			'Scanner-Version': modVersion,
 		)
 	}
 }
